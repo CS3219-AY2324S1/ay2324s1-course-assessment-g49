@@ -1,9 +1,11 @@
 function Question({ question }) {
   return (
-    <li key={question.id}>
-      {question.title} - {question.complexity}
-      <p>{question.description}</p>
-    </li>
+    <tr>
+      <td>{question.id}</td>
+      <td>{question.title}</td>
+      <td>{question.complexity}</td>
+      <td>{question.description}</td>
+    </tr>
   );
 }
 

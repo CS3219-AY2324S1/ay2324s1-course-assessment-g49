@@ -8,11 +8,21 @@ function QuestionList() {
   ]);
   return (
     <div>
-      <ul>
-        {questions.map((question) => {
-          return <Question question={question} />;
-        })}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Question No.</th>
+            <th>Question Title</th>
+            <th>Question Complexity</th>
+            <th>Question Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {questions.map((question) => {
+            return <Question question={question} />;
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
