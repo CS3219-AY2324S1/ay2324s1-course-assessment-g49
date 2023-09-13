@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @GetMapping()
-    public ResponseEntity<String> ping() {
+    @GetMapping("/login")
+    public ResponseEntity<String> login() {
         return ResponseEntity.ok("OK");
     }
 }
