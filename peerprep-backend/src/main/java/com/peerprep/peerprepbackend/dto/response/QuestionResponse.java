@@ -7,14 +7,12 @@ import lombok.Value;
 
 import java.util.Set;
 
-/**
- * Data transfer object representing the overview of a question
- */
 @Value
 @Builder
-public class QuestionOverview {
+public class QuestionResponse {
     String id;
     String title;
+    String description;
     Set<Category> categories;
     Complexity complexity;
 }

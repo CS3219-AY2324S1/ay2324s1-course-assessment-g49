@@ -2,6 +2,7 @@ package com.peerprep.peerprepbackend.service;
 
 import com.peerprep.peerprepbackend.dto.request.CreateQuestionRequest;
 import com.peerprep.peerprepbackend.dto.response.QuestionOverview;
+import com.peerprep.peerprepbackend.dto.response.QuestionResponse;
 import com.peerprep.peerprepbackend.entity.Question;
 import com.peerprep.peerprepbackend.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +32,25 @@ public class QuestionService {
         return questions.stream().map(q -> QuestionOverview.builder()
                         .id(q.getId())
                         .title(q.getTitle())
-                        .description(q.getDescription())
                         .categories(q.getCategories())
                         .complexity(q.getComplexity())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public QuestionResponse getQuestion(String id) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(RuntimeException::new);
+        return QuestionResponse.builder()
+                .id(question.getId())
+                .title(question.getTitle())
+                .description(question.getDescription())
+                .categories(question.getCategories())
+                .complexity(question.getComplexity())
+                .build();
+    }
+
+    public void deleteQuestion(String id) {
+        questionRepository.deleteById(id);
     }
 }

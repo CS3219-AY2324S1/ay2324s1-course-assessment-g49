@@ -2,6 +2,7 @@ package com.peerprep.peerprepbackend.controller;
 
 import com.peerprep.peerprepbackend.dto.request.CreateQuestionRequest;
 import com.peerprep.peerprepbackend.dto.response.QuestionOverview;
+import com.peerprep.peerprepbackend.dto.response.QuestionResponse;
 import com.peerprep.peerprepbackend.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,17 @@ public class QuestionController {
     public ResponseEntity<List<QuestionOverview>> getQuestions() {
         List<QuestionOverview> questions = questionService.getQuestions();
         return ResponseEntity.ok(questions);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionResponse> getQuestion(@PathVariable final String id) {
+        QuestionResponse question = questionService.getQuestion(id);
+        return ResponseEntity.ok(question);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteQuestion(@PathVariable final String id) {
+        questionService.deleteQuestion(id);
+        return ResponseEntity.ok().build();
     }
 }
