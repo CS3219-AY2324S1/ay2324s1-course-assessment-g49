@@ -20,7 +20,12 @@ function QuestionList({ questions }) {
 				</thead>
 				<tbody>
 					{questions.map((question) => {
-						return <Question question={question} />;
+						return (
+							<Question
+								key={question.title}
+								question={question}
+							/>
+						);
 					})}
 				</tbody>
 			</table>
