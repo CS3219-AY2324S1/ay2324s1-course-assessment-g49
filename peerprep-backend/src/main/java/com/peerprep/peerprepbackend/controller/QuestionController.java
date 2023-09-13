@@ -1,10 +1,31 @@
 package com.peerprep.peerprepbackend.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.peerprep.peerprepbackend.dto.request.CreateQuestionRequest;
+import com.peerprep.peerprepbackend.dto.response.QuestionOverview;
+import com.peerprep.peerprepbackend.service.QuestionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/question")
+@RequiredArgsConstructor
 public class QuestionController {
 
+
+    private final QuestionService questionService;
+
+    @PostMapping
+    public ResponseEntity<String> createQuestion(@RequestBody final CreateQuestionRequest request) {
+        String id = questionService.createQuestion(request);
+        return ResponseEntity.status(201).body(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<QuestionOverview>> getQuestions() {
+        List<QuestionOverview> questions = questionService.getQuestions();
+        return ResponseEntity.ok(questions);
+    }
 }
