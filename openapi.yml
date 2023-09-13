@@ -1,0 +1,121 @@
+openapi: 3.0.0
+info:
+    title: Peerprep
+    description: A technical interview preparation platform and peer matching system, where students can find peers to practice whiteboard-style interview questions together
+    version: 1.0.0
+
+servers:
+    - url: http://localhost:8080
+
+paths:
+    /question:
+        post:
+            description: Creates a question
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateQuestionRequest"
+            responses:
+                '200': 
+                    description: Question successfully created
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+                                description: Id of newly created question
+                                example: "65017ab714d2e510a11d0cc9"
+        get:
+            description: Retrieves a list of all questions
+            responses:
+                '200':
+                    description: Successfully retrieved all questions
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/QuestionOverview"
+    /question/{id}:
+        get:
+            description: Retrieves a specific question
+            parameters:
+            -   name: id
+                in: path
+                required: true
+                schema: 
+                    type: string
+            responses: 
+                '200':
+                    description: Successfully retrieved question
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/QuestionResponse"
+        delete:
+            description: Deletes a specific question
+            parameters:
+            -   name: id
+                in: path
+                required: true
+                schema: 
+                  type: string
+            responses:
+                '200':
+                    description: Successfully deleted question. Empty response
+
+components:
+    schemas:
+        CreateQuestionRequest:
+            type: object
+            required: 
+                -  title
+                -  description
+                -  categories
+                -  complexity
+            properties:
+                title:
+                    type: string
+                    example: Reverse a String
+                description:
+                    type: string
+                    example: Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.
+                categories:
+                    type: array
+                    items:
+                        type: string
+                    example: [ARRAY, ALGORITHMS]
+                complexity:
+                    type: string
+                    example: MEDIUM
+        QuestionOverview:
+            type: object
+            properties:
+                title:
+                    type: string
+                    example: Reverse a String
+                categories:
+                    type: array
+                    items:
+                        type: string
+                    example: [ARRAY, ALGORITHMS]
+                complexity:
+                    type: string
+                    example: MEDIUM
+        QuestionResponse:
+            type: object
+            properties:
+                title:
+                    type: string
+                    example: Reverse a String
+                description:
+                    type: string
+                    example: Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.
+                categories:
+                    type: array
+                    items:
+                        type: string
+                    example: [ARRAY, ALGORITHMS]
+                complexity:
+                    type: string
+                    example: MEDIUM
