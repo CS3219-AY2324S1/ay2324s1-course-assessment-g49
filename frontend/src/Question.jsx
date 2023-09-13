@@ -1,14 +1,18 @@
-function Question({ question, onDelete }) {
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+
+function Question({ question, questionId, onDelete }) {
 	return (
-		<tr>
-			<td>{question.id}</td>
-			<td>{question.title}</td>
-			<td>{question.category}</td>
-			<td>{question.complexity}</td>
-			<td>{question.description}</td>
-			<td><button onClick={() => onDelete(question.id)}>delete qn</button></td>
-			
-		</tr>
+		<TableRow key={question.title}>
+			<TableCell align="center">{questionId}</TableCell>
+			<TableCell>{question.title}</TableCell>
+			<TableCell>{question.category}</TableCell>
+			<TableCell align="center">{question.complexity}</TableCell>
+			<TableCell>{question.description}</TableCell>
+			<TableCell>
+				<button onClick={() => onDelete(question.title)}>Delete </button>
+			</TableCell>
+		</TableRow>
 	);
 }
 
