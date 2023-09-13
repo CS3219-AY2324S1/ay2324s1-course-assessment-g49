@@ -22,19 +22,32 @@ function App() {
 
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		const question = {
-			id: Number(inputRefQuestionId.current.value),
-			title: inputRefTitle.current.value,
-			category: inputRefCategory.current.value,
-			complexity: inputRefComplexity.current.value,
-			description: inputRefDescription.current.value,
-		};
-		setQuestions([...questions, question]);
-		inputRefQuestionId.current.value = '';
-		inputRefTitle.current.value = '';
-		inputRefCategory.current.value = '';
-		inputRefComplexity.current.value = '';
-		inputRefDescription.current.value = '';
+
+		const id = Number(inputRefQuestionId.current.value);
+		const title = inputRefTitle.current.value;
+		const complexity = inputRefComplexity.current.value;
+		const description = inputRefDescription.current.value;
+
+		const isDuplicateQuestion =
+			storedQuestions !== null &&
+			storedQuestions.some((question) => question.title === title);
+
+		if (isDuplicateQuestion) {
+			// handle duplicate question
+		} else {
+			const newQuestion = {
+				id,
+				title,
+				complexity,
+				description,
+			};
+
+			setQuestions([...questions, newQuestion]);
+			inputRefQuestionId.current.value = '';
+			inputRefTitle.current.value = '';
+			inputRefComplexity.current.value = '';
+			inputRefDescription.current.value = '';
+		}
 	};
 
 	useEffect(() => {
@@ -65,11 +78,11 @@ function App() {
 					placeholder="Question Category"
 					ref={inputRefCategory}
 				/>
-				<input
-					type="text"
-					placeholder="Question Complexity"
-					ref={inputRefComplexity}
-				/>
+				<select name="Question Complexity" ref={inputRefComplexity}>
+					<option value="Easy">Easy</option>
+					<option value="Medium">Medium</option>
+					<option value="Hard">Hard</option>
+				</select>
 				<input
 					type="text"
 					placeholder="Question Description"
