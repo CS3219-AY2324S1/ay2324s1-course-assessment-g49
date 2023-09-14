@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import QuestionList from './QuestionList';
+import CustomSnackbar from './CustomSnackbar';
 import './App.css';
 
 function App() {
@@ -8,6 +9,9 @@ function App() {
 	const [questions, setQuestions] = useState(
 		storedQuestions !== null ? storedQuestions : []
 	);
+
+	const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+	const [snackbarMessage, setsnackbarMessage] = useState('');
 
 	/**
 	 * { id: 1, title: "question 1", category: "cat1", complexity: "easy", description: "aaa" },
@@ -19,6 +23,23 @@ function App() {
 	const inputRefComplexity = useRef(null);
 	const inputRefDescription = useRef(null);
 
+	const handleDuplicateQuestion = () => {
+		setsnackbarMessage('Duplicate question detected!');
+		setSnackbarOpen(true);
+	};
+
+	const handleEmptyInputField = () => {
+		setsnackbarMessage('Missing fields detected!');
+		setSnackbarOpen(true);
+	};
+
+	const handleSnackbarClose = (event, reason) => {
+		if (reason == 'clickaway') {
+			return;
+		}
+		setSnackbarOpen(false);
+	};
+
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
 
@@ -28,11 +49,16 @@ function App() {
 		const description = inputRefDescription.current.value;
 
 		const isDuplicateQuestion =
-			storedQuestions !== null &&
-			storedQuestions.some((question) => question.title === title);
+			questions !== null &&
+			questions.some((question) => question.title === title);
+
+		const isInputFieldEmpty =
+			!title || !complexity || !category || !description;
 
 		if (isDuplicateQuestion) {
-			// handle duplicate question
+			handleDuplicateQuestion();
+		} else if (isInputFieldEmpty) {
+			handleEmptyInputField();
 		} else {
 			const newQuestion = {
 				title,
@@ -84,6 +110,12 @@ function App() {
 				/>
 				<button>add item</button>
 			</form>
+			<CustomSnackbar
+				open={isSnackbarOpen}
+				onClose={handleSnackbarClose}
+				message={snackbarMessage}
+				severity="warning"
+			></CustomSnackbar>
 		</>
 	);
 }
