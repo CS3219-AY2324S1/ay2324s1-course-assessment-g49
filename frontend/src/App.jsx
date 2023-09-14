@@ -69,7 +69,7 @@ function App() {
 
 			setQuestions([...questions, newQuestion]);
 			inputRefTitle.current.value = '';
-			inputRefComplexity.current.value = '';
+			inputRefComplexity.current.value = 'Easy';
 			inputRefCategory.current.value = '';
 			inputRefDescription.current.value = '';
 		}
@@ -99,7 +99,9 @@ function App() {
 					ref={inputRefCategory}
 				/>
 				<select name="Question Complexity" ref={inputRefComplexity}>
-					<option value="Easy">Easy</option>
+					<option value="Easy" defaultValue>
+						Easy
+					</option>
 					<option value="Medium">Medium</option>
 					<option value="Hard">Hard</option>
 				</select>
