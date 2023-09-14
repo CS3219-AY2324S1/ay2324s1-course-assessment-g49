@@ -14,7 +14,6 @@ function App() {
 	 * { id: 2, title: "question 2", category: "cat2", complexity: "easy", description: "bbb" },
 	 */
 
-	const inputRefQuestionId = useRef(null);
 	const inputRefTitle = useRef(null);
 	const inputRefCategory = useRef(null);
 	const inputRefComplexity = useRef(null);
@@ -23,9 +22,9 @@ function App() {
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
 
-		const id = Number(inputRefQuestionId.current.value);
 		const title = inputRefTitle.current.value;
 		const complexity = inputRefComplexity.current.value;
+		const category = inputRefCategory.current.value;
 		const description = inputRefDescription.current.value;
 
 		const isDuplicateQuestion =
@@ -36,16 +35,16 @@ function App() {
 			// handle duplicate question
 		} else {
 			const newQuestion = {
-				id,
 				title,
 				complexity,
+				category,
 				description,
 			};
 
 			setQuestions([...questions, newQuestion]);
-			inputRefQuestionId.current.value = '';
 			inputRefTitle.current.value = '';
 			inputRefComplexity.current.value = '';
+			inputRefCategory.current.value = '';
 			inputRefDescription.current.value = '';
 		}
 	};
@@ -63,11 +62,6 @@ function App() {
 					handleSubmit(evt);
 				}}
 			>
-				<input
-					type="text"
-					placeholder="Question Id"
-					ref={inputRefQuestionId}
-				/>
 				<input
 					type="text"
 					placeholder="Question Title"

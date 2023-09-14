@@ -19,10 +19,11 @@ function QuestionList({ questions }) {
 					</tr>
 				</thead>
 				<tbody>
-					{questions.map((question) => {
+					{questions.map((question, index) => {
 						return (
 							<Question
 								key={question.title}
+								questionId={index + 1}
 								question={question}
 							/>
 						);
