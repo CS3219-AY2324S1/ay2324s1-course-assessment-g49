@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import QuestionList from './QuestionList';
+import CustomSnackbar from './CustomSnackbar';
 import './App.css';
 
 function App() {
@@ -9,32 +10,69 @@ function App() {
 		storedQuestions !== null ? storedQuestions : []
 	);
 
+	const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+	const [snackbarMessage, setsnackbarMessage] = useState('');
+
 	/**
 	 * { id: 1, title: "question 1", category: "cat1", complexity: "easy", description: "aaa" },
 	 * { id: 2, title: "question 2", category: "cat2", complexity: "easy", description: "bbb" },
 	 */
 
-	const inputRefQuestionId = useRef(null);
 	const inputRefTitle = useRef(null);
 	const inputRefCategory = useRef(null);
 	const inputRefComplexity = useRef(null);
 	const inputRefDescription = useRef(null);
 
+	const handleDuplicateQuestion = () => {
+		setsnackbarMessage('Duplicate question detected!');
+		setSnackbarOpen(true);
+	};
+
+	const handleEmptyInputField = () => {
+		setsnackbarMessage('Missing fields detected!');
+		setSnackbarOpen(true);
+	};
+
+	const handleSnackbarClose = (event, reason) => {
+		if (reason == 'clickaway') {
+			return;
+		}
+		setSnackbarOpen(false);
+	};
+
 	const handleSubmit = (evt) => {
 		evt.preventDefault();
-		const question = {
-			id: Number(inputRefQuestionId.current.value),
-			title: inputRefTitle.current.value,
-			category: inputRefCategory.current.value,
-			complexity: inputRefComplexity.current.value,
-			description: inputRefDescription.current.value,
-		};
-		setQuestions([...questions, question]);
-		inputRefQuestionId.current.value = '';
-		inputRefTitle.current.value = '';
-		inputRefCategory.current.value = '';
-		inputRefComplexity.current.value = '';
-		inputRefDescription.current.value = '';
+
+		const title = inputRefTitle.current.value;
+		const complexity = inputRefComplexity.current.value;
+		const category = inputRefCategory.current.value;
+		const description = inputRefDescription.current.value;
+
+		const isDuplicateQuestion =
+			questions !== null &&
+			questions.some((question) => question.title === title);
+
+		const isInputFieldEmpty =
+			!title || !complexity || !category || !description;
+
+		if (isDuplicateQuestion) {
+			handleDuplicateQuestion();
+		} else if (isInputFieldEmpty) {
+			handleEmptyInputField();
+		} else {
+			const newQuestion = {
+				title,
+				complexity,
+				category,
+				description,
+			};
+
+			setQuestions([...questions, newQuestion]);
+			inputRefTitle.current.value = '';
+			inputRefComplexity.current.value = 'Easy';
+			inputRefCategory.current.value = '';
+			inputRefDescription.current.value = '';
+		}
 	};
 
 	useEffect(() => {
@@ -52,11 +90,6 @@ function App() {
 			>
 				<input
 					type="text"
-					placeholder="Question Id"
-					ref={inputRefQuestionId}
-				/>
-				<input
-					type="text"
 					placeholder="Question Title"
 					ref={inputRefTitle}
 				/>
@@ -65,11 +98,13 @@ function App() {
 					placeholder="Question Category"
 					ref={inputRefCategory}
 				/>
-				<input
-					type="text"
-					placeholder="Question Complexity"
-					ref={inputRefComplexity}
-				/>
+				<select name="Question Complexity" ref={inputRefComplexity}>
+					<option value="Easy" defaultValue>
+						Easy
+					</option>
+					<option value="Medium">Medium</option>
+					<option value="Hard">Hard</option>
+				</select>
 				<input
 					type="text"
 					placeholder="Question Description"
@@ -77,6 +112,12 @@ function App() {
 				/>
 				<button>add item</button>
 			</form>
+			<CustomSnackbar
+				open={isSnackbarOpen}
+				onClose={handleSnackbarClose}
+				message={snackbarMessage}
+				severity="warning"
+			></CustomSnackbar>
 		</>
 	);
 }

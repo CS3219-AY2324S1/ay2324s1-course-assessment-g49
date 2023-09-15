@@ -1,7 +1,7 @@
-function Question({ question }) {
+function Question({ question, questionId }) {
 	return (
 		<tr>
-			<td>{question.id}</td>
+			<td>{questionId}</td>
 			<td>{question.title}</td>
 			<td>{question.category}</td>
 			<td>{question.complexity}</td>
