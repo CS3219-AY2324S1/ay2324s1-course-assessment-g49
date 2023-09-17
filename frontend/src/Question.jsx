@@ -1,5 +1,4 @@
 function Question({ question, onDelete }) {
-
 	return (
 		<tr>
 			<td>{question.id}</td>
