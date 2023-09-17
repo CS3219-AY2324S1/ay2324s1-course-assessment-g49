@@ -1,4 +1,5 @@
-function Question({ question }) {
+function Question({ question, onDelete }) {
+
 	return (
 		<tr>
 			<td>{question.id}</td>
@@ -6,6 +7,8 @@ function Question({ question }) {
 			<td>{question.category}</td>
 			<td>{question.complexity}</td>
 			<td>{question.description}</td>
+			<td><button onClick={() => onDelete(question.id)}>delete qn</button></td>
+			
 		</tr>
 	);
 }
