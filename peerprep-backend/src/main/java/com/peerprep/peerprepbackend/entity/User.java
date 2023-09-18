@@ -1,8 +1,10 @@
 package com.peerprep.peerprepbackend.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Entity class representing a user profile row in PostgreSQL
@@ -12,6 +14,8 @@ import lombok.Data;
 @Data
 @Builder
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -21,6 +25,5 @@ public class User {
     private String username;
     private String email;
     private String country;
-
-    protected User() {}
+    private String password;
 }
