@@ -2,6 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import QuestionList from './QuestionList';
 import CustomSnackbar from './CustomSnackbar';
 import './App.css';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 function App() {
 	const storedQuestions = JSON.parse(localStorage.getItem('questions'));
@@ -75,55 +80,87 @@ function App() {
 		}
 	};
 
-	const handleDelete = (id) => {
-		const updatedList = questions.filter(item => item.id !== id);
+	const handleDelete = (title) => {
+		const updatedList = questions.filter((item) => item.title !== title);
 		setQuestions(updatedList);
-		localStorage.setItem("questions", JSON.stringify(updatedList));
-	}
+		localStorage.setItem('questions', JSON.stringify(updatedList));
+	};
 
 	useEffect(() => {
 		localStorage.setItem('questions', JSON.stringify(questions));
 	}, [questions]);
+	const complexityLevels = ['Easy', 'Medium', 'Hard'];
 
 	return (
 		<>
 			<h1>Peerprep</h1>
-			<QuestionList questions={questions} onDelete = {handleDelete}/>
-			<form
-				onSubmit={(evt) => {
-					handleSubmit(evt);
-				}}
-			>
-				<input
-					type="text"
-					placeholder="Question Title"
-					ref={inputRefTitle}
-				/>
-				<input
-					type="text"
-					placeholder="Question Category"
-					ref={inputRefCategory}
-				/>
-				<select name="Question Complexity" ref={inputRefComplexity}>
-					<option value="Easy" defaultValue>
-						Easy
-					</option>
-					<option value="Medium">Medium</option>
-					<option value="Hard">Hard</option>
-				</select>
-				<input
-					type="text"
-					placeholder="Question Description"
-					ref={inputRefDescription}
-				/>
-				<button>add item</button>
-			</form>
-			<CustomSnackbar
-				open={isSnackbarOpen}
-				onClose={handleSnackbarClose}
-				message={snackbarMessage}
-				severity="warning"
-			></CustomSnackbar>
+			<Box direction="column">
+				<Box mb={2}>
+					<form
+						onSubmit={(evt) => {
+							handleSubmit(evt);
+						}}
+					>
+						<Stack spacing={2} direction="row">
+							<TextField
+								className="textField same-width-textfield"
+								id="Question Title"
+								label="Question Title"
+								variant="filled"
+								inputRef={inputRefTitle}
+							></TextField>
+							<TextField
+								className="textField same-width-textfield"
+								id="Question Category"
+								label="Question Category"
+								variant="filled"
+								inputRef={inputRefCategory}
+							></TextField>
+							<TextField
+								select
+								name="Question Complexity"
+								label="Question Complexity"
+								variant="filled"
+								defaultValue="Easy"
+								inputRef={inputRefComplexity}
+								className="textField same-width-textfield"
+							>
+								{complexityLevels.map((option) => (
+									<MenuItem value={option} key={option}>
+										{option}
+									</MenuItem>
+								))}
+							</TextField>
+							<TextField
+								className="textField same-width-textfield"
+								id="Question Description"
+								label="Question Description"
+								variant="filled"
+								inputRef={inputRefDescription}
+							></TextField>
+							<Button
+								type="submit"
+								variant="contained"
+								className="same-width-textfield"
+							>
+								Add Item
+							</Button>
+						</Stack>
+					</form>
+				</Box>
+				<Box mb={2}>
+					<QuestionList
+						questions={questions}
+						onDelete={handleDelete}
+					/>
+				</Box>
+				<CustomSnackbar
+					open={isSnackbarOpen}
+					onClose={handleSnackbarClose}
+					message={snackbarMessage}
+					severity="warning"
+				></CustomSnackbar>
+			</Box>
 		</>
 	);
 }
