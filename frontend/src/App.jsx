@@ -75,6 +75,12 @@ function App() {
 		}
 	};
 
+	const handleDelete = (id) => {
+		const updatedList = questions.filter(item => item.id !== id);
+		setQuestions(updatedList);
+		localStorage.setItem("questions", JSON.stringify(updatedList));
+	}
+
 	useEffect(() => {
 		localStorage.setItem('questions', JSON.stringify(questions));
 	}, [questions]);
@@ -82,7 +88,7 @@ function App() {
 	return (
 		<>
 			<h1>Peerprep</h1>
-			<QuestionList questions={questions} />
+			<QuestionList questions={questions} onDelete = {handleDelete}/>
 			<form
 				onSubmit={(evt) => {
 					handleSubmit(evt);

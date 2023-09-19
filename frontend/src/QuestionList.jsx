@@ -1,6 +1,6 @@
 import Question from './Question';
 
-function QuestionList({ questions }) {
+function QuestionList({ questions, onDelete }) {
 	/**const [questions, setQuestions] = useState([
     { id: 1, title: "question 1", category: "cat1", complexity: "easy", description: "aaa" },
     { id: 2, title: "question 2", category: "cat2", complexity: "easy", description: "bbb" },
@@ -25,6 +25,7 @@ function QuestionList({ questions }) {
 								key={question.title}
 								questionId={index + 1}
 								question={question}
+								onDelete={onDelete}
 							/>
 						);
 					})}
