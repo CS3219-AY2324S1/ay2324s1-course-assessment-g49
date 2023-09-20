@@ -5,9 +5,9 @@ import lombok.Value;
 
 @Value
 @NoArgsConstructor(force = true)
-public class LoginRequest {
-
+public class UpdateUserRequest {
     String username;
+    String email;
+    String country;
     String password;
-
 }

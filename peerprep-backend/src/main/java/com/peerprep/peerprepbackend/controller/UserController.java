@@ -1,6 +1,7 @@
 package com.peerprep.peerprepbackend.controller;
 
 import com.peerprep.peerprepbackend.dto.request.CreateUserRequest;
+import com.peerprep.peerprepbackend.dto.request.UpdateUserRequest;
 import com.peerprep.peerprepbackend.dto.response.UserResponse;
 import com.peerprep.peerprepbackend.exception.EmailExistsException;
 import com.peerprep.peerprepbackend.exception.UsernameExistsException;
@@ -41,5 +42,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable final String id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<String> updateUser(@PathVariable final String id, @RequestBody final UpdateUserRequest request) throws UsernameExistsException, EmailExistsException {
+        userService.updateUser(id, request);
+        return ResponseEntity.ok(id);
     }
 }
