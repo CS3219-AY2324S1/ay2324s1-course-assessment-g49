@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Grid';
 import VerticalNavBar from './VerticalNavBar';
 import PastSubmissions from './PastSubmissions';
 import EditProfile from './EditProfile';
@@ -23,13 +23,17 @@ function ProfilePage() {
 	};
 
 	return (
-		<Stack direction="row" spacing={5}>
-			<VerticalNavBar
-				selectedTab={selectedTab}
-				onSelectTab={setSelectedTab}
-			/>
-			<Box>{renderPanel()}</Box>
-		</Stack>
+		<Grid container spacing={5}>
+			<Grid item xs={3}>
+				<VerticalNavBar
+					selectedTab={selectedTab}
+					onSelectTab={setSelectedTab}
+				/>
+			</Grid>
+			<Grid item xs={9}>
+				{renderPanel()}
+			</Grid>
+		</Grid>
 	);
 }
 
