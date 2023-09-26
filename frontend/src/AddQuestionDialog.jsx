@@ -12,6 +12,7 @@ import {
 	Box,
 } from '@mui/material';
 import CustomSnackbar from './CustomSnackbar';
+import axios from 'axios';
 
 function AddQuestionDialog({ onAddQuestion }) {
 	const storedQuestions = JSON.parse(localStorage.getItem('questions'));
@@ -23,7 +24,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 	const inputRefComplexity = useRef(null);
 	const inputRefDescription = useRef(null);
 
-	const complexityLevels = ['Easy', 'Medium', 'Hard'];
+	const complexityLevels = ['EASY', 'MEDIUM', 'HARD'];
 
 	const [open, setOpen] = useState(false);
 
@@ -55,12 +56,12 @@ function AddQuestionDialog({ onAddQuestion }) {
 		setSnackbarOpen(false);
 	};
 
-	const handleSubmit = (evt) => {
+	const handleSubmit = async (evt) => {
 		evt.preventDefault();
 
 		const title = inputRefTitle.current.value;
 		const complexity = inputRefComplexity.current.value;
-		const category = inputRefCategory.current.value;
+		const categories = inputRefCategory.current.value.split(", ");
 		const description = inputRefDescription.current.value;
 
 		const isDuplicateQuestion =
@@ -68,7 +69,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 			questions.some((question) => question.title === title);
 
 		const isInputFieldEmpty =
-			!title || !complexity || !category || !description;
+			!title || !complexity || !categories || !description;
 
 		if (isDuplicateQuestion) {
 			handleDuplicateQuestion();
@@ -78,17 +79,18 @@ function AddQuestionDialog({ onAddQuestion }) {
 			const newQuestion = {
 				title,
 				complexity,
-				category,
+				categories,
 				description,
 			};
-			onAddQuestion(newQuestion);
+			await axios.post("http://localhost:8080/question", newQuestion);
+			onAddQuestion();
 			handleClose();
 		}
 	};
 
 	useEffect(() => {
-		localStorage.setItem('questions', JSON.stringify(questions));
-	}, [questions]);
+		onAddQuestion();
+	}, []);
 
 	return (
 		<div>
@@ -131,7 +133,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 									name="Question Complexity"
 									label="Question Complexity"
 									variant="filled"
-									defaultValue="Easy"
+									defaultValue={complexityLevels[0]}
 									inputRef={inputRefComplexity}
 									className="textField same-width-textfield"
 								>
