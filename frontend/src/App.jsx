@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+import Theme from './themes/Theme';
 
 function App() {
 	const storedQuestions = JSON.parse(localStorage.getItem('questions'));
@@ -17,11 +18,6 @@ function App() {
 
 	const [isSnackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setsnackbarMessage] = useState('');
-
-	/**
-	 * { id: 1, title: "question 1", category: "cat1", complexity: "easy", description: "aaa" },
-	 * { id: 2, title: "question 2", category: "cat2", complexity: "easy", description: "bbb" },
-	 */
 
 	const inputRefTitle = useRef(null);
 	const inputRefCategory = useRef(null);
@@ -89,78 +85,81 @@ function App() {
 	useEffect(() => {
 		localStorage.setItem('questions', JSON.stringify(questions));
 	}, [questions]);
+
 	const complexityLevels = ['Easy', 'Medium', 'Hard'];
 
 	return (
 		<>
-			<h1>Peerprep</h1>
-			<Box direction="column">
-				<Box mb={2}>
-					<form
-						onSubmit={(evt) => {
-							handleSubmit(evt);
-						}}
-					>
-						<Stack spacing={2} direction="row">
-							<TextField
-								className="textField same-width-textfield"
-								id="Question Title"
-								label="Question Title"
-								variant="filled"
-								inputRef={inputRefTitle}
-							></TextField>
-							<TextField
-								className="textField same-width-textfield"
-								id="Question Category"
-								label="Question Category"
-								variant="filled"
-								inputRef={inputRefCategory}
-							></TextField>
-							<TextField
-								select
-								name="Question Complexity"
-								label="Question Complexity"
-								variant="filled"
-								defaultValue="Easy"
-								inputRef={inputRefComplexity}
-								className="textField same-width-textfield"
-							>
-								{complexityLevels.map((option) => (
-									<MenuItem value={option} key={option}>
-										{option}
-									</MenuItem>
-								))}
-							</TextField>
-							<TextField
-								className="textField same-width-textfield"
-								id="Question Description"
-								label="Question Description"
-								variant="filled"
-								inputRef={inputRefDescription}
-							></TextField>
-							<Button
-								type="submit"
-								variant="contained"
-								className="same-width-textfield"
-							>
-								Add Item
-							</Button>
-						</Stack>
-					</form>
+			<Theme>
+				<h1>Peerprep</h1>
+				<Box direction="column">
+					<Box mb={2}>
+						<form
+							onSubmit={(evt) => {
+								handleSubmit(evt);
+							}}
+						>
+							<Stack spacing={2} direction="row">
+								<TextField
+									className="textField same-width-textfield"
+									id="Question Title"
+									label="Question Title"
+									variant="filled"
+									inputRef={inputRefTitle}
+								></TextField>
+								<TextField
+									className="textField same-width-textfield"
+									id="Question Category"
+									label="Question Category"
+									variant="filled"
+									inputRef={inputRefCategory}
+								></TextField>
+								<TextField
+									select
+									name="Question Complexity"
+									label="Question Complexity"
+									variant="filled"
+									defaultValue="Easy"
+									inputRef={inputRefComplexity}
+									className="textField same-width-textfield"
+								>
+									{complexityLevels.map((option) => (
+										<MenuItem value={option} key={option}>
+											{option}
+										</MenuItem>
+									))}
+								</TextField>
+								<TextField
+									className="textField same-width-textfield"
+									id="Question Description"
+									label="Question Description"
+									variant="filled"
+									inputRef={inputRefDescription}
+								></TextField>
+								<Button
+									type="submit"
+									variant="contained"
+									className="same-width-textfield"
+								>
+									Add Item
+								</Button>
+							</Stack>
+						</form>
+					</Box>
+					<Box mb={2}>
+						<QuestionList
+							questions={questions}
+							onDelete={handleDelete}
+						/>
+					</Box>
+					<CustomSnackbar
+						open={isSnackbarOpen}
+						onClose={handleSnackbarClose}
+						message={snackbarMessage}
+						severity="warning"
+					></CustomSnackbar>
 				</Box>
-				<Box mb={2}>
-					<QuestionList
-						questions={questions}
-						onDelete={handleDelete}
-					/>
-				</Box>
-				<CustomSnackbar
-					open={isSnackbarOpen}
-					onClose={handleSnackbarClose}
-					message={snackbarMessage}
-					severity="warning"
-				></CustomSnackbar>
-			</Box>
+			</Theme>
 		</>
 	);
 }
