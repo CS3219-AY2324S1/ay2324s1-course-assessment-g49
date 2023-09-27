@@ -6,10 +6,17 @@ info:
 
 servers:
   - url: http://localhost:8080
+tags:
+  - name: questions
+    description: Operations about questions
+  - name: users
+    description: Operations about users
 
 paths:
   /question:
     post:
+      tags:
+        - questions
       description: Creates a question
       requestBody:
         content:
@@ -26,6 +33,8 @@ paths:
                 description: Id of newly created question
                 example: "65017ab714d2e510a11d0cc9"
     get:
+      tags:
+        - questions
       description: Retrieves a list of all questions
       responses:
         '200':
@@ -38,6 +47,8 @@ paths:
                   $ref: "#/components/schemas/QuestionOverview"
   /question/{id}:
     get:
+      tags:
+        - questions
       description: Retrieves a specific question
       parameters:
         - name: id
@@ -53,6 +64,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/QuestionResponse"
     delete:
+      tags:
+        - questions
       description: Deletes a specific question
       parameters:
         - name: id
@@ -65,6 +78,8 @@ paths:
           description: Successfully deleted question. Empty response
   /users:
     post:
+      tags:
+        - users
       description: Creates a user
       requestBody:
         content:
@@ -81,6 +96,8 @@ paths:
                 description: Id of newly created user
                 example: 1
     get:
+      tags:
+        - users
       description: Retrieves a list of all users
       responses:
         '200':
@@ -93,6 +110,8 @@ paths:
                   $ref: "#/components/schemas/UserResponse"
   /users/{id}:
     get:
+      tags:
+        - users
       description: Retrieves a specific user
       parameters:
         - name: id
@@ -108,6 +127,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserResponse"
     patch:
+      tags:
+        - users
       description: Updates a specific user
       parameters:
         - name: id
@@ -131,6 +152,8 @@ paths:
                 example: 1
 
     delete:
+      tags:
+        - users
       description: Deletes a specific user
       parameters:
         - name: id
