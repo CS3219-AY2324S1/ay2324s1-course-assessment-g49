@@ -1,6 +1,7 @@
 package com.peerprep.peerprepbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +23,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "username is mandatory")
     private String username;
+    @NotBlank(message = "email is mandatory")
     private String email;
+    @NotBlank(message = "country is mandatory")
     private String country;
+    @NotBlank(message = "password is mandatory")
     private String password;
 }
