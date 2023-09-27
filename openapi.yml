@@ -102,11 +102,34 @@ paths:
             type: string
       responses:
         '200':
-          description: Successfully retrieved question
+          description: Successfully retrieved user
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserResponse"
+    patch:
+      description: Updates a specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        '200':
+          description: Successfully updated user
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Id of updated user
+                example: 1
+
     delete:
       description: Deletes a specific user
       parameters:
@@ -195,6 +218,15 @@ components:
         password:
           type: string
           example: applepassword
+    UpdateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: orange
+        country:
+          type: string
+          example: Malaysia
     UserResponse:
       type: object
       properties:
