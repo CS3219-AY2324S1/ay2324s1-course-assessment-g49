@@ -6,6 +6,7 @@ import com.peerprep.peerprepbackend.dto.response.UserResponse;
 import com.peerprep.peerprepbackend.exception.EmailExistsException;
 import com.peerprep.peerprepbackend.exception.UsernameExistsException;
 import com.peerprep.peerprepbackend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody final CreateUserRequest request) throws UsernameExistsException, EmailExistsException {
+    public ResponseEntity<String> createUser(@Valid @RequestBody final CreateUserRequest request) throws UsernameExistsException, EmailExistsException {
         Long id = userService.createUser(request);
         return ResponseEntity.status(201).body(Long.toString(id));
     }
