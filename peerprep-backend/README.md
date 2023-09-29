@@ -3,9 +3,10 @@
 Backend component of PeerPrep
 
 ### Requirements
+
 1. MongoDB - https://www.mongodb.com/docs/manual/administration/install-community/
-2. PostgreSQL
-2. JDK 20
+2. PostgreSQL - https://www.postgresql.org/download/
+3. JDK 20
 
 ### Running the backend
 
