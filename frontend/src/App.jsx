@@ -1,62 +1,39 @@
-import { useState, useEffect } from "react";
-import QuestionList from "./components/QuestionList";
-import "./App.css";
-import Box from "@mui/material/Box";
-import axios from "axios";
-import AddQuestionDialog from "./components/AddQuestionDialog";
-import Theme from "./themes/Theme";
-import { reverseCategoryMapping } from "./utils/QuestionUtil";
+import './App.css';
+import { Grid } from '@mui/material';
+import Theme from './themes/Theme';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
+import NavBar from './components/NavBar';
+import Home from './pages/Home';
+import QuestionsRepo from './pages/QuestionsRepo';
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
-  const databaseURL = import.meta.env.VITE_DATABASE_URL;
-  const [questions, setQuestions] = useState([]);
-  const loadQuestions = async () => {
-    const questions = await axios.get(`${databaseURL}/question`);
-    for (let i = 0; i < questions.data.length; i++) {
-      let question = questions.data[i];
-      for (let j = 0; j < question.categories.length; j++) {
-        question.categories[j] = reverseCategoryMapping[question.categories[j]];
-      }
-    }
-    setQuestions(questions.data);
-  };
-
-  const handleDelete = async (id) => {
-    await axios.delete(`${databaseURL}/question/${id}`);
-    loadQuestions();
-  };
-
-  const handleEdit = async (id, fieldsToUpdate) => {
-    await axios.patch(`${databaseURL}/question/${id}`, fieldsToUpdate);
-    loadQuestions();
-  };
-
-  useEffect(() => {
-    loadQuestions();
-  }, []);
-
-  return (
-    <>
-      <Theme>
-        <h1>Peerprep</h1>
-        <Box direction="column">
-          <Box mb={2}>
-            <AddQuestionDialog
-              questions={questions}
-              onAddQuestion={loadQuestions}
-            />
-          </Box>
-          <Box mb={2}>
-            <QuestionList
-              questions={questions}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          </Box>
-        </Box>
-      </Theme>
-    </>
-  );
+	return (
+		<>
+			<Theme>
+				<Grid container direction="column">
+					<Grid item xs={12}>
+						<NavBar />
+					</Grid>
+					<Grid container>
+						<Grid item xs={12}>
+							<Routes>
+								<Route path="/" element={<Home />} />
+								<Route
+									path="/profile"
+									element={<ProfilePage />}
+								/>
+								<Route
+									path="/questions"
+									element={<QuestionsRepo />}
+								/>
+							</Routes>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Theme>
+		</>
+	);
 }
 
 export default App;

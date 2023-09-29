@@ -1,236 +1,170 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
 import {
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  MenuItem,
-  Box,
-  InputLabel,
-  Select,
-  Chip,
-} from "@mui/material";
-import CustomSnackbar from "./CustomSnackbar";
-import axios from "axios";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import Editor from "./Editor";
-import {
-  categoriesOptions,
-  categoryMapping,
-  complexityOptions,
-} from "../utils/QuestionUtil";
+	Button,
+	TextField,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	Stack,
+	MenuItem,
+	Box,
+} from '@mui/material';
+import CustomSnackbar from './CustomSnackbar';
 
-function AddQuestionDialog({ questions, onAddQuestion }) {
-  const databaseURL = import.meta.env.VITE_DATABASE_URL;
-  const inputRefs = {
-    title: useRef(null),
-  };
+function AddQuestionDialog({ onAddQuestion }) {
+	const storedQuestions = JSON.parse(localStorage.getItem('questions'));
 
-  const fieldOptions = {
-    complexity: complexityOptions,
-    categories: categoriesOptions,
-  };
+	const questions = storedQuestions !== null ? storedQuestions : [];
 
-  const [complexity, setComplexity] = useState(fieldOptions["complexity"][0]);
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setsnackbarMessage] = useState("");
+	const inputRefTitle = useRef(null);
+	const inputRefCategory = useRef(null);
+	const inputRefComplexity = useRef(null);
+	const inputRefDescription = useRef(null);
 
-  const handleSelectChange = (event, id) => {
-    const {
-      target: { value },
-    } = event;
-    setCategory(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+	const complexityLevels = ['Easy', 'Medium', 'Hard'];
 
-  const handleClickOpen = () => {
-    setOpenDialog(true);
-  };
+	const [open, setOpen] = useState(false);
 
-  const handleClose = () => {
-    setDescription("");
-    setCategory([]);
-    setComplexity(fieldOptions["complexity"][0]);
-    setOpenDialog(false);
-  };
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
 
-  const handleDuplicateQuestion = () => {
-    setsnackbarMessage("Duplicate question detected!");
-    setSnackbarOpen(true);
-  };
+	const handleClose = () => {
+		setOpen(false);
+	};
 
-  const handleEmptyInputField = () => {
-    setsnackbarMessage("Missing fields detected!");
-    setSnackbarOpen(true);
-  };
+	const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+	const [snackbarMessage, setsnackbarMessage] = useState('');
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason == "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
+	const handleDuplicateQuestion = () => {
+		setsnackbarMessage('Duplicate question detected!');
+		setSnackbarOpen(true);
+	};
 
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
+	const handleEmptyInputField = () => {
+		setsnackbarMessage('Missing fields detected!');
+		setSnackbarOpen(true);
+	};
 
-    const title = inputRefs["title"].current.value.trim();
-    const categories = category;
-    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
+	const handleSnackbarClose = (event, reason) => {
+		if (reason == 'clickaway') {
+			return;
+		}
+		setSnackbarOpen(false);
+	};
 
-    const isDuplicateQuestion = questions.some(
-      (question) => question.title.toLowerCase() === title.toLowerCase()
-    );
+	const handleSubmit = (evt) => {
+		evt.preventDefault();
 
-    const isInputFieldEmpty =
-      !title ||
-      !complexity ||
-      categories.length == 0 ||
-      descriptionClean.length == 0;
+		const title = inputRefTitle.current.value;
+		const complexity = inputRefComplexity.current.value;
+		const category = inputRefCategory.current.value;
+		const description = inputRefDescription.current.value;
 
-    if (isDuplicateQuestion) {
-      handleDuplicateQuestion();
-    } else if (isInputFieldEmpty) {
-      handleEmptyInputField();
-    } else {
-      for (let i = 0; i < categories.length; i++) {
-        categories[i] = categoryMapping[categories[i]];
-      }
+		const isDuplicateQuestion =
+			questions !== null &&
+			questions.some((question) => question.title === title);
 
-      const newQuestion = {
-        title,
-        complexity,
-        categories,
-        description,
-      };
+		const isInputFieldEmpty =
+			!title || !complexity || !category || !description;
 
-      await axios.post(`${databaseURL}/question`, newQuestion);
-      onAddQuestion();
-      setCategory([]);
-      setComplexity(fieldOptions["complexity"][0]);
-      handleClose();
-    }
-  };
+		if (isDuplicateQuestion) {
+			handleDuplicateQuestion();
+		} else if (isInputFieldEmpty) {
+			handleEmptyInputField();
+		} else {
+			const newQuestion = {
+				title,
+				complexity,
+				category,
+				description,
+			};
+			onAddQuestion(newQuestion);
+			handleClose();
+		}
+	};
 
-  const renderSelectField = (state, id, label, multiple, handleChange) => (
-    <>
-      <InputLabel>{label}</InputLabel>
-      <Select
-        multiple={multiple}
-        value={state}
-        onChange={handleChange}
-        renderValue={(selected) => (
-          <>
-            {multiple ? (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            ) : (
-              selected
-            )}
-          </>
-        )}
-      >
-        {renderOptions(id)}
-      </Select>
-    </>
-  );
+	useEffect(() => {
+		localStorage.setItem('questions', JSON.stringify(questions));
+	}, [questions]);
 
-  const renderTextField = (id, label) => (
-    <TextField
-      className="textField same-width-textfield"
-      id={id}
-      label={label}
-      variant="filled"
-      inputRef={inputRefs[id]}
-    ></TextField>
-  );
+	return (
+		<div>
+			<Button variant="contained" onClick={handleClickOpen}>
+				Add a Question
+			</Button>
+			<Dialog open={open} onClose={handleClose}>
+				<DialogTitle>Add Question</DialogTitle>
+				<DialogContent>
+					<Box direction="column">
+						<Box mb={2}>
+							<DialogContentText>
+								To add a new question, please enter all details
+								below.
+							</DialogContentText>
+						</Box>
 
-  const renderOptions = (id) => {
-    const options = fieldOptions[id];
-    return options.map((option) => (
-      <MenuItem value={option} key={option}>
-        {option}
-      </MenuItem>
-    ));
-  };
-
-  useEffect(() => {
-    onAddQuestion();
-  }, []);
-
-  return (
-    <div>
-      <Button variant="contained" onClick={handleClickOpen}>
-        Add a Question
-      </Button>
-      <Dialog open={openDialog} onClose={handleClose}>
-        <DialogTitle>Add Question</DialogTitle>
-        <DialogContent>
-          <Box direction="column">
-            <Box mb={2}>
-              <DialogContentText>
-                To add a new question, please enter all details below.
-              </DialogContentText>
-            </Box>
-
-            <form
-              onSubmit={(evt) => {
-                handleSubmit(evt);
-              }}
-            >
-              <Stack spacing={2}>
-                {renderTextField("title", "Question Title")}
-                {renderSelectField(
-                  complexity,
-                  "complexity",
-                  "Question Complexity",
-                  false,
-                  (e) => setComplexity(e.target.value)
-                )}
-                {renderSelectField(
-                  category,
-                  "categories",
-                  "Question Category",
-                  true,
-                  handleSelectChange
-                )}
-                <DialogContentText>Question Description</DialogContentText>
-                <ReactQuill
-                  theme="snow"
-                  value={description}
-                  onChange={setDescription}
-                  modules={Editor.modules}
-                  formats={Editor.formats}
-                />
-              </Stack>
-            </form>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Add Question</Button>
-        </DialogActions>
-      </Dialog>
-      <CustomSnackbar
-        open={isSnackbarOpen}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        severity="warning"
-      ></CustomSnackbar>
-    </div>
-  );
+						<form
+							onSubmit={(evt) => {
+								handleSubmit(evt);
+							}}
+						>
+							<Stack spacing={2}>
+								<TextField
+									className="textField same-width-textfield"
+									id="Question Title"
+									label="Question Title"
+									variant="filled"
+									inputRef={inputRefTitle}
+								></TextField>
+								<TextField
+									className="textField same-width-textfield"
+									id="Question Category"
+									label="Question Category"
+									variant="filled"
+									inputRef={inputRefCategory}
+								></TextField>
+								<TextField
+									select
+									name="Question Complexity"
+									label="Question Complexity"
+									variant="filled"
+									defaultValue="Easy"
+									inputRef={inputRefComplexity}
+									className="textField same-width-textfield"
+								>
+									{complexityLevels.map((option) => (
+										<MenuItem value={option} key={option}>
+											{option}
+										</MenuItem>
+									))}
+								</TextField>
+								<TextField
+									className="textField same-width-textfield"
+									id="Question Description"
+									label="Question Description"
+									variant="filled"
+									inputRef={inputRefDescription}
+								></TextField>
+							</Stack>
+						</form>
+					</Box>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose}>Cancel</Button>
+					<Button onClick={handleSubmit}>Add Question</Button>
+				</DialogActions>
+			</Dialog>
+			<CustomSnackbar
+				open={isSnackbarOpen}
+				onClose={handleSnackbarClose}
+				message={snackbarMessage}
+				severity="warning"
+			></CustomSnackbar>
+		</div>
+	);
 }
+
 export default AddQuestionDialog;

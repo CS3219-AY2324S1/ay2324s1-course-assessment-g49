@@ -1,12 +1,7 @@
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Button, IconButton, TextField, Grid, Typography } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
 
 function EditProfile() {
 	const [showPassword, setShowPassword] = useState(false);
