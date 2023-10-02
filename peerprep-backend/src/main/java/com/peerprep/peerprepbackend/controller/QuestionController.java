@@ -4,6 +4,7 @@ import com.peerprep.peerprepbackend.dto.request.CreateQuestionRequest;
 import com.peerprep.peerprepbackend.dto.response.QuestionOverview;
 import com.peerprep.peerprepbackend.dto.response.QuestionResponse;
 import com.peerprep.peerprepbackend.service.QuestionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity<String> createQuestion(@RequestBody final CreateQuestionRequest request) {
+    public ResponseEntity<String> createQuestion(@RequestBody @Valid final CreateQuestionRequest request) {
         String id = questionService.createQuestion(request);
         return ResponseEntity.status(201).body(id);
     }
