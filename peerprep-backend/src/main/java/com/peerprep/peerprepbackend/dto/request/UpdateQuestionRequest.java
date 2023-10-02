@@ -5,7 +5,6 @@ import com.peerprep.peerprepbackend.common.Complexity;
 import jakarta.validation.constraints.Size;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
 
