@@ -1,6 +1,7 @@
 package com.peerprep.peerprepbackend.controller;
 
 import com.peerprep.peerprepbackend.dto.request.CreateQuestionRequest;
+import com.peerprep.peerprepbackend.dto.request.UpdateQuestionRequest;
 import com.peerprep.peerprepbackend.dto.response.QuestionOverview;
 import com.peerprep.peerprepbackend.dto.response.QuestionResponse;
 import com.peerprep.peerprepbackend.service.QuestionService;
@@ -40,6 +41,12 @@ public class QuestionController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable final String id) {
         questionService.deleteQuestion(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateQuestion(@PathVariable final String id, @RequestBody @Valid final UpdateQuestionRequest request) {
+        questionService.updateQuestion(id, request);
         return ResponseEntity.ok().build();
     }
 }
