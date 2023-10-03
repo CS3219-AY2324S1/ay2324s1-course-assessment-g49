@@ -3,6 +3,7 @@ import './App.css';
 import QuestionList from './QuestionList';
 import AddQuestionDialog from './AddQuestionDialog';
 import Box from '@mui/material/Box';
+import Theme from './themes/Theme';
 
 function App() {
 	const storedQuestions = JSON.parse(localStorage.getItem('questions'));
@@ -27,18 +28,20 @@ function App() {
 
 	return (
 		<>
-			<h1>Peerprep</h1>
-			<Box direction="column">
-				<Box mb={2}>
-					<AddQuestionDialog onAddQuestion={handleNewQuestion} />
+			<Theme>
+				<h1>Peerprep</h1>
+				<Box direction="column">
+					<Box mb={2}>
+						<AddQuestionDialog onAddQuestion={handleNewQuestion} />
+					</Box>
+					<Box mb={2}>
+						<QuestionList
+							questions={questions}
+							onDelete={handleDelete}
+						/>
+					</Box>
 				</Box>
-				<Box mb={2}>
-					<QuestionList
-						questions={questions}
-						onDelete={handleDelete}
-					/>
-				</Box>
-			</Box>
+			</Theme>
 		</>
 	);
 }
