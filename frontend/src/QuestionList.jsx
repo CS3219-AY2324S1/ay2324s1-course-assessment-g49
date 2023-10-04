@@ -22,9 +22,6 @@ function QuestionList({ questions, onDelete }) {
 							<TableCell align="center">
 								Question Complexity
 							</TableCell>
-							<TableCell align="center">
-								Question Description
-							</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
