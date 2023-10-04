@@ -23,8 +23,7 @@ function Question({ question, questionId, onDelete }) {
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Question Description</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              <div dangerouslySetInnerHTML={{ __html: question.description }} />
+            <DialogContentText dangerouslySetInnerHTML={{ __html: question.description }}>
             </DialogContentText>
           </DialogContent>
           <DialogActions>
