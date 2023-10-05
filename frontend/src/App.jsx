@@ -19,14 +19,8 @@ function App() {
 						<Grid item xs={12}>
 							<Routes>
 								<Route path="/" element={<Home />} />
-								<Route
-									path="/profile"
-									element={<ProfilePage />}
-								/>
-								<Route
-									path="/questions"
-									element={<QuestionsRepo />}
-								/>
+								<Route path="/profile" element={<ProfilePage />} />
+								<Route path="/questions" element={<QuestionsRepo />} />
 							</Routes>
 						</Grid>
 					</Grid>

@@ -10,9 +10,7 @@ function Question({ question, questionId, onDelete }) {
 			<TableCell align="center">{question.complexity}</TableCell>
 			<TableCell>{question.description}</TableCell>
 			<TableCell>
-				<button onClick={() => onDelete(question.title)}>
-					Delete{' '}
-				</button>
+				<button onClick={() => onDelete(question.title)}>Delete</button>
 			</TableCell>
 		</TableRow>
 	);
