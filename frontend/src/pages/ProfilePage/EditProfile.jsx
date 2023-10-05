@@ -12,6 +12,7 @@ import CustomSnackbar from '../../components/CustomSnackbar';
 import axios from 'axios';
 
 function EditProfile() {
+	const userId = 'userId'; // TODO: obtain user id after logging in
 	const [showPassword, setShowPassword] = useState(false);
 	const handleClickShowPassword = () => setShowPassword((show) => !show);
 	const inputRefs = {
@@ -42,7 +43,7 @@ function EditProfile() {
 	*/
 	const fetchData = async () => {
 		try {
-			const response = await axios.get('http://localhost:8080/users/1');
+			const response = await axios.get(`http://localhost:8080/users/${userId}`);
 			setUserData(response.data);
 			setOldUserData(response.data);
 		} catch (error) {
@@ -87,7 +88,10 @@ function EditProfile() {
 				return acc;
 			}, {});
 
-			await axios.patch('http://localhost:8080/users/1', fieldsToUpdate);
+			await axios.patch(
+				`http://localhost:8080/users/${userId}`,
+				fieldsToUpdate
+			);
 
 			if (Object.keys(fieldsToUpdate).length > 0) {
 				setOldUserData(fieldsToUpdate);
@@ -113,7 +117,7 @@ function EditProfile() {
 			<TextField
 				label={label}
 				name={name}
-				value={userData[name] || 'placeholderpassword'}
+				value={userData[name] || 'placeholder'}
 				variant="filled"
 				fullWidth
 				type={type}
