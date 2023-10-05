@@ -6,6 +6,7 @@ import com.peerprep.peerprepbackend.dto.request.CreateUserRequest;
 import com.peerprep.peerprepbackend.dto.request.UpdateUserRequest;
 import com.peerprep.peerprepbackend.dto.response.LoginResponse;
 import com.peerprep.peerprepbackend.dto.response.UserResponse;
+import com.peerprep.peerprepbackend.entity.Role;
 import com.peerprep.peerprepbackend.entity.User;
 import com.peerprep.peerprepbackend.exception.*;
 import com.peerprep.peerprepbackend.repository.UserRepository;
@@ -38,15 +39,22 @@ public class UserService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    @Value("${spring.application.name}")
+    private String appName;
+
     /**
      * Authenticate credentials using configured AuthenticationManager
      */
     public LoginResponse authenticateUser(String username, String password) throws BadCredentialsException {
+
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new BadCredentialsException("Bad credentials"));
+
         // throws AuthenticationException if fails
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities()));
 
         String token = JWT.create()
-                .withIssuer("peerprep-backend")
+                .withIssuer(appName)
                 .withSubject(username)
                 .withExpiresAt(Instant.now().plusSeconds(jwtExpiration))
                 .sign(Algorithm.HMAC256(jwtSecret));
@@ -68,6 +76,7 @@ public class UserService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .country(request.getCountry())
+                .role(Role.USER)
                 .build();
         return userRepository.save(user).getId();
     }
