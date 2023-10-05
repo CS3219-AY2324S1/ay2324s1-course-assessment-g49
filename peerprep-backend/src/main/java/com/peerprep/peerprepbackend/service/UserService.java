@@ -8,10 +8,12 @@ import com.peerprep.peerprepbackend.entity.User;
 import com.peerprep.peerprepbackend.exception.*;
 import com.peerprep.peerprepbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -21,11 +23,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
+
+    /**
+     * Authenticate credentials using configured AuthenticationManager
+     */
     public LoginResponse authenticateUser(String username, String password) throws BadCredentialsException {
+        // throws AuthenticationException if fails
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
         User user = userRepository.findFirstByUsername(username).orElseThrow(BadCredentialsException::new);
-        if (!Objects.equals(user.getPassword(), password)) {
-            throw new BadCredentialsException();
-        }
+
+        // todo: generate jwt here and change login response to contain only jwt
+
         return LoginResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -42,7 +54,7 @@ public class UserService {
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .country(request.getCountry())
                 .build();
         return userRepository.save(user).getId();
@@ -98,10 +110,6 @@ public class UserService {
         if (request.getPassword() != null) {
             user.setPassword(request.getPassword());
         }
-
-
-
-
         userRepository.save(user);
     }
 }
