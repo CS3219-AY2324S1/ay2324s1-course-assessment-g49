@@ -35,7 +35,7 @@ public class SecurityConfig {
      * Provides an instance of a BCryptPassword encoder which provides a method to hash a password string
      * using bcrypt hashing function
      *
-     * @return BCryptPassword encoder
+     * @return BCryptPossword encoder
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
