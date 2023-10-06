@@ -32,10 +32,13 @@ public class User implements UserDetails {
 
     @NotBlank(message = "username is mandatory")
     private String username;
+
     @NotBlank(message = "email is mandatory")
     private String email;
+
     @NotBlank(message = "country is mandatory")
     private String country;
+
     @NotBlank(message = "password is mandatory")
     private String password;
 
@@ -47,6 +50,7 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    // default implementation for below methods, no use case for now
     @Override
     public boolean isAccountNonExpired() {
         return true;
