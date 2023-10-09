@@ -64,13 +64,15 @@ function AddQuestionDialog({ onAddQuestion }) {
     const title = inputRefTitle.current.value;
     const complexity = inputRefComplexity.current.value;
     const category = inputRefCategory.current.value;
+    const regex = /(<([^>]+)>)/gi;
+    const descriptionClean = description.replace(regex, "").trim();
 
     const isDuplicateQuestion =
       questions !== null &&
       questions.some((question) => question.title === title);
 
     const isInputFieldEmpty =
-      !title || !complexity || !category || !description;
+      !title || !complexity || !category || descriptionClean.length == 0;
 
     if (isDuplicateQuestion) {
       handleDuplicateQuestion();
@@ -174,6 +176,5 @@ function AddQuestionDialog({ onAddQuestion }) {
     </div>
   );
 }
-
 
 export default AddQuestionDialog;
