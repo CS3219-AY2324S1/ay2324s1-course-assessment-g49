@@ -12,6 +12,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 
 function Question({ question, questionId, onDelete }) {
+  const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -31,11 +32,11 @@ function Question({ question, questionId, onDelete }) {
           </DialogActions>
         </Dialog>
       </TableCell>
-      <TableCell>{question.category}</TableCell>
+      <TableCell>{categories}</TableCell>
       <TableCell align="center">{question.complexity}</TableCell>
       {/* <TableCell>{question.description}</TableCell> */}
       <TableCell>
-        <button onClick={() => onDelete(question.title)}>Delete </button>
+        <button onClick={() => onDelete(question.id)}>Delete </button>
       </TableCell>
     </TableRow>
   );
