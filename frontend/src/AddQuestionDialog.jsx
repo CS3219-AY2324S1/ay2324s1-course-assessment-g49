@@ -35,6 +35,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   };
 
   const handleClose = () => {
+    setDescription("");
     setOpen(false);
   };
 
@@ -144,13 +145,7 @@ function AddQuestionDialog({ onAddQuestion }) {
                     </MenuItem>
                   ))}
                 </TextField>
-                {/* <TextField
-									className="textField same-width-textfield"
-									id="Question Description"
-									label="Question Description"
-									variant="filled"
-									inputRef={inputRefDescription}
-								></TextField> */}
+                <DialogContentText>Question Description</DialogContentText>
                 <ReactQuill
                   theme="snow"
                   value={description}
