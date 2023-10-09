@@ -34,7 +34,6 @@ function Question({ question, questionId, onDelete }) {
       </TableCell>
       <TableCell>{categories}</TableCell>
       <TableCell align="center">{question.complexity}</TableCell>
-      {/* <TableCell>{question.description}</TableCell> */}
       <TableCell>
         <button onClick={() => onDelete(question.id)}>Delete </button>
       </TableCell>
