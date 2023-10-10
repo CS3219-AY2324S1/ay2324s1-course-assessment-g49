@@ -63,6 +63,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/QuestionResponse"
+    patch:
+      tags: 
+      - questions
+      description: Updates a specific question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuestionRequest"
+      responses:
+        '200':
+          description: Successfully updated question. Empty response
     delete:
       tags:
         - questions
@@ -220,7 +238,23 @@ components:
         complexity:
           type: string
           example: MEDIUM
-
+    UpdateQuestionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Reverse a String
+        description:
+          type: string
+          example: Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.
+        categories:
+          type: array
+          items:
+            type: string
+          example: [ ARRAY, ALGORITHMS ]
+        complexity:
+          type: string
+          example: MEDIUM
     CreateUserRequest:
       type: object
       required:

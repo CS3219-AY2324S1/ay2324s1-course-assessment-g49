@@ -1,6 +1,7 @@
 package com.peerprep.peerprepbackend.service;
 
 import com.peerprep.peerprepbackend.dto.request.CreateQuestionRequest;
+import com.peerprep.peerprepbackend.dto.request.UpdateQuestionRequest;
 import com.peerprep.peerprepbackend.dto.response.QuestionOverview;
 import com.peerprep.peerprepbackend.dto.response.QuestionResponse;
 import com.peerprep.peerprepbackend.entity.Question;
@@ -56,5 +57,23 @@ public class QuestionService {
             throw new QuestionNotFoundException(id);
         }
         questionRepository.deleteById(id);
+    }
+
+    public void updateQuestion(String id, UpdateQuestionRequest request) {
+        Question question = questionRepository.findById(id)
+                .orElseThrow(() -> new QuestionNotFoundException(id));
+        if (request.getTitle() != null) {
+            question.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            question.setDescription(request.getDescription());
+        }
+        if (request.getCategories() != null) {
+            question.setCategories(request.getCategories());
+        }
+        if (request.getComplexity() != null) {
+            question.setComplexity(request.getComplexity());
+        }
+        questionRepository.save(question);
     }
 }

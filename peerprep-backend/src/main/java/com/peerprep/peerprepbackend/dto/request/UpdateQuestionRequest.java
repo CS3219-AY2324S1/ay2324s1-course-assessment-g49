@@ -2,9 +2,7 @@ package com.peerprep.peerprepbackend.dto.request;
 
 import com.peerprep.peerprepbackend.common.Category;
 import com.peerprep.peerprepbackend.common.Complexity;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 
@@ -12,18 +10,17 @@ import java.util.Set;
 
 @Value
 @NoArgsConstructor(force = true)
-public class CreateQuestionRequest {
+public class UpdateQuestionRequest {
 
-    @NotBlank(message = "title is mandatory")
+    @Size(min = 1, message = "title cannot be empty")
     String title;
 
-    @NotBlank(message = "description is mandatory")
+    @Size(min = 1, message = "description cannot be empty")
     String description;
 
-    @NotEmpty(message = "categories are mandatory")
+    @Size(min = 1, message = "must have at least 1 category")
     Set<Category> categories;
 
-    @NotNull(message = "complexity is mandatory")
     Complexity complexity;
 
 }

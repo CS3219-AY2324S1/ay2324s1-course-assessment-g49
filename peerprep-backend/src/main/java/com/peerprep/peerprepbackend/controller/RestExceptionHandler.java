@@ -3,11 +3,11 @@ package com.peerprep.peerprepbackend.controller;
 import com.peerprep.peerprepbackend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,8 @@ import java.util.Map;
 public class RestExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException() {
+    public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
     }
 
@@ -51,6 +52,20 @@ public class RestExceptionHandler {
     }
 
 
+    /**
+     * Thrown if there is an error deserializing api request body, such as:
+     * 1. wrong json format
+     * 2. wrong spelling of enums
+     * 3. wrong type provided (int vs string)
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getLocalizedMessage());
+    }
+
+    /**
+     * Thrown when @Valid fails for an argument
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
