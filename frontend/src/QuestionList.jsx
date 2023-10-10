@@ -8,32 +8,36 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 function QuestionList({ questions, onDelete }) {
-  return (
-    <div>
-      <TableContainer component={Paper} elevation={5}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Question No.</TableCell>
-              <TableCell align="center">Question Title</TableCell>
-              <TableCell align="center">Question Category</TableCell>
-              <TableCell align="center">Question Complexity</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {questions.map((question, index) => (
-              <Question
-                key={question.title}
-                questionId={index + 1}
-                question={question}
-                onDelete={onDelete}
-              ></Question>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
-  );
+	return (
+		<div>
+			<TableContainer component={Paper} elevation={5}>
+				<Table sx={{ minWidth: 650 }} aria-label="simple table">
+					<TableHead>
+						<TableRow>
+							<TableCell align="center">Question No.</TableCell>
+							<TableCell align="center">Question Title</TableCell>
+							<TableCell align="center">
+								Question Category
+							</TableCell>
+							<TableCell align="center">
+								Question Complexity
+							</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{questions.map((question, index) => (
+							<Question
+								key={question.title}
+								questionId={index + 1}
+								question={question}
+								onDelete={onDelete}
+							></Question>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</div>
+	);
 }
 
 export default QuestionList;
