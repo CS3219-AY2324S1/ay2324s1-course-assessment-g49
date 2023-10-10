@@ -3,7 +3,7 @@ const Editor = {
       toolbar: [
         [{ header: "1" }, { header: "2" }],
         [{ size: [] }],
-        ["bold", "italic", "underline", "blockquote"],
+        ["bold", "italic", "underline", "blockquote", "code"],
         [
           { list: "ordered" },
           { list: "bullet" },
@@ -24,6 +24,7 @@ const Editor = {
       "italic",
       "underline",
       "blockquote",
+      "code",
       "list",
       "bullet",
       "indent",
