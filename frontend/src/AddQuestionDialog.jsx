@@ -1,18 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import {
-	Button,
-	TextField,
-	Dialog,
-	DialogActions,
-	DialogContent,
-	DialogContentText,
-	DialogTitle,
-	Stack,
-	MenuItem,
-	Box,
-} from '@mui/material';
-import CustomSnackbar from './CustomSnackbar';
-import axios from 'axios';
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Stack,
+  MenuItem,
+  Box,
+} from "@mui/material";
+import CustomSnackbar from "./CustomSnackbar";
+import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
@@ -26,7 +26,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   const inputRefCategory = useRef(null);
   const inputRefComplexity = useRef(null);
 
-	const complexityLevels = ['EASY', 'MEDIUM', 'HARD'];
+  const complexityLevels = ["EASY", "MEDIUM", "HARD"];
 
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
@@ -60,14 +60,13 @@ function AddQuestionDialog({ onAddQuestion }) {
     setSnackbarOpen(false);
   };
 
-	const handleSubmit = async (evt) => {
-		evt.preventDefault();
+  const handleSubmit = async (evt) => {
+    evt.preventDefault();
 
-		const title = inputRefTitle.current.value;
-		const complexity = inputRefComplexity.current.value;
-		const categories = inputRefCategory.current.value.split(", ");
-    const regex = /(<([^>]+)>)/gi;
-    const descriptionClean = description.replace(regex, "").trim();
+    const title = inputRefTitle.current.value;
+    const complexity = inputRefComplexity.current.value;
+    const categories = inputRefCategory.current.value.split(", ");
+    const descriptionClean = description.replace("<.*?>", "").trim();
 
     const isDuplicateQuestion =
       questions !== null &&
@@ -76,27 +75,27 @@ function AddQuestionDialog({ onAddQuestion }) {
     const isInputFieldEmpty =
       !title || !complexity || !categories || descriptionClean.length == 0;
 
-		if (isDuplicateQuestion) {
-			handleDuplicateQuestion();
-		} else if (isInputFieldEmpty) {
-			handleEmptyInputField();
-		} else {
-			const newQuestion = {
-				title,
-				complexity,
-				categories,
-				description,
-			};
+    if (isDuplicateQuestion) {
+      handleDuplicateQuestion();
+    } else if (isInputFieldEmpty) {
+      handleEmptyInputField();
+    } else {
+      const newQuestion = {
+        title,
+        complexity,
+        categories,
+        description,
+      };
 
-			await axios.post("http://localhost:8080/question", newQuestion);
-			onAddQuestion();
-			handleClose();
-		}
-	};
+      await axios.post("http://localhost:8080/question", newQuestion);
+      onAddQuestion();
+      handleClose();
+    }
+  };
 
-	useEffect(() => {
-		onAddQuestion();
-	}, []);
+  useEffect(() => {
+    onAddQuestion();
+  }, []);
 
   return (
     <div>
