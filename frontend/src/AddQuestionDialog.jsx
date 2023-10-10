@@ -68,7 +68,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 		const categories = inputRefCategory.current.value.split(", ");
     const regex = /(<([^>]+)>)/gi;
     const descriptionClean = description.replace(regex, "").trim();
-    
+
     const isDuplicateQuestion =
       questions !== null &&
       questions.some((question) => question.title === title);
@@ -87,6 +87,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 				categories,
 				description,
 			};
+
 			await axios.post("http://localhost:8080/question", newQuestion);
 			onAddQuestion();
 			handleClose();

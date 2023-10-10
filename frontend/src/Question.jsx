@@ -10,12 +10,25 @@ import {
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
+import { useEffect } from "react";
+import axios from "axios";
 
 function Question({ question, questionId, onDelete }) {
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [description, setDescription] = React.useState("");
+
+  const loadDesciption = async () => {
+    const response = await axios.get("http://localhost:8080/question/" + question.id);
+    setDescription(response.data.description);
+  };
+
+  useEffect(() => {
+    loadDesciption();
+  }, []);
+
   return (
     <TableRow key={question.title}>
       <TableCell align="center">{questionId}</TableCell>
@@ -24,8 +37,9 @@ function Question({ question, questionId, onDelete }) {
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Question Description</DialogTitle>
           <DialogContent>
-            <DialogContentText dangerouslySetInnerHTML={{ __html: question.description }}>
-            </DialogContentText>
+            <DialogContentText
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
