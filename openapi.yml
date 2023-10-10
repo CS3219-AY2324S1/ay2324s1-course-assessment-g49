@@ -73,6 +73,11 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuestionRequest"
       responses:
         '200':
           description: Successfully updated question. Empty response
