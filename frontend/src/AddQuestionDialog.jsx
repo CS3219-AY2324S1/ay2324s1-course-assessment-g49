@@ -18,9 +18,10 @@ import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
 
 function AddQuestionDialog({ onAddQuestion }) {
-  const storedQuestions = JSON.parse(localStorage.getItem("questions"));
+  // const storedQuestions = JSON.parse(localStorage.getItem("questions"));
+  // const questions = storedQuestions !== null ? storedQuestions : [];
+  const [questions, setQuestions] = useState([]);
 
-  const questions = storedQuestions !== null ? storedQuestions : [];
 
   const inputRefTitle = useRef(null);
   const inputRefCategory = useRef(null);
@@ -93,7 +94,20 @@ function AddQuestionDialog({ onAddQuestion }) {
     }
   };
 
+  const fetchQuestions=async()=>{
+    try {
+      const storedQuestions = await axios.get(
+        `http://localhost:8080/question`
+      );
+      setQuestions(storedQuestions.data);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+    
+  }
+
   useEffect(() => {
+    fetchQuestions();
     onAddQuestion();
   }, []);
 

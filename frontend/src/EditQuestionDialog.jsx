@@ -20,11 +20,10 @@ import Editor from "./Editor";
 import EditIcon from "@mui/icons-material/Edit";
 
 function EditQuestionDialog({ question, onEdit }) {
-  const categories = question.categories.join(", ");
-  const storedQuestions = JSON.parse(localStorage.getItem("questions"));
-  console.log("questions:", storedQuestions);
-
-  const questions = storedQuestions !== null ? storedQuestions : [];
+  //   const storedQuestions = JSON.parse(localStorage.getItem("questions"));
+  // const storedQuestions=await axios.get(`http://localhost:8080/question/`)
+  const [questions, setQuestions] = useState([]);
+  //   const questions = storedQuestions !== null ? storedQuestions : [];
 
   const inputRefs = {
     title: useRef(null),
@@ -32,7 +31,6 @@ function EditQuestionDialog({ question, onEdit }) {
     complexity: useRef(null),
     description: useRef(null),
   };
-
 
   const [questionData, setQuestionData] = useState({
     title: "",
@@ -56,7 +54,6 @@ function EditQuestionDialog({ question, onEdit }) {
 
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setsnackbarMessage] = useState("");
-  //   const [description, setDescription] = useState("");
 
   const handleDuplicateQuestion = () => {
     setsnackbarMessage("Duplicate question detected!");
@@ -127,7 +124,10 @@ function EditQuestionDialog({ question, onEdit }) {
         `http://localhost:8080/question/${question.id}`
       );
       setQuestionData(response.data);
-      //   setDescription(dcpt);
+      const storedQuestions = await axios.get(
+        `http://localhost:8080/question`
+      );
+      setQuestions(storedQuestions.data);
     } catch (error) {
       console.error("Error fetching user data", error);
     }
