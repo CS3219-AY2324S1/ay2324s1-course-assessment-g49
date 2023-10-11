@@ -16,13 +16,17 @@ import TableRow from "@mui/material/TableRow";
 import { useEffect } from "react";
 import axios from "axios";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import "react-quill/dist/quill.snow.css";
+import EditQuestionDialog from "./EditQuestionDialog";
 
-function Question({ question, questionId, onDelete }) {
+function Question({ question, questionId, onDelete, onEdit }) {
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = async () => {
+    loadDesciption();
+    setOpen(true);
+  }
   const handleClose = () => setOpen(false);
   const [description, setDescription] = React.useState("");
 
@@ -89,12 +93,7 @@ function Question({ question, questionId, onDelete }) {
             horizontal: "left",
           }}
         >
-          <MenuItem onClick={handleCloseActions}>
-            <ListItemIcon>
-              <EditIcon fontSize="small" />
-            </ListItemIcon>
-            Edit
-          </MenuItem>
+          <EditQuestionDialog question={question}  onEdit={onEdit}/>
           <MenuItem onClick={()=>onDelete(question.id)}>
             <ListItemIcon>
               <DeleteIcon fontSize="small" />

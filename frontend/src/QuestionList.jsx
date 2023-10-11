@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-function QuestionList({ questions, onDelete }) {
+function QuestionList({ questions, onDelete, onEdit }) {
 	return (
 		<div>
 			<TableContainer component={Paper} elevation={5}>
@@ -31,6 +31,7 @@ function QuestionList({ questions, onDelete }) {
 								questionId={index + 1}
 								question={question}
 								onDelete={onDelete}
+								onEdit={onEdit}
 							></Question>
 						))}
 					</TableBody>

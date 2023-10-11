@@ -25,6 +25,11 @@ function App() {
     loadQuestions();
   };
 
+  const handleEdit = async (id, newQuestion) => {
+    await axios.patch(`http://localhost:8080/question/${id}`, newQuestion);
+    loadQuestions();
+  }
+
   useEffect(() => {
     loadQuestions();
   }, []);
@@ -38,7 +43,7 @@ function App() {
             <AddQuestionDialog onAddQuestion={loadQuestions} />
           </Box>
           <Box mb={2}>
-            <QuestionList questions={questions} onDelete={handleDelete} />
+            <QuestionList questions={questions} onDelete={handleDelete} onEdit={handleEdit}/>
           </Box>
         </Box>
       </Theme>

@@ -66,7 +66,7 @@ function AddQuestionDialog({ onAddQuestion }) {
     const title = inputRefTitle.current.value;
     const complexity = inputRefComplexity.current.value;
     const categories = inputRefCategory.current.value.split(", ");
-    const descriptionClean = description.replace("<.*?>", "").trim();
+    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
 
     const isDuplicateQuestion =
       questions !== null &&
