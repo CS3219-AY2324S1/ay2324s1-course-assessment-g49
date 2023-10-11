@@ -26,13 +26,13 @@ function Question({ question, questionId, onDelete, onEdit }) {
   const handleOpen = async () => {
     loadDesciption();
     setOpen(true);
-  }
+  };
   const handleClose = () => setOpen(false);
   const [description, setDescription] = React.useState("");
 
   const loadDesciption = async () => {
     const response = await axios.get(
-      "http://localhost:8080/question/" + question.id
+      `http://localhost:8080/question/${question.id}`
     );
     setDescription(response.data.description);
   };
@@ -93,8 +93,8 @@ function Question({ question, questionId, onDelete, onEdit }) {
             horizontal: "left",
           }}
         >
-          <EditQuestionDialog question={question}  onEdit={onEdit}/>
-          <MenuItem onClick={()=>onDelete(question.id)}>
+          <EditQuestionDialog question={question} onEdit={onEdit} />
+          <MenuItem onClick={() => onDelete(question.id)}>
             <ListItemIcon>
               <DeleteIcon fontSize="small" />
             </ListItemIcon>
