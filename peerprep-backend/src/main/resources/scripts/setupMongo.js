@@ -1,6 +1,6 @@
-// use peerprep
+use peerprep
 
-db.createCollection('question', { autoIndexId: true });
+db.createCollection('question');
 
 db.question.insertMany([
 	{
