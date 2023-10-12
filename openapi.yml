@@ -7,10 +7,12 @@ info:
 servers:
   - url: http://localhost:8080
 tags:
+  - name: auth
+    description: Endpoints for authentication
   - name: questions
-    description: Operations about questions
+    description: Endpoints for questions
   - name: users
-    description: Operations about users
+    description: Endpoints for users
 
 paths:
   /question:
@@ -182,6 +184,23 @@ paths:
       responses:
         '200':
           description: Successfully deleted user
+  /auth/login:
+    post:
+      tags:
+        - auth
+      description: Uses username and password to login, and get a JWT
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
 
 components:
   schemas:
@@ -296,3 +315,21 @@ components:
         country:
           type: string
           example: Singapore
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: apple
+        password:
+          type: string
+          example: password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
