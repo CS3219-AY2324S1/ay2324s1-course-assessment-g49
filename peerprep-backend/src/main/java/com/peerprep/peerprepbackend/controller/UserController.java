@@ -5,6 +5,7 @@ import com.peerprep.peerprepbackend.dto.response.UserResponse;
 import com.peerprep.peerprepbackend.exception.EmailExistsException;
 import com.peerprep.peerprepbackend.exception.UsernameExistsException;
 import com.peerprep.peerprepbackend.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
