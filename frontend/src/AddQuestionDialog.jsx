@@ -25,9 +25,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   const inputRefTitle = useRef(null);
   const inputRefCategory = useRef(null);
   const inputRefComplexity = useRef(null);
-
   const complexityLevels = ["EASY", "MEDIUM", "HARD"];
-
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
 

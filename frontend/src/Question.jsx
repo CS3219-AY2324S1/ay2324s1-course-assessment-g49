@@ -21,7 +21,9 @@ function Question({ question, questionId, onDelete }) {
   const [description, setDescription] = React.useState("");
 
   const loadDesciption = async () => {
-    const response = await axios.get("http://localhost:8080/question/" + question.id);
+    const response = await axios.get(
+      "http://localhost:8080/question/" + question.id
+    );
     setDescription(response.data.description);
   };
 
