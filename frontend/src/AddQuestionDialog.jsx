@@ -20,9 +20,10 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 
 function AddQuestionDialog({ onAddQuestion }) {
-  const storedQuestions = JSON.parse(localStorage.getItem("questions"));
+  // const storedQuestions = JSON.parse(localStorage.getItem("questions"));
+  // const questions = storedQuestions !== null ? storedQuestions : [];
+  const [questions, setQuestions] = useState([]);
 
-  const questions = storedQuestions !== null ? storedQuestions : [];
 
   const inputRefTitle = useRef(null);
   const inputRefComplexity = useRef(null);
@@ -32,6 +33,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   const [category, setCategory] = useState([]);
 
   const categories = [
+    "Arrays",
     "Strings",
     "Algorithms",
     "Data Structures",
@@ -42,6 +44,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   ];
 
   var categoryDict = {
+    Arrays: "ARRAYS",
     Strings: "STRINGS",
     Algorithms: "ALGORITHMS",
     "Data Structures": "DATA_STRUCTURES",
@@ -96,7 +99,7 @@ function AddQuestionDialog({ onAddQuestion }) {
     const title = inputRefTitle.current.value;
     const complexity = inputRefComplexity.current.value;
     const categories = category;
-    const descriptionClean = description.replace("<.*?>", "").trim();
+    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
 
     const isDuplicateQuestion =
       questions !== null &&
@@ -128,7 +131,20 @@ function AddQuestionDialog({ onAddQuestion }) {
     }
   };
 
+  const fetchQuestions=async()=>{
+    try {
+      const storedQuestions = await axios.get(
+        `http://localhost:8080/question`
+      );
+      setQuestions(storedQuestions.data);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+    
+  }
+
   useEffect(() => {
+    fetchQuestions();
     onAddQuestion();
   }, []);
 

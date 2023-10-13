@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "@mui/material";
+import { IconButton, Link } from "@mui/material";
 import {
   Button,
   Dialog,
@@ -7,16 +7,26 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Menu,
+  MenuItem,
+  ListItemIcon,
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { useEffect } from "react";
 import axios from "axios";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DeleteIcon from "@mui/icons-material/Delete";
+import "react-quill/dist/quill.snow.css";
+import EditQuestionDialog from "./EditQuestionDialog";
 
-function Question({ question, questionId, onDelete }) {
+function Question({ question, questionId, onDelete, onEdit }) {
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = async () => {
+    loadDesciption();
+    setOpen(true);
+  }
   const handleClose = () => setOpen(false);
   const [description, setDescription] = React.useState("");
 
@@ -25,6 +35,15 @@ function Question({ question, questionId, onDelete }) {
       "http://localhost:8080/question/" + question.id
     );
     setDescription(response.data.description);
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openActions = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseActions = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -51,7 +70,37 @@ function Question({ question, questionId, onDelete }) {
       <TableCell>{categories}</TableCell>
       <TableCell align="center">{question.complexity}</TableCell>
       <TableCell>
-        <button onClick={() => onDelete(question.id)}>Delete </button>
+        <IconButton
+          id="long-button"
+          aria-haspopup="true"
+          onClick={handleClick}
+          style={{ outline: "none" }}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="demo-positioned-menu"
+          aria-labelledby="demo-positioned-button"
+          anchorEl={anchorEl}
+          open={openActions}
+          onClose={handleCloseActions}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <EditQuestionDialog question={question}  onEdit={onEdit}/>
+          <MenuItem onClick={()=>onDelete(question.id)}>
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" />
+            </ListItemIcon>
+            Delete
+          </MenuItem>
+        </Menu>
       </TableCell>
     </TableRow>
   );

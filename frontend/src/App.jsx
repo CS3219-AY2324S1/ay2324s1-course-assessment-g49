@@ -16,6 +16,7 @@ function App() {
    */
 
   var reverseCategoryDict = {
+    "ARRAYS": "Arrays",
     "STRINGS": "Strings",
     "ALGORITHMS": "Algorithms",
     "DATA_STRUCTURES": "Data Structures",
@@ -41,6 +42,11 @@ function App() {
     loadQuestions();
   };
 
+  const handleEdit = async (id, fieldsToUpdate) => {
+    await axios.patch(`http://localhost:8080/question/${id}`, fieldsToUpdate);
+    loadQuestions();
+  }
+
   useEffect(() => {
     loadQuestions();
   }, []);
@@ -54,7 +60,7 @@ function App() {
             <AddQuestionDialog onAddQuestion={loadQuestions} />
           </Box>
           <Box mb={2}>
-            <QuestionList questions={questions} onDelete={handleDelete} />
+            <QuestionList questions={questions} onDelete={handleDelete} onEdit={handleEdit}/>
           </Box>
         </Box>
       </Theme>
