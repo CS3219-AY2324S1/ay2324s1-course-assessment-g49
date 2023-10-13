@@ -18,6 +18,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
 import EditIcon from "@mui/icons-material/Edit";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 
 function EditQuestionDialog({ question, onEdit }) {
   //   const storedQuestions = JSON.parse(localStorage.getItem("questions"));
@@ -39,6 +41,38 @@ function EditQuestionDialog({ question, onEdit }) {
   });
 
   const [oldQuestionData, setOldQuestionData] = useState({ ...questionData });
+
+  const categories = [
+    "Strings",
+    "Algorithms",
+    "Data Structures",
+    "Bit Manipulation",
+    "Recursion",
+    "Databases",
+    "Brainteaser",
+  ];
+
+  var categoryDict = {
+    Strings: "STRINGS",
+    Algorithms: "ALGORITHMS",
+    "Data Structures": "DATA_STRUCTURES",
+    "Bit Manipulation": "BIT_MANIPULATION",
+    Recursion: "RECURSION",
+    Databases: "DATABASES",
+    Brainteaser: "BRAINTEASER",
+  };
+
+  var reverseDict = {
+    'STRINGS': 'Strings',
+    'ALGORITHMS': 'Algorithms',
+    'DATA_STRUCTURES': 'Data Structures',
+    'BIT_MANIPULATION': 'Bit Manipulation',
+    'RECURSION': 'Recursion',
+    'DATABASES': 'Databases',
+    'BRAINTEASER': 'Brainteaser'
+  }
+
+
 
   const complexityLevels = ["EASY", "MEDIUM", "HARD"];
 
@@ -88,6 +122,13 @@ function EditQuestionDialog({ question, onEdit }) {
     }));
   };
 
+  const handleCategoriesChange = (evt) => {
+    setQuestionData((prevQuestionData) => ({
+        ...prevQuestionData,
+        categories: evt.target.value,
+      }));
+  }
+
   const handleError = (message) => {
     setsnackbarMessage(message);
     setSnackbarOpen(true);
@@ -98,12 +139,15 @@ function EditQuestionDialog({ question, onEdit }) {
 
     const title = inputRefs.title.current.value;
     const complexity = inputRefs.complexity.current.value;
-    const categories = inputRefs.categories.current.value.split(", ");
+    const categories = inputRefs.categories.current.value;
     const description = inputRefs.description.current.value;
     const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
     const isDuplicateQuestion =
       questions !== null &&
-      questions.some((question) => question.title === title && question.title != oldQuestionData.title);
+      questions.some(
+        (question) =>
+          question.title === title && question.title != oldQuestionData.title
+      );
 
     const isInputFieldEmpty =
       !title || !complexity || !categories || descriptionClean.length == 0;
@@ -114,13 +158,24 @@ function EditQuestionDialog({ question, onEdit }) {
       handleEmptyInputField();
     } else {
       try {
-        const fieldsToUpdate = Object.keys(questionData).reduce((acc, key) => {
-          if (oldQuestionData[key] !== questionData[key]) {
-            acc[key] = questionData[key];
+        for (let i = 0; i < categories.length; i++) {
+          categories[i] = categoryDict[categories[i]];
+        }
+        const newQuestion = {
+          title,
+          complexity,
+          categories,
+          description,
+        };
+        const fieldsToUpdate = Object.keys(newQuestion).reduce((acc, key) => {
+          if (oldQuestionData[key] !== newQuestion[key]) {
+            acc[key] = newQuestion[key];
           }
           return acc;
         }, {});
+        console.log("field change:", fieldsToUpdate);
         onEdit(question.id, fieldsToUpdate);
+
         if (Object.keys(fieldsToUpdate).length > 0) {
           setOldQuestionData(fieldsToUpdate);
         }
@@ -137,8 +192,14 @@ function EditQuestionDialog({ question, onEdit }) {
       const response = await axios.get(
         `http://localhost:8080/question/${question.id}`
       );
-      setQuestionData(response.data);
-      setOldQuestionData(response.data);
+      const data = response.data;
+      const cat = data.categories;
+      for (let i = 0; i < cat.length; i++) {
+        cat[i] = reverseDict[cat[i]];
+      }
+      data.categories=cat;
+      setQuestionData(data);
+      setOldQuestionData(data);
       const storedQuestions = await axios.get(`http://localhost:8080/question`);
       setQuestions(storedQuestions.data);
     } catch (error) {
@@ -184,22 +245,28 @@ function EditQuestionDialog({ question, onEdit }) {
                   type="text"
                   inputRef={inputRefs.title}
                 ></TextField>
-                <TextField
-                  className="textField same-width-textfield"
-                  name="categories"
-                  label="Question Category"
+                <InputLabel id="multiple-category-label">Category</InputLabel>
+                <Select
+                  labelId="multiple-category-label"
+                  id="multiple-category"
+                  multiple
                   value={questionData.categories}
-                  onChange={handleFieldChange}
-                  variant="filled"
+                  onChange={handleCategoriesChange}
                   inputRef={inputRefs.categories}
-                ></TextField>
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category} value={category}>
+                      {category}
+                    </MenuItem>
+                  ))}
+                </Select>
                 <TextField
                   select
                   name="complexity"
                   label="Question Complexity"
                   value={questionData.complexity}
-                  onChange={handleFieldChange}
                   variant="filled"
+                  onChange={handleFieldChange}
                   inputRef={inputRefs.complexity}
                   className="textField same-width-textfield"
                 >
@@ -216,7 +283,6 @@ function EditQuestionDialog({ question, onEdit }) {
                   name="description"
                   value={questionData.description}
                   onChange={handleDescriptionChange}
-                  //   inputRef={inputRefs.description}
                   modules={Editor.modules}
                   formats={Editor.formats}
                 />

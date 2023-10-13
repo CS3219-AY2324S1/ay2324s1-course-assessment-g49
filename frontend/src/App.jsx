@@ -15,8 +15,24 @@ function App() {
    * { id: 2, title: "question 2", category: "cat2", complexity: "easy", description: "bbb" },
    */
 
+  var reverseCategoryDict = {
+    "STRINGS": "Strings",
+    "ALGORITHMS": "Algorithms",
+    "DATA_STRUCTURES": "Data Structures",
+    "BIT_MANIPULATION": "Bit Manipulation",
+    "RECURSION": "Recursion",
+    "DATABASES": "Databases",
+    "BRAINTEASER": "Brainteaser"
+  }
+
   const loadQuestions = async () => {
     const questions = await axios.get("http://localhost:8080/question");
+    for (let i = 0; i < questions.data.length; i++) {
+      let question = questions.data[i]
+      for (let j = 0; j < question.categories.length; j++) {
+        question.categories[j] = reverseCategoryDict[question.categories[j]]
+      }
+    }  
     setQuestions(questions.data);
   };
 

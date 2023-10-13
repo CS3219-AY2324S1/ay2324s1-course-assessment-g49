@@ -16,6 +16,8 @@ import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
 
 function AddQuestionDialog({ onAddQuestion }) {
   // const storedQuestions = JSON.parse(localStorage.getItem("questions"));
@@ -24,11 +26,41 @@ function AddQuestionDialog({ onAddQuestion }) {
 
 
   const inputRefTitle = useRef(null);
-  const inputRefCategory = useRef(null);
   const inputRefComplexity = useRef(null);
   const complexityLevels = ["EASY", "MEDIUM", "HARD"];
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState([]);
+
+  const categories = [
+    "Strings",
+    "Algorithms",
+    "Data Structures",
+    "Bit Manipulation",
+    "Recursion",
+    "Databases",
+    "Brainteaser",
+  ];
+
+  var categoryDict = {
+    Strings: "STRINGS",
+    Algorithms: "ALGORITHMS",
+    "Data Structures": "DATA_STRUCTURES",
+    "Bit Manipulation": "BIT_MANIPULATION",
+    Recursion: "RECURSION",
+    Databases: "DATABASES",
+    Brainteaser: "BRAINTEASER",
+  };
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setCategory(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,7 +96,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 
     const title = inputRefTitle.current.value;
     const complexity = inputRefComplexity.current.value;
-    const categories = inputRefCategory.current.value.split(", ");
+    const categories = category;
     const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
 
     const isDuplicateQuestion =
@@ -79,6 +111,10 @@ function AddQuestionDialog({ onAddQuestion }) {
     } else if (isInputFieldEmpty) {
       handleEmptyInputField();
     } else {
+      for (let i = 0; i < categories.length; i++) {
+        categories[i] = categoryDict[categories[i]];
+      }
+
       const newQuestion = {
         title,
         complexity,
@@ -88,6 +124,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 
       await axios.post("http://localhost:8080/question", newQuestion);
       onAddQuestion();
+      setCategory([]);
       handleClose();
     }
   };
@@ -137,13 +174,20 @@ function AddQuestionDialog({ onAddQuestion }) {
                   variant="filled"
                   inputRef={inputRefTitle}
                 ></TextField>
-                <TextField
-                  className="textField same-width-textfield"
-                  id="Question Category"
-                  label="Question Category"
-                  variant="filled"
-                  inputRef={inputRefCategory}
-                ></TextField>
+                <InputLabel id="multiple-category-label">Category</InputLabel>
+                <Select
+                  labelId="multiple-category-label"
+                  id="multiple-category"
+                  multiple
+                  value={category}
+                  onChange={handleChange}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category} value={category}>
+                      {category}
+                    </MenuItem>
+                  ))}
+                </Select>
                 <TextField
                   select
                   name="Question Complexity"
