@@ -129,7 +129,7 @@ function EditQuestionDialog({ question, onEdit }) {
         handleClose();
       } catch (error) {
         handleError(error.response.data);
-        console.error("Error updating user's data", error);
+        console.error("Error updating question data", error);
       }
     }
   };
@@ -144,7 +144,7 @@ function EditQuestionDialog({ question, onEdit }) {
       const storedQuestions = await axios.get(`http://localhost:8080/question`);
       setQuestions(storedQuestions.data);
     } catch (error) {
-      console.error("Error fetching user data", error);
+      console.error("Error fetching question data", error);
     }
   };
 
