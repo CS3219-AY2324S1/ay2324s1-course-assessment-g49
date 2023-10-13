@@ -3,7 +3,7 @@ const Editor = {
       toolbar: [
         [{ header: "1" }, { header: "2" }],
         [{ size: [] }],
-        ["bold", "italic", "underline", "blockquote", "code"],
+        ["bold", "italic", "underline", "code", "blockquote", "code-block"],
         [
           { list: "ordered" },
           { list: "bullet" },
@@ -11,10 +11,6 @@ const Editor = {
           { indent: "+1" },
         ],
         ["image"],      ],
-    //   clipboard: {
-    //     // toggle to add extra line breaks when pasting HTML:
-    //     matchVisual: false,
-    //   },
     },
 
     formats: [
@@ -23,8 +19,9 @@ const Editor = {
       "bold",
       "italic",
       "underline",
-      "blockquote",
       "code",
+      "blockquote",
+      "code-block",
       "list",
       "bullet",
       "indent",
