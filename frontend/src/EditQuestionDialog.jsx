@@ -21,9 +21,8 @@ import EditIcon from "@mui/icons-material/Edit";
 
 function EditQuestionDialog({ question, onEdit }) {
   //   const storedQuestions = JSON.parse(localStorage.getItem("questions"));
-  // const storedQuestions=await axios.get(`http://localhost:8080/question/`)
-  const [questions, setQuestions] = useState([]);
   //   const questions = storedQuestions !== null ? storedQuestions : [];
+  const [questions, setQuestions] = useState([]);
 
   const inputRefs = {
     title: useRef(null),
@@ -38,6 +37,8 @@ function EditQuestionDialog({ question, onEdit }) {
     complexity: "",
     description: "",
   });
+
+  const [oldQuestionData, setOldQuestionData] = useState({ ...questionData });
 
   const complexityLevels = ["EASY", "MEDIUM", "HARD"];
 
@@ -55,10 +56,10 @@ function EditQuestionDialog({ question, onEdit }) {
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setsnackbarMessage] = useState("");
 
-  const handleDuplicateQuestion = () => {
-    setsnackbarMessage("Duplicate question detected!");
-    setSnackbarOpen(true);
-  };
+//   const handleDuplicateQuestion = () => {
+//     setsnackbarMessage("Duplicate question detected!");
+//     setSnackbarOpen(true);
+//   };
 
   const handleEmptyInputField = () => {
     setsnackbarMessage("Missing fields detected!");
@@ -74,17 +75,22 @@ function EditQuestionDialog({ question, onEdit }) {
 
   const handleFieldChange = (evt) => {
     const { name, value } = evt.target;
-    setQuestionData((prevUserData) => ({
-      ...prevUserData,
+    setQuestionData((prevQuestionData) => ({
+      ...prevQuestionData,
       [name]: value,
     }));
   };
 
   const handleDescriptionChange = (value) => {
-    setQuestionData((prevUserData) => ({
-      ...prevUserData,
+    setQuestionData((prevQuestionData) => ({
+      ...prevQuestionData,
       description: value,
     }));
+  };
+
+  const handleError = (message) => {
+    setsnackbarMessage(message);
+    setSnackbarOpen(true);
   };
 
   const handleSubmit = async (evt) => {
@@ -95,26 +101,36 @@ function EditQuestionDialog({ question, onEdit }) {
     const categories = inputRefs.categories.current.value.split(", ");
     const description = inputRefs.description.current.value;
     const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
-    const isDuplicateQuestion =
-      questions !== null &&
-      questions.some((question) => question.title === title);
+    // const isDuplicateQuestion =
+    //   questions !== null &&
+    //   questions.some((question) => question.title === title);
 
     const isInputFieldEmpty =
       !title || !complexity || !categories || descriptionClean.length == 0;
 
-    if (isDuplicateQuestion) {
-      handleDuplicateQuestion();
-    } else if (isInputFieldEmpty) {
+    // if (isDuplicateQuestion) {
+    //   handleDuplicateQuestion();
+    // } else
+    if (isInputFieldEmpty) {
       handleEmptyInputField();
     } else {
-      const newQuestion = {
-        title,
-        complexity,
-        categories,
-        description,
-      };
-      onEdit(question.id, newQuestion);
-      handleClose();
+      try {
+        const fieldsToUpdate = Object.keys(questionData).reduce((acc, key) => {
+          
+          if (oldQuestionData[key] !== questionData[key]) {
+            acc[key] = questionData[key];
+          }
+          return acc;
+        }, {});
+        onEdit(question.id, fieldsToUpdate);
+        if (Object.keys(fieldsToUpdate).length > 0) {
+          setOldQuestionData(fieldsToUpdate);
+        }
+        handleClose();
+      } catch (error) {
+        handleError(error.response.data);
+        console.error("Error updating user's data", error);
+      }
     }
   };
 
@@ -124,9 +140,8 @@ function EditQuestionDialog({ question, onEdit }) {
         `http://localhost:8080/question/${question.id}`
       );
       setQuestionData(response.data);
-      const storedQuestions = await axios.get(
-        `http://localhost:8080/question`
-      );
+      setOldQuestionData(response.data);
+      const storedQuestions = await axios.get(`http://localhost:8080/question`);
       setQuestions(storedQuestions.data);
     } catch (error) {
       console.error("Error fetching user data", error);

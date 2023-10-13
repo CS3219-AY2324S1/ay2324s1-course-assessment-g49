@@ -25,8 +25,8 @@ function App() {
     loadQuestions();
   };
 
-  const handleEdit = async (id, newQuestion) => {
-    await axios.patch(`http://localhost:8080/question/${id}`, newQuestion);
+  const handleEdit = async (id, fieldsToUpdate) => {
+    await axios.patch(`http://localhost:8080/question/${id}`, fieldsToUpdate);
     loadQuestions();
   }
 
