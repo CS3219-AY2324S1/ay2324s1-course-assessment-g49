@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<String> updateUser(@PathVariable final String id, @RequestBody final UpdateUserRequest request) throws UsernameExistsException, EmailExistsException {
+    public ResponseEntity<String> updateUser(@PathVariable final String id, @Valid @RequestBody final UpdateUserRequest request) throws UsernameExistsException, EmailExistsException {
         userService.updateUser(id, request);
         return ResponseEntity.ok(id);
     }
