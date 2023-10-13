@@ -173,7 +173,6 @@ function EditQuestionDialog({ question, onEdit }) {
           }
           return acc;
         }, {});
-        console.log("field change:", fieldsToUpdate);
         onEdit(question.id, fieldsToUpdate);
 
         if (Object.keys(fieldsToUpdate).length > 0) {
