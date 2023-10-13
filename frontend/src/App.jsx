@@ -16,6 +16,7 @@ function App() {
    */
 
   var reverseCategoryDict = {
+    "ARRAYS": "Arrays",
     "STRINGS": "Strings",
     "ALGORITHMS": "Algorithms",
     "DATA_STRUCTURES": "Data Structures",

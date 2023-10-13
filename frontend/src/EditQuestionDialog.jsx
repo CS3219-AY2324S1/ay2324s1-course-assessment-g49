@@ -43,6 +43,7 @@ function EditQuestionDialog({ question, onEdit }) {
   const [oldQuestionData, setOldQuestionData] = useState({ ...questionData });
 
   const categories = [
+    "Arrays",
     "Strings",
     "Algorithms",
     "Data Structures",
@@ -53,6 +54,7 @@ function EditQuestionDialog({ question, onEdit }) {
   ];
 
   var categoryDict = {
+    Arrays: "ARRAYS",
     Strings: "STRINGS",
     Algorithms: "ALGORITHMS",
     "Data Structures": "DATA_STRUCTURES",
@@ -63,6 +65,7 @@ function EditQuestionDialog({ question, onEdit }) {
   };
 
   var reverseDict = {
+    'ARRAYS': 'Arrays',
     'STRINGS': 'Strings',
     'ALGORITHMS': 'Algorithms',
     'DATA_STRUCTURES': 'Data Structures',
@@ -123,6 +126,7 @@ function EditQuestionDialog({ question, onEdit }) {
   };
 
   const handleCategoriesChange = (evt) => {
+    console.log(evt.target.value);
     setQuestionData((prevQuestionData) => ({
         ...prevQuestionData,
         categories: evt.target.value,

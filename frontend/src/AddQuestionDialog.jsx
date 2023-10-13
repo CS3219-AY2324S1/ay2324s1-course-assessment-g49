@@ -33,6 +33,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   const [category, setCategory] = useState([]);
 
   const categories = [
+    "Arrays",
     "Strings",
     "Algorithms",
     "Data Structures",
@@ -43,6 +44,7 @@ function AddQuestionDialog({ onAddQuestion }) {
   ];
 
   var categoryDict = {
+    Arrays: "ARRAYS",
     Strings: "STRINGS",
     Algorithms: "ALGORITHMS",
     "Data Structures": "DATA_STRUCTURES",
