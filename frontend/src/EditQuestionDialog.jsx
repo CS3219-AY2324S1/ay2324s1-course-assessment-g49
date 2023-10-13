@@ -56,10 +56,10 @@ function EditQuestionDialog({ question, onEdit }) {
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setsnackbarMessage] = useState("");
 
-//   const handleDuplicateQuestion = () => {
-//     setsnackbarMessage("Duplicate question detected!");
-//     setSnackbarOpen(true);
-//   };
+  const handleDuplicateQuestion = () => {
+    setsnackbarMessage("Duplicate question detected!");
+    setSnackbarOpen(true);
+  };
 
   const handleEmptyInputField = () => {
     setsnackbarMessage("Missing fields detected!");
@@ -101,22 +101,20 @@ function EditQuestionDialog({ question, onEdit }) {
     const categories = inputRefs.categories.current.value.split(", ");
     const description = inputRefs.description.current.value;
     const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
-    // const isDuplicateQuestion =
-    //   questions !== null &&
-    //   questions.some((question) => question.title === title);
+    const isDuplicateQuestion =
+      questions !== null &&
+      questions.some((question) => question.title === title && question.title != oldQuestionData.title);
 
     const isInputFieldEmpty =
       !title || !complexity || !categories || descriptionClean.length == 0;
 
-    // if (isDuplicateQuestion) {
-    //   handleDuplicateQuestion();
-    // } else
-    if (isInputFieldEmpty) {
+    if (isDuplicateQuestion) {
+      handleDuplicateQuestion();
+    } else if (isInputFieldEmpty) {
       handleEmptyInputField();
     } else {
       try {
         const fieldsToUpdate = Object.keys(questionData).reduce((acc, key) => {
-          
           if (oldQuestionData[key] !== questionData[key]) {
             acc[key] = questionData[key];
           }
