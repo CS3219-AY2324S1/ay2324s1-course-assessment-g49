@@ -13,6 +13,7 @@ import {
   Box,
   InputLabel,
   Select,
+  Chip,
 } from "@mui/material";
 import CustomSnackbar from "./CustomSnackbar";
 import axios from "axios";
@@ -28,6 +29,7 @@ import {
 } from "../utils/QuestionUtil";
 
 function EditQuestionDialog({ question, onEdit }) {
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefs = {
     title: useRef(null),
     categories: useRef(null),
@@ -191,6 +193,19 @@ function EditQuestionDialog({ question, onEdit }) {
         value={questionData[id]}
         onChange={handleChange}
         inputRef={inputRefs[id]}
+        renderValue={(selected) => (
+          <>
+            {multiple ? (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            ) : (
+              selected
+            )}
+          </>
+        )}
       >
         {renderOptions(id)}
       </Select>
@@ -200,7 +215,7 @@ function EditQuestionDialog({ question, onEdit }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/question/${question.id}`
+        `${databaseURL}/question/${question.id}`
       );
       const data = response.data;
       const cat = data.categories;
@@ -210,7 +225,7 @@ function EditQuestionDialog({ question, onEdit }) {
       data.categories = cat;
       setQuestionData(data);
       setOldQuestionData(data);
-      const storedQuestions = await axios.get(`http://localhost:8080/question`);
+      const storedQuestions = await axios.get(`${databaseURL}/question`);
       setQuestions(storedQuestions.data);
     } catch (error) {
       console.error("Error fetching question data", error);

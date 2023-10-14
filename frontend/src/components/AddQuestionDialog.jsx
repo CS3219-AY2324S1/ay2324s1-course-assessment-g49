@@ -12,6 +12,7 @@ import {
   Box,
   InputLabel,
   Select,
+  Chip,
 } from "@mui/material";
 import CustomSnackbar from "./CustomSnackbar";
 import axios from "axios";
@@ -25,6 +26,7 @@ import {
 } from "../utils/QuestionUtil";
 
 function AddQuestionDialog({ onAddQuestion }) {
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefs = {
     title: useRef(null),
   };
@@ -113,7 +115,7 @@ function AddQuestionDialog({ onAddQuestion }) {
         description,
       };
 
-      await axios.post("http://localhost:8080/question", newQuestion);
+      await axios.post(`${databaseURL}/question`, newQuestion);
       onAddQuestion();
       setCategory([]);
       setComplexity(fieldOptions["complexity"][0]);
@@ -124,7 +126,24 @@ function AddQuestionDialog({ onAddQuestion }) {
   const renderSelectField = (state, id, label, multiple, handleChange) => (
     <>
       <InputLabel>{label}</InputLabel>
-      <Select multiple={multiple} value={state} onChange={handleChange}>
+      <Select
+        multiple={multiple}
+        value={state}
+        onChange={handleChange}
+        renderValue={(selected) => (
+          <>
+            {multiple ? (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            ) : (
+              selected
+            )}
+          </>
+        )}
+      >
         {renderOptions(id)}
       </Select>
     </>
@@ -151,7 +170,7 @@ function AddQuestionDialog({ onAddQuestion }) {
 
   const fetchQuestions = async () => {
     try {
-      const storedQuestions = await axios.get(`http://localhost:8080/question`);
+      const storedQuestions = await axios.get(`${databaseURL}/question`);
       setQuestions(storedQuestions.data);
     } catch (error) {
       console.error("Error fetching user data", error);

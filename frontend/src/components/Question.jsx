@@ -21,6 +21,7 @@ import "react-quill/dist/quill.snow.css";
 import EditQuestionDialog from "./EditQuestionDialog";
 
 function Question({ question, questionId, onDelete, onEdit }) {
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = async () => {
@@ -31,9 +32,7 @@ function Question({ question, questionId, onDelete, onEdit }) {
   const [description, setDescription] = React.useState("");
 
   const loadDesciption = async () => {
-    const response = await axios.get(
-      `http://localhost:8080/question/${question.id}`
-    );
+    const response = await axios.get(`${databaseURL}/question/${question.id}`);
     setDescription(response.data.description);
   };
 

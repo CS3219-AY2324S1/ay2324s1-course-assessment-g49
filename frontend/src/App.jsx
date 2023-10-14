@@ -3,17 +3,15 @@ import QuestionList from "./components/QuestionList";
 import "./App.css";
 import Box from "@mui/material/Box";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import AddQuestionDialog from "./components/AddQuestionDialog";
 import Theme from "./themes/Theme";
 import { reverseCategoryMapping } from "./utils/QuestionUtil";
 
 function App() {
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [questions, setQuestions] = useState([]);
-  const { id } = useParams();
-
   const loadQuestions = async () => {
-    const questions = await axios.get("http://localhost:8080/question");
+    const questions = await axios.get(`${databaseURL}/question`);
     for (let i = 0; i < questions.data.length; i++) {
       let question = questions.data[i];
       for (let j = 0; j < question.categories.length; j++) {
@@ -24,12 +22,12 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:8080/question/${id}`);
+    await axios.delete(`${databaseURL}/question/${id}`);
     loadQuestions();
   };
 
   const handleEdit = async (id, fieldsToUpdate) => {
-    await axios.patch(`http://localhost:8080/question/${id}`, fieldsToUpdate);
+    await axios.patch(`${databaseURL}/question/${id}`, fieldsToUpdate);
     loadQuestions();
   };
 
