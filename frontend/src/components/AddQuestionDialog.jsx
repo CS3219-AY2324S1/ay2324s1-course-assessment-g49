@@ -25,7 +25,7 @@ import {
   complexityOptions,
 } from "../utils/QuestionUtil";
 
-function AddQuestionDialog({ onAddQuestion }) {
+function AddQuestionDialog({ questions, onAddQuestion }) {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefs = {
     title: useRef(null),
@@ -36,7 +36,6 @@ function AddQuestionDialog({ onAddQuestion }) {
     categories: categoriesOptions,
   };
 
-  const [questions, setQuestions] = useState([]);
   const [complexity, setComplexity] = useState(fieldOptions["complexity"][0]);
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState([]);
@@ -168,17 +167,7 @@ function AddQuestionDialog({ onAddQuestion }) {
     ));
   };
 
-  const fetchQuestions = async () => {
-    try {
-      const storedQuestions = await axios.get(`${databaseURL}/question`);
-      setQuestions(storedQuestions.data);
-    } catch (error) {
-      console.error("Error fetching user data", error);
-    }
-  };
-
   useEffect(() => {
-    fetchQuestions();
     onAddQuestion();
   }, []);
 
