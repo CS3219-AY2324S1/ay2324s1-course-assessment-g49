@@ -3,9 +3,8 @@ const Editor = {
     toolbar: [
       [{ header: "1" }, { header: "2" }],
       [{ size: [] }],
-      [{ script: "sub" }, { script: "super" }][
-        ("bold", "italic", "underline", "code", "blockquote", "code-block")
-      ],
+      [{ script: "sub" }, { script: "super" }],
+      [("bold", "italic", "underline", "code", "blockquote", "code-block")],
       [
         { list: "ordered" },
         { list: "bullet" },
