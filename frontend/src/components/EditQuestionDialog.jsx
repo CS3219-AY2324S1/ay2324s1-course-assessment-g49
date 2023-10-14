@@ -11,6 +11,9 @@ import {
   Stack,
   MenuItem,
   Box,
+  InputLabel,
+  Select,
+  Chip,
 } from "@mui/material";
 import CustomSnackbar from "./CustomSnackbar";
 import axios from "axios";
@@ -18,14 +21,15 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Editor from "./Editor";
 import EditIcon from "@mui/icons-material/Edit";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
+import {
+  categoriesOptions,
+  categoryMapping,
+  reverseCategoryMapping,
+  complexityOptions,
+} from "../utils/QuestionUtil";
 
 function EditQuestionDialog({ question, onEdit }) {
-  //   const storedQuestions = JSON.parse(localStorage.getItem("questions"));
-  //   const questions = storedQuestions !== null ? storedQuestions : [];
-  const [questions, setQuestions] = useState([]);
-
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefs = {
     title: useRef(null),
     categories: useRef(null),
@@ -33,65 +37,31 @@ function EditQuestionDialog({ question, onEdit }) {
     description: useRef(null),
   };
 
+  const fieldOptions = {
+    complexity: complexityOptions,
+    categories: categoriesOptions,
+  };
+
+  const [questions, setQuestions] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setsnackbarMessage] = useState("");
   const [questionData, setQuestionData] = useState({
     title: "",
     categories: "",
     complexity: "",
     description: "",
   });
-
   const [oldQuestionData, setOldQuestionData] = useState({ ...questionData });
-
-  const categories = [
-    "Arrays",
-    "Strings",
-    "Algorithms",
-    "Data Structures",
-    "Bit Manipulation",
-    "Recursion",
-    "Databases",
-    "Brainteaser",
-  ];
-
-  var categoryDict = {
-    Arrays: "ARRAYS",
-    Strings: "STRINGS",
-    Algorithms: "ALGORITHMS",
-    "Data Structures": "DATA_STRUCTURES",
-    "Bit Manipulation": "BIT_MANIPULATION",
-    Recursion: "RECURSION",
-    Databases: "DATABASES",
-    Brainteaser: "BRAINTEASER",
-  };
-
-  var reverseDict = {
-    'ARRAYS': 'Arrays',
-    'STRINGS': 'Strings',
-    'ALGORITHMS': 'Algorithms',
-    'DATA_STRUCTURES': 'Data Structures',
-    'BIT_MANIPULATION': 'Bit Manipulation',
-    'RECURSION': 'Recursion',
-    'DATABASES': 'Databases',
-    'BRAINTEASER': 'Brainteaser'
-  }
-
-
-
-  const complexityLevels = ["EASY", "MEDIUM", "HARD"];
-
-  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     fetchData();
-    setOpen(true);
+    setOpenDialog(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDialog(false);
   };
-
-  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setsnackbarMessage] = useState("");
 
   const handleDuplicateQuestion = () => {
     setsnackbarMessage("Duplicate question detected!");
@@ -125,13 +95,12 @@ function EditQuestionDialog({ question, onEdit }) {
     }));
   };
 
-  const handleCategoriesChange = (evt) => {
-    console.log(evt.target.value);
+  const handleSelectChange = (name, evt) => {
     setQuestionData((prevQuestionData) => ({
-        ...prevQuestionData,
-        categories: evt.target.value,
-      }));
-  }
+      ...prevQuestionData,
+      [name]: evt.target.value,
+    }));
+  };
 
   const handleError = (message) => {
     setsnackbarMessage(message);
@@ -141,20 +110,25 @@ function EditQuestionDialog({ question, onEdit }) {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    const title = inputRefs.title.current.value;
+    const title = inputRefs.title.current.value.trim();
     const complexity = inputRefs.complexity.current.value;
     const categories = inputRefs.categories.current.value;
     const description = inputRefs.description.current.value;
     const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
+
     const isDuplicateQuestion =
       questions !== null &&
       questions.some(
         (question) =>
-          question.title === title && question.title != oldQuestionData.title
+          question.title.toLowerCase() === title.toLowerCase() &&
+          question.title.toLowerCase() != oldQuestionData.title.toLowerCase()
       );
 
     const isInputFieldEmpty =
-      !title || !complexity || !categories || descriptionClean.length == 0;
+      !title ||
+      !complexity ||
+      categories.length == 0 ||
+      descriptionClean.length == 0;
 
     if (isDuplicateQuestion) {
       handleDuplicateQuestion();
@@ -163,7 +137,7 @@ function EditQuestionDialog({ question, onEdit }) {
     } else {
       try {
         for (let i = 0; i < categories.length; i++) {
-          categories[i] = categoryDict[categories[i]];
+          categories[i] = categoryMapping[categories[i]];
         }
         const newQuestion = {
           title,
@@ -190,20 +164,68 @@ function EditQuestionDialog({ question, onEdit }) {
     }
   };
 
+  const renderOptions = (id) => {
+    const options = fieldOptions[id];
+    return options.map((option) => (
+      <MenuItem value={option} key={option}>
+        {option}
+      </MenuItem>
+    ));
+  };
+
+  const renderTextField = (id, label, handleChange) => (
+    <TextField
+      className="textField same-width-textfield"
+      name={id}
+      label={label}
+      value={questionData[id]}
+      variant="filled"
+      inputRef={inputRefs[id]}
+      onChange={handleChange}
+    ></TextField>
+  );
+
+  const renderSelectField = (id, label, multiple, handleChange) => (
+    <>
+      <InputLabel>{label}</InputLabel>
+      <Select
+        multiple={multiple}
+        value={questionData[id]}
+        onChange={handleChange}
+        inputRef={inputRefs[id]}
+        renderValue={(selected) => (
+          <>
+            {multiple ? (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            ) : (
+              selected
+            )}
+          </>
+        )}
+      >
+        {renderOptions(id)}
+      </Select>
+    </>
+  );
+
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/question/${question.id}`
+        `${databaseURL}/question/${question.id}`
       );
       const data = response.data;
       const cat = data.categories;
       for (let i = 0; i < cat.length; i++) {
-        cat[i] = reverseDict[cat[i]];
+        cat[i] = reverseCategoryMapping[cat[i]];
       }
-      data.categories=cat;
+      data.categories = cat;
       setQuestionData(data);
       setOldQuestionData(data);
-      const storedQuestions = await axios.get(`http://localhost:8080/question`);
+      const storedQuestions = await axios.get(`${databaseURL}/question`);
       setQuestions(storedQuestions.data);
     } catch (error) {
       console.error("Error fetching question data", error);
@@ -222,7 +244,7 @@ function EditQuestionDialog({ question, onEdit }) {
         </ListItemIcon>
         Edit
       </MenuItem>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={openDialog} onClose={handleClose}>
         <DialogTitle>Edit Question</DialogTitle>
         <DialogContent>
           <Box direction="column">
@@ -238,47 +260,19 @@ function EditQuestionDialog({ question, onEdit }) {
               }}
             >
               <Stack spacing={2}>
-                <TextField
-                  className="textField same-width-textfield"
-                  name="title"
-                  label="Question Title"
-                  value={questionData.title}
-                  variant="filled"
-                  onChange={handleFieldChange}
-                  type="text"
-                  inputRef={inputRefs.title}
-                ></TextField>
-                <InputLabel id="multiple-category-label">Category</InputLabel>
-                <Select
-                  labelId="multiple-category-label"
-                  id="multiple-category"
-                  multiple
-                  value={questionData.categories}
-                  onChange={handleCategoriesChange}
-                  inputRef={inputRefs.categories}
-                >
-                  {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <TextField
-                  select
-                  name="complexity"
-                  label="Question Complexity"
-                  value={questionData.complexity}
-                  variant="filled"
-                  onChange={handleFieldChange}
-                  inputRef={inputRefs.complexity}
-                  className="textField same-width-textfield"
-                >
-                  {complexityLevels.map((option) => (
-                    <MenuItem value={option} key={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                {renderTextField("title", "Question Title", handleFieldChange)}
+                {renderSelectField(
+                  "complexity",
+                  "Question Complexity",
+                  false,
+                  (e) => handleSelectChange("complexity", e)
+                )}
+                {renderSelectField(
+                  "categories",
+                  "Question Category",
+                  true,
+                  (e) => handleSelectChange("categories", e)
+                )}
                 <DialogContentText>Question Description</DialogContentText>
                 <ReactQuill
                   ref={inputRefs.description}
