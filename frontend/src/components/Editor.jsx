@@ -4,7 +4,7 @@ const Editor = {
       [{ header: "1" }, { header: "2" }],
       [{ size: [] }],
       [{ script: "sub" }, { script: "super" }],
-      [("bold", "italic", "underline", "code", "blockquote", "code-block")],
+      ["bold", "italic", "underline", "code", "blockquote", "code-block"],
       [
         { list: "ordered" },
         { list: "bullet" },
@@ -27,6 +27,7 @@ const Editor = {
     "list",
     "bullet",
     "indent",
+    "script",
     "image",
   ],
 };
