@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import AddQuestionDialog from '../components/AddQuestionDialog';
-import QuestionList from '../components/QuestionList';
-import { Box } from '@mui/material';
-import axios from 'axios';
-import { reverseCategoryMapping } from '../utils/QuestionUtil';
+import { useState, useEffect } from "react";
+import AddQuestionDialog from "../components/AddQuestionDialog";
+import QuestionList from "../components/QuestionList";
+import { Box, Grid } from "@mui/material";
+import axios from "axios";
+import { reverseCategoryMapping } from "../utils/QuestionUtil";
+import NavBar from "../components/NavBar";
 
 const QuestionsRepo = () => {
-	const databaseURL = import.meta.env.VITE_DATABASE_URL;
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [questions, setQuestions] = useState([]);
   const loadQuestions = async () => {
     const questions = await axios.get(`${databaseURL}/question`);
@@ -35,22 +36,27 @@ const QuestionsRepo = () => {
 
   return (
     <>
-        <h1>Question Repository</h1>
-        <Box direction="column">
-          <Box mb={2}>
-            <AddQuestionDialog
-              questions={questions}
-              onAddQuestion={loadQuestions}
-            />
-          </Box>
-          <Box mb={2}>
-            <QuestionList
-              questions={questions}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          </Box>
-        </Box>
+      <Grid container direction="column">
+        <Grid item>
+          <NavBar />
+        </Grid>
+        <Grid item>
+          <h1>Question Repository</h1>
+        </Grid>
+        <Grid item mb={2}>
+          <AddQuestionDialog
+            questions={questions}
+            onAddQuestion={loadQuestions}
+          />
+        </Grid>
+        <Grid item mb={2}>
+          <QuestionList
+            questions={questions}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 };
