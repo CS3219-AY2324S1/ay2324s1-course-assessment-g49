@@ -97,24 +97,6 @@ paths:
         '200':
           description: Successfully deleted question. Empty response
   /users:
-    post:
-      tags:
-        - users
-      description: Creates a user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateUserRequest"
-      responses:
-        '200':
-          description: Successfully created user
-          content:
-            text/plain:
-              schema:
-                type: string
-                description: Id of newly created user
-                example: 1
     get:
       tags:
         - users
