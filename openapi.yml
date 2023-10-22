@@ -275,7 +275,7 @@ components:
         complexity:
           type: string
           example: MEDIUM
-    CreateUserRequest:
+    RegisterRequest:
       type: object
       required:
         - username
