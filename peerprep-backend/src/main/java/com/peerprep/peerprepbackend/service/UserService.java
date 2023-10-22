@@ -2,7 +2,7 @@ package com.peerprep.peerprepbackend.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.peerprep.peerprepbackend.dto.request.CreateUserRequest;
+import com.peerprep.peerprepbackend.dto.request.RegisterRequest;
 import com.peerprep.peerprepbackend.dto.request.UpdateUserRequest;
 import com.peerprep.peerprepbackend.dto.response.LoginResponse;
 import com.peerprep.peerprepbackend.dto.response.UserResponse;
@@ -64,7 +64,7 @@ public class UserService {
                 .build();
     }
 
-    public Long createUser(CreateUserRequest request) throws UsernameExistsException, EmailExistsException {
+    public Long createUser(RegisterRequest request) throws UsernameExistsException, EmailExistsException {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameExistsException(request.getUsername());
         }
