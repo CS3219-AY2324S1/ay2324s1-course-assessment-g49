@@ -1,5 +1,7 @@
 package com.peerprep.peerprepbackend.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.peerprep.peerprepbackend.dto.request.CreateUserRequest;
 import com.peerprep.peerprepbackend.dto.request.UpdateUserRequest;
 import com.peerprep.peerprepbackend.dto.response.LoginResponse;
@@ -8,11 +10,14 @@ import com.peerprep.peerprepbackend.entity.User;
 import com.peerprep.peerprepbackend.exception.*;
 import com.peerprep.peerprepbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +32,12 @@ public class UserService {
 
     private final AuthenticationManager authenticationManager;
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
     /**
      * Authenticate credentials using configured AuthenticationManager
      */
@@ -34,13 +45,14 @@ public class UserService {
         // throws AuthenticationException if fails
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        User user = userRepository.findFirstByUsername(username).orElseThrow(BadCredentialsException::new);
-
-        // todo: generate jwt here and change login response to contain only jwt
+        String token = JWT.create()
+                .withIssuer("peerprep-backend")
+                .withSubject(username)
+                .withExpiresAt(Instant.now().plusSeconds(jwtExpiration))
+                .sign(Algorithm.HMAC256(jwtSecret));
 
         return LoginResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
+                .jwt(token)
                 .build();
     }
 
