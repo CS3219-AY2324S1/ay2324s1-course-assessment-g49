@@ -1,6 +1,6 @@
 package com.peerprep.peerprepbackend.controller;
 
-import com.peerprep.peerprepbackend.dto.request.CreateUserRequest;
+import com.peerprep.peerprepbackend.dto.request.RegisterRequest;
 import com.peerprep.peerprepbackend.dto.request.LoginRequest;
 import com.peerprep.peerprepbackend.dto.response.LoginResponse;
 import com.peerprep.peerprepbackend.exception.EmailExistsException;
@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody final CreateUserRequest request) throws UsernameExistsException, EmailExistsException {
+    public ResponseEntity<String> register(@Valid @RequestBody final RegisterRequest request) throws UsernameExistsException, EmailExistsException {
         Long id = userService.createUser(request);
         return ResponseEntity.status(201).body(Long.toString(id));
     }
