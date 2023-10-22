@@ -183,6 +183,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
+  /auth/regsiter:
+    post:
+      tags:
+        - auth
+      description: Registers a user with details
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        '200':
+          description: Successfully registered user
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Id of newly created user
+                example: 1
 
 components:
   schemas:
