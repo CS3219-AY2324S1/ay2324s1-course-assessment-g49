@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,6 +13,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../components/Copyright";
+import CustomSnackbar from "../components/CustomSnackbar";
 import axios from "axios";
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -24,23 +25,56 @@ export default function LoginPage() {
   const inputRefPassword = useRef(null);
   const navigate = useNavigate();
 
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setsnackbarMessage] = useState("");
+
+  const handleEmptyInputField = () => {
+    setsnackbarMessage("Missing fields detected!");
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason == "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  /*
+	Renders snackbar with error message
+	*/
+  const handleError = (message) => {
+    setsnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const username = inputRefUsername.current.value;
       const password = inputRefPassword.current.value;
       console.log(username);
-      const user = {
-        username,
-        password,
-      };
-      await axios.post("http://localhost:8080/auth/login", user).then((res) => {
-        console.log(res.data);
-      });
-      navigate("/home");
-      alert("User Logged In Successfully");
+
+      const isInputFieldEmpty = !username || !password;
+
+      if (isInputFieldEmpty) {
+        handleEmptyInputField();
+      } else {
+        const user = {
+          username,
+          password,
+        };
+        await axios
+          .post("http://localhost:8080/auth/login", user)
+          .then((res) => {
+            console.log(res.data);
+          });
+        navigate("/home");
+        alert("User Logged In Successfully");
+      }
     } catch (err) {
-      alert(err);
+      handleError(err.response.data);
+      console.error("Error updating user's data", err);
     }
   };
 
@@ -131,6 +165,12 @@ export default function LoginPage() {
                 </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />
+              <CustomSnackbar
+                open={isSnackbarOpen}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+                severity="warning"
+              ></CustomSnackbar>
             </Box>
           </Box>
         </Grid>

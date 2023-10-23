@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,6 +12,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CountrySelect from "../components/CountrySelect";
 import Copyright from "../components/Copyright";
+import CustomSnackbar from "../components/CustomSnackbar";
 import axios from "axios";
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -26,6 +27,34 @@ export default function RegisterPage() {
 
   const navigate = useNavigate();
 
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setsnackbarMessage] = useState("");
+
+  const handleEmptyInputField = () => {
+    setsnackbarMessage("Missing fields detected!");
+    setSnackbarOpen(true);
+  };
+
+  const handleWhitespace = () => {
+    setsnackbarMessage("No whitespace allowed in username!");
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason == "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  /*
+	Renders snackbar with error message
+	*/
+  const handleError = (message) => {
+    setsnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -35,18 +64,30 @@ export default function RegisterPage() {
       console.log(country);
       const email = inputRefEmail.current.value;
       const password = inputRefPassword.current.value;
-      const newUser = {
-        username,
-        email,
-        country,
-        password,
-      };
-      console.log(newUser);
-      await axios.post("http://localhost:8080/users", newUser);
-      navigate("/");
-      alert("User Registration Successfully");
+
+      const usernameContainsWhitespace = username.indexOf(" ") >= 0;
+
+      const isInputFieldEmpty = !username || !country || !email || !password;
+
+      if (usernameContainsWhitespace) {
+        handleWhitespace();
+      } else if (isInputFieldEmpty) {
+        handleEmptyInputField();
+      } else {
+        const newUser = {
+          username,
+          email,
+          country,
+          password,
+        };
+        console.log(newUser);
+        await axios.post("http://localhost:8080/users", newUser);
+        navigate("/");
+        alert("User Registration Successfully");
+      }
     } catch (err) {
-      alert(err);
+      handleError(err.response.data);
+      console.error("Error updating user's data", err);
     }
   };
 
@@ -141,6 +182,12 @@ export default function RegisterPage() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />
+        <CustomSnackbar
+          open={isSnackbarOpen}
+          onClose={handleSnackbarClose}
+          message={snackbarMessage}
+          severity="warning"
+        ></CustomSnackbar>
       </Container>
     </ThemeProvider>
   );
