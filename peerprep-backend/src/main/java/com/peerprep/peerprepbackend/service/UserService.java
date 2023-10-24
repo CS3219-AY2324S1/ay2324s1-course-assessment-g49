@@ -80,19 +80,19 @@ public class UserService {
     public void updateUser(String id, UpdateUserRequest request) throws UsernameExistsException, EmailExistsException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-        if (request.getUsername() != null) {
+        if (request.getUsername() != null && !request.getUsername().equals(user.getUsername())) {
             if (userRepository.existsByUsername(request.getUsername())) {
                 throw new UsernameExistsException(request.getUsername());
             }
             user.setUsername(request.getUsername());
         }
-        if (request.getEmail() != null) {
+        if (request.getEmail() != null && !request.getEmail().equals(user.getEmail())) {
             if (userRepository.existsByEmail(request.getEmail())) {
                 throw new EmailExistsException(request.getEmail());
             }
             user.setEmail(request.getEmail());
         }
-        if (request.getCountry() != null) {
+        if (request.getCountry() != null && !request.getCountry().equals(user.getCountry())) {
             user.setCountry(request.getCountry());
         }
         if (request.getPassword() != null) {
