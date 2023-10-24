@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-const userContextProvider = createContext({
+const UserContextProvider = createContext({
   userContext: {
     username: null,
     userId: null,
@@ -8,4 +8,4 @@ const userContextProvider = createContext({
   setUserContext: () => {},
 });
 
-export default userContextProvider;
+export default UserContextProvider;

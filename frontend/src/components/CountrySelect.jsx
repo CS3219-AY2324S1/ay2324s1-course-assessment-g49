@@ -1,14 +1,41 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
-export default function CountrySelect({ inputRefCountry }) {
+export default function CountrySelect({
+  inputRefCountry,
+  defaultCountryLabel,
+  onSelect,
+}) {
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  useEffect(() => {
+    if (defaultCountryLabel) {
+      const defaultCountryOption = countries.find(
+        (country) => country.label === defaultCountryLabel
+      );
+
+      if (defaultCountryOption) {
+        setSelectedCountry(defaultCountryOption);
+      }
+    }
+  }, [defaultCountryLabel]);
+
   return (
     <Autocomplete
       id="country-select-demo"
       options={countries}
       autoHighlight
+      value={selectedCountry}
+      onChange={(evt, newValue) => {
+        setSelectedCountry(newValue);
+        if (onSelect) {
+          onSelect(newValue ? newValue.label : "");
+        }
+      }}
+      inputValue={selectedCountry ? selectedCountry.label : ""}
       getOptionLabel={(option) => option.label}
       renderOption={(props, option) => (
         <Box
