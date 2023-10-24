@@ -25,13 +25,13 @@ function Question({ question, questionId, onDelete, onEdit }) {
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = async () => {
-    loadDesciption();
+    loadDescription();
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
   const [description, setDescription] = React.useState("");
 
-  const loadDesciption = async () => {
+  const loadDescription = async () => {
     const response = await axios.get(`${databaseURL}/question/${question.id}`);
     setDescription(response.data.description);
   };
@@ -44,10 +44,6 @@ function Question({ question, questionId, onDelete, onEdit }) {
   const handleCloseActions = () => {
     setAnchorEl(null);
   };
-
-  useEffect(() => {
-    loadDesciption();
-  }, []);
 
   return (
     <TableRow key={question.title}>
