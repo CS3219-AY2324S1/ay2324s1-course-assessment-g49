@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import {
 	Button,
 	IconButton,
@@ -10,22 +10,22 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import CustomSnackbar from '../../components/CustomSnackbar';
 import axios from 'axios';
+import userContextProvider from '../../utils/Context';
+
 
 function EditProfile() {
-	const userId = 'userId'; // TODO: obtain user id after logging in
-	const [showPassword, setShowPassword] = useState(false);
-	const handleClickShowPassword = () => setShowPassword((show) => !show);
+	const { userContext, setUserContext } = useContext(userContextProvider);
+	console.log(userContext, userContext.userId)
+	const userId = userContext.userId; // TODO: obtain user id after logging in
 	const inputRefs = {
 		username: useRef(null),
 		email: useRef(null),
 		country: useRef(null),
-		password: useRef(null),
 	};
 	const [userData, setUserData] = useState({
 		username: '',
 		email: '',
 		country: '',
-		password: '',
 	});
 	const [oldUserData, setOldUserData] = useState({ ...userData });
 	const [isSnackbarOpen, setSnackbarOpen] = useState(false);
@@ -46,6 +46,7 @@ function EditProfile() {
 			const response = await axios.get(`http://localhost:8080/users/${userId}`);
 			setUserData(response.data);
 			setOldUserData(response.data);
+			console.log(response.data)
 		} catch (error) {
 			console.error('Error fetching user data', error);
 		}
@@ -93,6 +94,8 @@ function EditProfile() {
 				fieldsToUpdate
 			);
 
+			localStorage.setItem('user', JSON.stringify({username: userData.username, id: userId }));
+
 			if (Object.keys(fieldsToUpdate).length > 0) {
 				setOldUserData(fieldsToUpdate);
 			}
@@ -102,28 +105,18 @@ function EditProfile() {
 		}
 	};
 
-	const passwordInputProps = {
-		endAdornment: (
-			<InputAdornment position="end">
-				<IconButton onClick={handleClickShowPassword} edge="end">
-					{showPassword ? <VisibilityOff /> : <Visibility />}
-				</IconButton>
-			</InputAdornment>
-		),
-	};
 
 	const renderTextField = (name, label, type = 'text') => (
 		<Grid item xs={12}>
 			<TextField
 				label={label}
 				name={name}
-				value={userData[name] || 'placeholder'}
+				value={userData[name]}
 				variant="filled"
 				fullWidth
 				type={type}
 				onChange={handleFieldChange}
 				inputRef={inputRefs[name]}
-				InputProps={name === 'password' ? passwordInputProps : undefined}
 			/>
 		</Grid>
 	);
@@ -137,11 +130,6 @@ function EditProfile() {
 				{renderTextField('username', 'Username')}
 				{renderTextField('email', 'Email')}
 				{renderTextField('country', 'Country')}
-				{renderTextField(
-					'password',
-					'Password',
-					showPassword ? 'text' : 'password'
-				)}
 			</Grid>
 			<Grid item xs={12}>
 				<Button variant="contained" onClick={handleSave}>

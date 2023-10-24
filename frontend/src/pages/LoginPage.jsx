@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Copyright from "../components/Copyright";
 import CustomSnackbar from "../components/CustomSnackbar";
 import axios from "axios";
+import userContextProvider from "../utils/Context";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -24,9 +25,9 @@ export default function LoginPage() {
   const inputRefUsername = useRef(null);
   const inputRefPassword = useRef(null);
   const navigate = useNavigate();
-
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setsnackbarMessage] = useState("");
+  const { userContext, setUserContext } = useContext(userContextProvider);
 
   const handleEmptyInputField = () => {
     setsnackbarMessage("Missing fields detected!");
@@ -53,7 +54,6 @@ export default function LoginPage() {
     try {
       const username = inputRefUsername.current.value;
       const password = inputRefPassword.current.value;
-      console.log(username);
 
       const isInputFieldEmpty = !username || !password;
 
@@ -67,7 +67,11 @@ export default function LoginPage() {
         await axios
           .post("http://localhost:8080/auth/login", user)
           .then((res) => {
-            console.log(res.data);
+            setUserContext({
+              username: res.data.username,
+              userId: res.data.id,
+            });
+            localStorage.setItem('user', JSON.stringify(res.data));
           });
         navigate("/home");
         alert("User Logged In Successfully");

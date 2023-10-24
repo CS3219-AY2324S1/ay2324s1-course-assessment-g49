@@ -29,6 +29,10 @@ const NavBar = () => {
     }
   }, [location]);
 
+  const handleLogOut = (evt) => {
+    localStorage.setItem('user', JSON.stringify({username: null, id: null }));
+  }
+
   return (
     <div>
       <AppBar position="fixed">
@@ -47,7 +51,7 @@ const NavBar = () => {
               />
             ))}
           </Tabs>
-          <Button variant="text" href="/">
+          <Button variant="text" href="/" onClick={handleLogOut}>
             Log Out
           </Button>
         </Toolbar>
