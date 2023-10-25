@@ -26,7 +26,7 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateQuestionRequest"
       responses:
-        '200':
+        "200":
           description: Question successfully created
           content:
             text/plain:
@@ -39,7 +39,7 @@ paths:
         - questions
       description: Retrieves a list of all questions
       responses:
-        '200':
+        "200":
           description: Successfully retrieved all questions
           content:
             application/json:
@@ -59,15 +59,15 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully retrieved question
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/QuestionResponse"
     patch:
-      tags: 
-      - questions
+      tags:
+        - questions
       description: Updates a specific question
       parameters:
         - name: id
@@ -81,7 +81,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateQuestionRequest"
       responses:
-        '200':
+        "200":
           description: Successfully updated question. Empty response
     delete:
       tags:
@@ -94,7 +94,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully deleted question. Empty response
   /users:
     get:
@@ -102,7 +102,7 @@ paths:
         - users
       description: Retrieves a list of all users
       responses:
-        '200':
+        "200":
           description: Successfully retrieved all users
           content:
             application/json:
@@ -122,7 +122,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully retrieved user
           content:
             application/json:
@@ -144,7 +144,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateUserRequest"
       responses:
-        '200':
+        "200":
           description: Successfully updated user
           content:
             text/plain:
@@ -164,26 +164,26 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully deleted user
   /auth/login:
     post:
       tags:
         - auth
       description: Uses username and password to login, and get a JWT
-      requestBody: 
+      requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/LoginRequest"
       responses:
-        '200':
+        "200":
           description: Successfully logged in
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
-  /auth/regsiter:
+  /auth/register:
     post:
       tags:
         - auth
@@ -194,7 +194,7 @@ paths:
             schema:
               $ref: "#/components/schemas/RegisterRequest"
       responses:
-        '200':
+        "200":
           description: Successfully registered user
           content:
             text/plain:
@@ -223,7 +223,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
@@ -237,7 +237,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
@@ -254,7 +254,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
@@ -271,7 +271,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
