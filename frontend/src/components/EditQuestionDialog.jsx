@@ -87,7 +87,7 @@ function EditQuestionDialog({ question, onEdit }) {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    const title = inputRefs.title.current.value.trim();
+    const title = inputRefs.title.current.value.trimEnd();
     const complexity = inputRefs.complexity.current.value;
     const categories = inputRefs.categories.current.value;
     const description = inputRefs.description.current.value;

@@ -61,20 +61,48 @@ function EditProfile() {
 	*/
   const handleSave = async () => {
     try {
-      await axios.patch(`${databaseURL}/users/${userId}`, userData);
+      let hasMissingFields = false;
+      let hasWhiteSpaces = false;
+      for (const key in userData) {
+        if (typeof userData[key] === "string") {
+          userData[key] = userData[key].trimEnd();
+        }
+        if (key == "email" || key == "username") {
+          if (/^\s*$/.test(userData[key])) {
+            hasMissingFields = true;
+          } else if (/\s/.test(userData[key])) {
+            hasWhiteSpaces = true;
+          }
+        }
+      }
+      if (hasMissingFields) {
+        setSnack({
+          message: "Missing input fields detected!",
+          open: true,
+          severity: "warning",
+        });
+      } else if (hasWhiteSpaces) {
+        setSnack({
+          message: "No whitespaces allowed in username or email!",
+          open: true,
+          severity: "warning",
+        });
+      } else {
+        await axios.patch(`${databaseURL}/users/${userId}`, userData);
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ username: userData.username, id: userId })
-      );
-
-      setSnack({
-        message: "Saved successfully",
-        open: true,
-        severity: "success",
-      });
-      fetchData();
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ username: userData.username, id: userId })
+        );
+        setSnack({
+          message: "Saved successfully",
+          open: true,
+          severity: "success",
+        });
+        fetchData();
+      }
     } catch (error) {
+      console.log(error);
       setSnack({
         message: error.response.data,
         open: true,

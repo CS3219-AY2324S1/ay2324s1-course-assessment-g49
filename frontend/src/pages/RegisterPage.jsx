@@ -26,17 +26,18 @@ export default function RegisterPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const username = inputRefUsername.current.value;
-      const country = inputRefCountry.current.value;
-      const email = inputRefEmail.current.value;
+      const username = inputRefUsername.current.value.trimEnd();
+      const country = inputRefCountry.current.value.trimEnd();
+      const email = inputRefEmail.current.value.trimEnd();
       const password = inputRefPassword.current.value;
 
-      const usernameContainsWhitespace = username.indexOf(" ") >= 0;
+      const containsWhitespace =
+        username.indexOf(" ") >= 0 || email.indexOf(" ") >= 0;
       const isInputFieldEmpty = !username || !country || !email || !password;
 
-      if (usernameContainsWhitespace) {
+      if (containsWhitespace) {
         setSnack({
-          message: "No whitespace allowed in username!",
+          message: "No whitespace allowed in username or email!",
           open: true,
           severity: "warning",
         });

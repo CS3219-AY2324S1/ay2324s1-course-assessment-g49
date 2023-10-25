@@ -66,9 +66,9 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    const title = inputRefs["title"].current.value.trim();
+    const title = inputRefs["title"].current.value.trimEnd();
     const categories = category;
-    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
+    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trimEnd();
 
     const isDuplicateQuestion = questions.some(
       (question) => question.title.toLowerCase() === title.toLowerCase()
