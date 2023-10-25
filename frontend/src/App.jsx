@@ -1,59 +1,42 @@
-import { useState, useEffect } from "react";
-import QuestionList from "./components/QuestionList";
 import "./App.css";
-import Box from "@mui/material/Box";
-import axios from "axios";
-import AddQuestionDialog from "./components/AddQuestionDialog";
+import { useState } from "react";
+import { Grid } from "@mui/material";
 import Theme from "./themes/Theme";
-import { reverseCategoryMapping } from "./utils/QuestionUtil";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import Home from "./pages/Home";
+import QuestionsRepo from "./pages/QuestionsRepo";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import { Route, Routes } from "react-router-dom";
+import UserContextProvider from "./utils/UserContextUtil";
+import SnackbarProvider from "./utils/SnackbarContextUtil";
 
 function App() {
-  const databaseURL = import.meta.env.VITE_DATABASE_URL;
-  const [questions, setQuestions] = useState([]);
-  const loadQuestions = async () => {
-    const questions = await axios.get(`${databaseURL}/question`);
-    for (let i = 0; i < questions.data.length; i++) {
-      let question = questions.data[i];
-      for (let j = 0; j < question.categories.length; j++) {
-        question.categories[j] = reverseCategoryMapping[question.categories[j]];
-      }
-    }
-    setQuestions(questions.data);
-  };
-
-  const handleDelete = async (id) => {
-    await axios.delete(`${databaseURL}/question/${id}`);
-    loadQuestions();
-  };
-
-  const handleEdit = async (id, fieldsToUpdate) => {
-    await axios.patch(`${databaseURL}/question/${id}`, fieldsToUpdate);
-    loadQuestions();
-  };
-
-  useEffect(() => {
-    loadQuestions();
-  }, []);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [userContext, setUserContext] = useState({
+    username: user ? user.username : null,
+    userId: user ? user.id : null,
+  });
+  const value = { userContext, setUserContext };
 
   return (
     <>
       <Theme>
-        <h1>Peerprep</h1>
-        <Box direction="column">
-          <Box mb={2}>
-            <AddQuestionDialog
-              questions={questions}
-              onAddQuestion={loadQuestions}
-            />
-          </Box>
-          <Box mb={2}>
-            <QuestionList
-              questions={questions}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
-          </Box>
-        </Box>
+        <Grid container>
+          <Grid item xs={12}>
+            <UserContextProvider.Provider value={value}>
+              <SnackbarProvider>
+                <Routes>
+                  <Route path="/" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/home" element={<Home />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/questions" element={<QuestionsRepo />} />
+                </Routes>
+              </SnackbarProvider>
+            </UserContextProvider.Provider>
+          </Grid>
+        </Grid>
       </Theme>
     </>
   );

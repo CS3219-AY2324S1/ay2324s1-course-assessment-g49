@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import {
   Button,
   TextField,
@@ -14,7 +14,7 @@ import {
   Select,
   Chip,
 } from "@mui/material";
-import CustomSnackbar from "./CustomSnackbar";
+import { SnackbarContext } from "../utils/SnackbarContextUtil";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -40,8 +40,7 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
-  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setsnackbarMessage] = useState("");
+  const { snack, setSnack } = useContext(SnackbarContext);
 
   const handleSelectChange = (event, id) => {
     const {
@@ -64,29 +63,12 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
     setOpenDialog(false);
   };
 
-  const handleDuplicateQuestion = () => {
-    setsnackbarMessage("Duplicate question detected!");
-    setSnackbarOpen(true);
-  };
-
-  const handleEmptyInputField = () => {
-    setsnackbarMessage("Missing fields detected!");
-    setSnackbarOpen(true);
-  };
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason == "clickaway") {
-      return;
-    }
-    setSnackbarOpen(false);
-  };
-
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    const title = inputRefs["title"].current.value.trim();
+    const title = inputRefs["title"].current.value.trimEnd();
     const categories = category;
-    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trim();
+    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trimEnd();
 
     const isDuplicateQuestion = questions.some(
       (question) => question.title.toLowerCase() === title.toLowerCase()
@@ -99,9 +81,17 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
       descriptionClean.length == 0;
 
     if (isDuplicateQuestion) {
-      handleDuplicateQuestion();
+      setSnack({
+        message: "Duplicate question detected!",
+        open: true,
+        severity: "warning",
+      });
     } else if (isInputFieldEmpty) {
-      handleEmptyInputField();
+      setSnack({
+        message: "Missing fields detected!",
+        open: true,
+        severity: "warning",
+      });
     } else {
       for (let i = 0; i < categories.length; i++) {
         categories[i] = categoryMapping[categories[i]];
@@ -224,12 +214,6 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
           <Button onClick={handleSubmit}>Add Question</Button>
         </DialogActions>
       </Dialog>
-      <CustomSnackbar
-        open={isSnackbarOpen}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        severity="warning"
-      ></CustomSnackbar>
     </div>
   );
 }
