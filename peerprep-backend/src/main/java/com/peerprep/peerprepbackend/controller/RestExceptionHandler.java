@@ -1,9 +1,11 @@
 package com.peerprep.peerprepbackend.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.peerprep.peerprepbackend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -75,5 +77,15 @@ public class RestExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    /**
+     * Thrown when Jackson runs into an error deserializing a JSON object, such as:
+     * 1. wrong spelling of enums
+     * Will probably only happen at the Websocket message deserialization
+     */
+    @MessageExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<String> handleInvalidFormatException(InvalidFormatException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getLocalizedMessage());
     }
 }

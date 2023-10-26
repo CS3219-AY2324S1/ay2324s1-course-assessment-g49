@@ -27,7 +27,7 @@ function MatchPage() {
       setStompClient(client);
       console.log("Connected: " + frame);
       client.subscribe("/topic/match", (reply) => {
-        showReply(JSON.parse(reply.body).reply);
+        handleReply(reply);
       });
     };
 
@@ -57,13 +57,23 @@ function MatchPage() {
     if (stompClient) {
       stompClient.publish({
         destination: "/app/match",
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ complexity: message }),
       });
+      console.log(JSON.stringify({ complexity: message }));
     }
   };
 
-  const showReply = (message) => {
-    setReplies((prevReplies) => [...prevReplies, message]);
+  const handleReply = (reply) => {
+    console.log(reply);
+    const replyBody = JSON.parse(reply.body);
+    // think the way I check for error isn't very good here,
+    // because I'm counting on how only error replies have the statusCodeValue property
+    // whereas successful replies (means correct complexity enums) don't have the statusCodeValue property
+    if (replyBody.statusCodeValue) {
+      console.error("Error getting message reply ", replyBody.body);
+    } else {
+      setReplies((prevReplies) => [...prevReplies, replyBody.reply]);
+    }
   };
 
   return (
