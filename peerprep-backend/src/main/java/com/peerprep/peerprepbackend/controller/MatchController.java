@@ -20,7 +20,7 @@ public class MatchController {
     @MessageMapping("/match")
     public void greeting(TestWebsocketMessageRequest message) throws Exception {
         Thread.sleep(1000);
-        this.simpMessagingTemplate.convertAndSend("/topic/matching", new TestWebsocketReplyResponse("from backend websocket: " + HtmlUtils.htmlEscape(message.getMessage())));
+        this.simpMessagingTemplate.convertAndSend("/topic/match", new TestWebsocketReplyResponse("from backend websocket: " + HtmlUtils.htmlEscape(message.getMessage())));
     }
 
 //    @MessageMapping("/match")

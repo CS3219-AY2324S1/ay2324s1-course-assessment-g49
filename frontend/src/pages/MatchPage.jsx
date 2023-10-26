@@ -9,7 +9,7 @@ function MatchPage() {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: "ws://localhost:8080/matching",
+      brokerURL: "ws://localhost:8080/match",
       connectHeaders: {
         login: "user",
         passcode: "password",
@@ -26,7 +26,7 @@ function MatchPage() {
       setConnected(true);
       setStompClient(client);
       console.log("Connected: " + frame);
-      client.subscribe("/topic/matching", (reply) => {
+      client.subscribe("/topic/match", (reply) => {
         showReply(JSON.parse(reply.body).reply);
       });
     };

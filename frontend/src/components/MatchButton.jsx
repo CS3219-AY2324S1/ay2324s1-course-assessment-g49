@@ -4,7 +4,7 @@ function MatchButton() {
   const navigate = useNavigate();
 
   const changeToMatchingPage = () => {
-    navigate("/matching");
+    navigate("/match");
   };
 
   return (

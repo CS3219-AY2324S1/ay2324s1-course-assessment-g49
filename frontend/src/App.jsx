@@ -33,7 +33,7 @@ function App() {
                   <Route path="/home" element={<Home />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/questions" element={<QuestionsRepo />} />
-                  <Route path="/matching" element={<MatchPage />} />
+                  <Route path="/match" element={<MatchPage />} />
                 </Routes>
               </SnackbarProvider>
             </UserContextProvider.Provider>
