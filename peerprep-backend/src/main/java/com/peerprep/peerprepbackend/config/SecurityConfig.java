@@ -66,8 +66,7 @@ public class SecurityConfig {
      */
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findFirstByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+        return id -> userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
-
 }

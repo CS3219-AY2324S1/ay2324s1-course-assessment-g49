@@ -52,7 +52,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } catch (JWTVerificationException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid or expired JWT token");
-            filterChain.doFilter(request, response);
             return;
         }
         String username = decodedJWT.getSubject();
