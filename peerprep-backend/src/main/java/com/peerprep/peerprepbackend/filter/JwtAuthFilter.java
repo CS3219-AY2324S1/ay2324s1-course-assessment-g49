@@ -5,6 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.peerprep.peerprepbackend.entity.User;
+import com.peerprep.peerprepbackend.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -33,6 +36,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private String appName;
 
     private final UserDetailsService userDetailsService;
+
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -51,11 +56,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             decodedJWT = verifier.verify(jwt);
         } catch (JWTVerificationException e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid or expired JWT token");
+            response.getWriter().write("Expired JWT");
             return;
         }
-        String username = decodedJWT.getSubject();
-        UserDetails user = userDetailsService.loadUserByUsername(username);
+        String id = decodedJWT.getSubject();
+        Optional<User> dbUser = userRepository.findById(id);
+        if (dbUser.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT");
+            return;
+        }
+        UserDetails user = userDetailsService.loadUserByUsername(dbUser.get().getUsername());
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
         authToken.setDetails(new WebAuthenticationDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
