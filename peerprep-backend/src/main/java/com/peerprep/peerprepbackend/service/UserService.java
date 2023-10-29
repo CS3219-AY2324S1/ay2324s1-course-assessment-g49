@@ -1,17 +1,25 @@
 package com.peerprep.peerprepbackend.service;
 
-import com.peerprep.peerprepbackend.dto.request.CreateUserRequest;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.peerprep.peerprepbackend.dto.request.RegisterRequest;
 import com.peerprep.peerprepbackend.dto.request.UpdateUserRequest;
 import com.peerprep.peerprepbackend.dto.response.LoginResponse;
 import com.peerprep.peerprepbackend.dto.response.UserResponse;
+import com.peerprep.peerprepbackend.entity.Role;
 import com.peerprep.peerprepbackend.entity.User;
 import com.peerprep.peerprepbackend.exception.*;
 import com.peerprep.peerprepbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -21,18 +29,42 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
+    @Value("${spring.application.name}")
+    private String appName;
+
+    /**
+     * Authenticate credentials using configured AuthenticationManager
+     */
     public LoginResponse authenticateUser(String username, String password) throws BadCredentialsException {
-        User user = userRepository.findFirstByUsername(username).orElseThrow(BadCredentialsException::new);
-        if (!Objects.equals(user.getPassword(), password)) {
-            throw new BadCredentialsException();
-        }
+
+        User user = userRepository.findFirstByUsername(username)
+                .orElseThrow(() -> new BadCredentialsException("Bad credentials"));
+
+        // throws AuthenticationException if fails
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities()));
+
+        String token = JWT.create()
+                .withIssuer(appName)
+                .withSubject(username)
+                .withExpiresAt(Instant.now().plusSeconds(jwtExpiration))
+                .sign(Algorithm.HMAC256(jwtSecret));
+
         return LoginResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
+                .jwt(token)
                 .build();
     }
 
-    public Long createUser(CreateUserRequest request) throws UsernameExistsException, EmailExistsException {
+    public Long createUser(RegisterRequest request) throws UsernameExistsException, EmailExistsException {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameExistsException(request.getUsername());
         }
@@ -42,8 +74,9 @@ public class UserService {
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .country(request.getCountry())
+                .role(Role.USER)
                 .build();
         return userRepository.save(user).getId();
     }
@@ -98,10 +131,6 @@ public class UserService {
         if (request.getPassword() != null) {
             user.setPassword(request.getPassword());
         }
-
-
-
-
         userRepository.save(user);
     }
 }

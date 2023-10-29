@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Value
 @NoArgsConstructor(force = true)
-public class CreateUserRequest {
+public class RegisterRequest {
 
     @NotBlank(message = "username is mandatory")
     String username;

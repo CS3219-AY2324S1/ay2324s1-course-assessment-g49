@@ -7,10 +7,12 @@ info:
 servers:
   - url: http://localhost:8080
 tags:
+  - name: auth
+    description: Endpoints for authentication
   - name: questions
-    description: Operations about questions
+    description: Endpoints for questions
   - name: users
-    description: Operations about users
+    description: Endpoints for users
 
 paths:
   /question:
@@ -24,7 +26,7 @@ paths:
             schema:
               $ref: "#/components/schemas/CreateQuestionRequest"
       responses:
-        '200':
+        "200":
           description: Question successfully created
           content:
             text/plain:
@@ -37,7 +39,7 @@ paths:
         - questions
       description: Retrieves a list of all questions
       responses:
-        '200':
+        "200":
           description: Successfully retrieved all questions
           content:
             application/json:
@@ -57,15 +59,15 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully retrieved question
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/QuestionResponse"
     patch:
-      tags: 
-      - questions
+      tags:
+        - questions
       description: Updates a specific question
       parameters:
         - name: id
@@ -79,7 +81,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateQuestionRequest"
       responses:
-        '200':
+        "200":
           description: Successfully updated question. Empty response
     delete:
       tags:
@@ -92,33 +94,15 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully deleted question. Empty response
   /users:
-    post:
-      tags:
-        - users
-      description: Creates a user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateUserRequest"
-      responses:
-        '200':
-          description: Successfully created user
-          content:
-            text/plain:
-              schema:
-                type: string
-                description: Id of newly created user
-                example: 1
     get:
       tags:
         - users
       description: Retrieves a list of all users
       responses:
-        '200':
+        "200":
           description: Successfully retrieved all users
           content:
             application/json:
@@ -138,7 +122,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully retrieved user
           content:
             application/json:
@@ -160,7 +144,7 @@ paths:
             schema:
               $ref: "#/components/schemas/UpdateUserRequest"
       responses:
-        '200':
+        "200":
           description: Successfully updated user
           content:
             text/plain:
@@ -180,8 +164,44 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully deleted user
+  /auth/login:
+    post:
+      tags:
+        - auth
+      description: Uses username and password to login, and get a JWT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+  /auth/register:
+    post:
+      tags:
+        - auth
+      description: Registers a user with details
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "200":
+          description: Successfully registered user
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Id of newly created user
+                example: 1
 
 components:
   schemas:
@@ -203,7 +223,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
@@ -217,7 +237,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
@@ -234,7 +254,7 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
@@ -251,11 +271,11 @@ components:
           type: array
           items:
             type: string
-          example: [ ARRAY, ALGORITHMS ]
+          example: [ARRAY, ALGORITHMS]
         complexity:
           type: string
           example: MEDIUM
-    CreateUserRequest:
+    RegisterRequest:
       type: object
       required:
         - username
@@ -296,3 +316,21 @@ components:
         country:
           type: string
           example: Singapore
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: apple
+        password:
+          type: string
+          example: password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
