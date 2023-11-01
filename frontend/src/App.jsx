@@ -10,7 +10,8 @@ import RegisterPage from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
 import UserContextProvider from "./utils/UserContextUtil";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
-import MatchPage from "./pages/MatchPage";
+import MatchPage from "./pages/MatchingPage/MatchPage";
+import LoadingMatchPage from "./pages/MatchingPage/LoadingMatchPage";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -33,7 +34,8 @@ function App() {
                   <Route path="/home" element={<Home />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/questions" element={<QuestionsRepo />} />
-                  <Route path="/match" element={<MatchPage />} />
+                  <Route path="/matchpage" element={<MatchPage />} />
+                  <Route path="/matching" element={<LoadingMatchPage />} />
                 </Routes>
               </SnackbarProvider>
             </UserContextProvider.Provider>
