@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
 import UserContextProvider from "./utils/UserContextUtil";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
+import CollaborationPage from "./pages/Collaboration/Collaboration/CollaborationPage";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -32,6 +33,10 @@ function App() {
                   <Route path="/home" element={<Home />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/questions" element={<QuestionsRepo />} />
+                  <Route
+                    path="/collaboration"
+                    element={<CollaborationPage />}
+                  />
                 </Routes>
               </SnackbarProvider>
             </UserContextProvider.Provider>

@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material/";
 
-function Collaborator() {
+function CollaborationPage() {
   return (
     <Grid container direction="row">
       <Grid container item spacing={3} xs={8} sx={{ backgroundColor: "brown" }}>
@@ -18,4 +18,4 @@ function Collaborator() {
   );
 }
 
-export default Collaborator;
+export default CollaborationPage;
