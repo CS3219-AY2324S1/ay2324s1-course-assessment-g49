@@ -34,8 +34,8 @@ function LoadingMatchPage() {
     navigate("/practicealone");
   };
 
-  const handlePracticeTogether = () => {
-    navigate("/practicetogether");
+  const handleCollaboration = () => {
+    navigate("/collaboration");
   };
 
   useEffect(() => {
@@ -142,7 +142,7 @@ function LoadingMatchPage() {
               id="practice-alone"
               variant="contained"
               disabled={!timerCompleted || !responseReceived}
-              onClick={handlePracticeTogether}
+              onClick={handleCollaboration}
             >
               Practice together
             </Button>
