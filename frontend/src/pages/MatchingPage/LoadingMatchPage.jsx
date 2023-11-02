@@ -1,9 +1,10 @@
-import { useState, useEffect, useMemo, StrictMode } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Client } from "@stomp/stompjs";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Grid, Typography } from "@mui/material";
 import TimerComponent from "../../components/TimerComponent";
 import NavBar from "../../components/NavBar";
+import UserContextProvider from "../../utils/UserContextUtil";
 
 function LoadingMatchPage() {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ function LoadingMatchPage() {
   const [text, setText] = useState("Matching in progress...");
   const [timerCompleted, setTimerCompleted] = useState(false);
   const [responseReceived, setResponseReceived] = useState(false);
+
+  const { userContext, setUserContext } = useContext(UserContextProvider);
+  const userId = userContext.userId;
 
   const { complexity } = location.state;
 
@@ -40,7 +44,7 @@ function LoadingMatchPage() {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: "ws://localhost:8080/matching",
+      brokerURL: "ws://localhost:8080/match",
       connectHeaders: {
         login: "user",
         passcode: "password",
@@ -57,7 +61,7 @@ function LoadingMatchPage() {
       setConnected(true);
       setStompClient(client);
       console.log("Connected: " + frame);
-      client.subscribe("/topic/matching", (reply) => {
+      client.subscribe("/topic/match", (reply) => {
         showReply(JSON.parse(reply.body).reply);
         client.deactivate();
         setConnected(false);
@@ -92,7 +96,7 @@ function LoadingMatchPage() {
     if (stompClient) {
       stompClient.publish({
         destination: "/app/match",
-        body: JSON.stringify({ message }),
+        body: JSON.stringify(message),
       });
     }
   };
@@ -103,7 +107,7 @@ function LoadingMatchPage() {
 
   useEffect(() => {
     if (complexity) {
-      setMessage(complexity);
+      setMessage({ complexity: complexity, userId: userId });
       sendMessage();
     }
   }, [complexity, stompClient]);
