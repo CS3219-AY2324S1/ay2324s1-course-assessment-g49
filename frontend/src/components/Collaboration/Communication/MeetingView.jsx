@@ -86,7 +86,7 @@ function MeetingView(props) {
               </AccordionSummary>
             </div>
             <AccordionDetails>
-              <ChatView chatExpanded={chatExpanded}/>
+              <ChatView chatExpanded={chatExpanded} />
             </AccordionDetails>
           </Accordion>
         </Grid>
