@@ -9,7 +9,7 @@ import lombok.Value;
 @Value
 @NoArgsConstructor(force = true)
 public class MatchRequest {
-    
+
     @NotBlank
     Long userId;
 

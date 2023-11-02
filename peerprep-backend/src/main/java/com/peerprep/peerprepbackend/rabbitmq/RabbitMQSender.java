@@ -11,11 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class RabbitMQSender {
 
-    @Autowired
-    private RabbitTemplate template;
+    private final RabbitTemplate template;
 
-    @Autowired
-    private DirectExchange direct;
+    private final DirectExchange direct;
+
+    public RabbitMQSender(RabbitTemplate template, DirectExchange direct) {
+        this.template = template;
+        this.direct = direct;
+    }
 
     AtomicInteger index = new AtomicInteger(0);
 

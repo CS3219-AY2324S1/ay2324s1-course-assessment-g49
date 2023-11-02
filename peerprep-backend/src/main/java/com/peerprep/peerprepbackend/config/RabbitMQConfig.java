@@ -14,54 +14,40 @@ public class RabbitMQConfig {
         return new DirectExchange("match.direct");
     }
 
-    private static class ReceiverConfig {
-        @Bean
-        public Queue easyComplexityQueue() {
-            return new Queue("easyComplexityQueue");
-        }
-
-        @Bean
-        public Queue mediumComplexityQueue() {
-            return new Queue("mediumComplexityQueue");
-        }
-
-        @Bean
-        public Queue hardComplexityQueue() {
-            return new Queue("hardComplexityQueue");
-        }
-
-        @Bean
-        public Binding bindingEasy(DirectExchange direct,
-                                   Queue easyComplexityQueue) {
-            return BindingBuilder.bind(easyComplexityQueue)
-                    .to(direct)
-                    .with(Complexity.EASY);
-        }
-
-        @Bean
-        public Binding bindingMedium(DirectExchange direct,
-                                     Queue mediumComplexityQueue) {
-            return BindingBuilder.bind(mediumComplexityQueue)
-                    .to(direct)
-                    .with(Complexity.MEDIUM);
-        }
-
-        @Bean
-        public Binding bindingHard(DirectExchange direct,
-                                   Queue hardComplexityQueue) {
-            return BindingBuilder.bind(hardComplexityQueue)
-                    .to(direct)
-                    .with(Complexity.HARD);
-        }
-
-//        @Bean
-//        public RabbitMQReceiver receiver() {
-//            return new RabbitMQReceiver();
-//        }
+    @Bean
+    public Queue easyComplexityQueue() {
+        return new Queue("easyComplexityQueue");
     }
 
     @Bean
-    public RabbitMQSender sender() {
-        return new RabbitMQSender();
+    public Queue mediumComplexityQueue() {
+        return new Queue("mediumComplexityQueue");
     }
+
+    @Bean
+    public Queue hardComplexityQueue() {
+        return new Queue("hardComplexityQueue");
+    }
+
+    @Bean
+    public Binding bindingEasy(DirectExchange direct, Queue easyComplexityQueue) {
+        return BindingBuilder.bind(easyComplexityQueue)
+                .to(direct)
+                .with(Complexity.EASY);
+    }
+
+    @Bean
+    public Binding bindingMedium(DirectExchange direct, Queue mediumComplexityQueue) {
+        return BindingBuilder.bind(mediumComplexityQueue)
+                .to(direct)
+                .with(Complexity.MEDIUM);
+    }
+
+    @Bean
+    public Binding bindingHard(DirectExchange direct, Queue hardComplexityQueue) {
+        return BindingBuilder.bind(hardComplexityQueue)
+                .to(direct)
+                .with(Complexity.HARD);
+    }
+
 }
