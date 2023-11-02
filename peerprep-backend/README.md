@@ -7,6 +7,7 @@ Backend component of PeerPrep
 1. MongoDB - https://www.mongodb.com/docs/manual/administration/install-community/
 2. PostgreSQL - https://www.postgresql.org/download/
 3. JDK 20
+4. RabbitMQ
 
 ## Running the backend
 
