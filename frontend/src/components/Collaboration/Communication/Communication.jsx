@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { MeetingProvider } from "@videosdk.live/react-sdk";
 import { authToken, createMeeting } from "./API";
 import MeetingView from "./MeetingView";
+import UserContextProvider from "../../../utils/UserContextUtil";
 
 function JoinScreen({ getMeetingAndToken }) {
   const [meetingId, setMeetingId] = useState(null);
@@ -26,6 +27,8 @@ function JoinScreen({ getMeetingAndToken }) {
 
 function Communication() {
   const [meetingId, setMeetingId] = useState(null);
+  const { userContext, setUserContext } = useContext(UserContextProvider);
+  const username = userContext.username;
 
   // Get meetingId from API.jsx
   const getMeetingAndToken = async (id) => {
@@ -45,7 +48,7 @@ function Communication() {
         meetingId,
         micEnabled: true,
         webcamEnabled: true,
-        name: "placeholdername",
+        name: username,
       }}
       token={authToken}
     >

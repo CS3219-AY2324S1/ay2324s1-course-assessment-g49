@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useMeeting } from "@videosdk.live/react-sdk";
 import ParticipantView from "./ParticipantView";
-import MeetingControls from "./MeetingControls";
 import { Button, Grid } from "@mui/material";
 
 function MeetingView(props) {
@@ -26,12 +25,13 @@ function MeetingView(props) {
       <h3>Meeting Id: {props.meetingId}</h3>
       {joined && joined == "JOINED" ? (
         <Grid container item direction="column">
-          <MeetingControls />
-          {[...participants.keys()].map((participantId) => (
-            <ParticipantView
-              participantId={participantId}
-              key={participantId}
-            />
+          {[...participants.keys()].map((participantId, index) => (
+            <div key={index}>
+              <ParticipantView
+                participantId={participantId}
+                key={participantId}
+              />
+            </div>
           ))}
         </Grid>
       ) : joined && joined == "JOINING" ? (
