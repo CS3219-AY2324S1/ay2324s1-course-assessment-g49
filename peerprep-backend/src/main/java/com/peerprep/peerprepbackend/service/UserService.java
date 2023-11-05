@@ -55,7 +55,8 @@ public class UserService {
 
         String token = JWT.create()
                 .withIssuer(appName)
-                .withSubject(username)
+                .withSubject(user.getId().toString())
+                .withClaim("role", user.getRole().name())
                 .withExpiresAt(Instant.now().plusSeconds(jwtExpiration))
                 .sign(Algorithm.HMAC256(jwtSecret));
 

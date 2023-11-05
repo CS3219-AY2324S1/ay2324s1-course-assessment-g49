@@ -69,5 +69,4 @@ public class SecurityConfig {
         return username -> userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
     }
-
 }

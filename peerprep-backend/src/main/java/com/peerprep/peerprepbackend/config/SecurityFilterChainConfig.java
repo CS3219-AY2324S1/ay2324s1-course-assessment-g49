@@ -4,6 +4,7 @@ import com.peerprep.peerprepbackend.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,6 +26,9 @@ public class SecurityFilterChainConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/auth/login", "/auth/register", "/ping").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/question").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/question").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/question").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                         )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
