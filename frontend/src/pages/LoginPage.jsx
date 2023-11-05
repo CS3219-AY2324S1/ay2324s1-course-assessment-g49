@@ -13,6 +13,8 @@ import Copyright from "../components/Copyright";
 import axios from "axios";
 import userContextProvider from "../utils/UserContextUtil";
 import { SnackbarContext } from "../utils/SnackbarContextUtil";
+import { jwtDecode } from "jwt-decode";
+import AuthenticationToken from "../services/AuthenticationToken";
 
 export default function LoginPage() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
@@ -41,12 +43,16 @@ export default function LoginPage() {
           username,
           password,
         };
-        await axios.post(`${databaseURL}/auth/login`, user).then((res) => {
+        await axios.post(`${databaseURL}/auth/login`, user, { headers: AuthenticationToken() }).then((res) => {
+          console.log(res.data.jwt);
+          const token = res.data.jwt;
+          const decodedToken = jwtDecode(token);
           setUserContext({
-            username: res.data.username,
-            userId: res.data.id,
+            userId: decodedToken.sub,
           });
-          localStorage.setItem("user", JSON.stringify(res.data));
+          if (res.data.jwt) {
+            localStorage.setItem("user", JSON.stringify(res.data));
+          }
         });
         navigate("/home");
         setSnack({

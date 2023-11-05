@@ -4,6 +4,7 @@ import axios from "axios";
 import userContextProvider from "../../utils/UserContextUtil";
 import { SnackbarContext } from "../../utils/SnackbarContextUtil";
 import CountrySelect from "../../components/CountrySelect";
+import AuthenticationToken from "../../services/AuthenticationToken";
 
 function EditProfile() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
@@ -27,7 +28,7 @@ function EditProfile() {
 	*/
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${databaseURL}/users/${userId}`);
+      const response = await axios.get(`${databaseURL}/users/${userId}`, { headers: AuthenticationToken() });
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data", error);
@@ -88,7 +89,7 @@ function EditProfile() {
           severity: "warning",
         });
       } else {
-        await axios.patch(`${databaseURL}/users/${userId}`, userData);
+        await axios.patch(`${databaseURL}/users/${userId}`, userData, { headers: AuthenticationToken() });
 
         localStorage.setItem(
           "user",

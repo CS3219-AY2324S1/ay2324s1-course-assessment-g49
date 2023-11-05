@@ -24,6 +24,7 @@ import {
   categoryMapping,
   complexityOptions,
 } from "../utils/QuestionUtil";
+import AuthenticationToken from "../services/AuthenticationToken";
 
 function AddQuestionDialog({ questions, onAddQuestion }) {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
@@ -104,7 +105,7 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
         description,
       };
 
-      await axios.post(`${databaseURL}/question`, newQuestion);
+      await axios.post(`${databaseURL}/question`, newQuestion, { headers: AuthenticationToken() });
       onAddQuestion();
       setCategory([]);
       setComplexity(fieldOptions["complexity"][0]);

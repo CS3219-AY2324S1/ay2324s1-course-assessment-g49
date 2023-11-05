@@ -5,12 +5,14 @@ import { Box, Grid } from "@mui/material";
 import axios from "axios";
 import { reverseCategoryMapping } from "../utils/QuestionUtil";
 import NavBar from "../components/NavBar";
+import AuthenticationToken from "../services/AuthenticationToken";
 
 const QuestionsRepo = () => {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [questions, setQuestions] = useState([]);
   const loadQuestions = async () => {
-    const questions = await axios.get(`${databaseURL}/question`);
+    console.log(AuthenticationToken())
+    const questions = await axios.get(`${databaseURL}/question`, { headers: AuthenticationToken() });
     for (let i = 0; i < questions.data.length; i++) {
       let question = questions.data[i];
       for (let j = 0; j < question.categories.length; j++) {
@@ -21,12 +23,12 @@ const QuestionsRepo = () => {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`${databaseURL}/question/${id}`);
+    await axios.delete(`${databaseURL}/question/${id}`, { headers: AuthenticationToken() });
     loadQuestions();
   };
 
   const handleEdit = async (id, fieldsToUpdate) => {
-    await axios.patch(`${databaseURL}/question/${id}`, fieldsToUpdate);
+    await axios.patch(`${databaseURL}/question/${id}`, fieldsToUpdate, { headers: AuthenticationToken() });
     loadQuestions();
   };
 

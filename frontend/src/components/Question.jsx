@@ -19,6 +19,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "react-quill/dist/quill.snow.css";
 import EditQuestionDialog from "./EditQuestionDialog";
+import AuthenticationToken from "../services/AuthenticationToken";
 
 function Question({ question, questionId, onDelete, onEdit }) {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
@@ -32,7 +33,7 @@ function Question({ question, questionId, onDelete, onEdit }) {
   const [description, setDescription] = React.useState("");
 
   const loadDescription = async () => {
-    const response = await axios.get(`${databaseURL}/question/${question.id}`);
+    const response = await axios.get(`${databaseURL}/question/${question.id}`, { headers: AuthenticationToken() });
     setDescription(response.data.description);
   };
 
