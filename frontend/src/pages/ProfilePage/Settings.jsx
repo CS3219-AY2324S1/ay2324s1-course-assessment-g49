@@ -13,6 +13,7 @@ import axios from "axios";
 import userContextProvider from "../../utils/UserContextUtil";
 import { useNavigate } from "react-router-dom";
 import { SnackbarContext } from "../../utils/SnackbarContextUtil";
+import AuthenticationToken from "../../services/AuthenticationToken";
 
 function Settings() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
@@ -35,7 +36,7 @@ function Settings() {
 	*/
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(`${databaseURL}/users/${userId}`);
+      await axios.delete(`${databaseURL}/users/${userId}`, { headers: AuthenticationToken() });
       navigate("/");
       localStorage.setItem(
         "user",
