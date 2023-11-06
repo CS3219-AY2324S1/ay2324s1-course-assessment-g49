@@ -32,7 +32,7 @@ const NavBar = () => {
   const handleLogOut = (evt) => {
     localStorage.removeItem("user");
     //localStorage.setItem('user', JSON.stringify({username: null, id: null }));
-  }
+  };
 
   return (
     <div>

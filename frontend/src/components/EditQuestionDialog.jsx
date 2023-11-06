@@ -205,7 +205,8 @@ function EditQuestionDialog({ question, onEdit }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${databaseURL}/question/${question.id}`, { headers: AuthenticationToken() }
+        `${databaseURL}/question/${question.id}`,
+        { headers: AuthenticationToken() }
       );
       const data = response.data;
       const cat = data.categories;
@@ -215,7 +216,9 @@ function EditQuestionDialog({ question, onEdit }) {
       data.categories = cat;
       setQuestionData(data);
       setOldQuestionData(data);
-      const storedQuestions = await axios.get(`${databaseURL}/question`, { headers: AuthenticationToken() });
+      const storedQuestions = await axios.get(`${databaseURL}/question`, {
+        headers: AuthenticationToken(),
+      });
       setQuestions(storedQuestions.data);
     } catch (error) {
       console.error("Error fetching question data", error);
