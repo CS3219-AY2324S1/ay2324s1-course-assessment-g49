@@ -1,19 +1,14 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { Button, TextField, Grid, Typography } from "@mui/material";
 import axios from "axios";
-import userContextProvider from "../../utils/UserContextUtil";
 import { SnackbarContext } from "../../utils/SnackbarContextUtil";
 import CountrySelect from "../../components/CountrySelect";
 import AuthenticationToken from "../../services/AuthenticationToken";
 
 function EditProfile() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
-  const { userContext, setUserContext } = useContext(userContextProvider);
-  const userId = userContext.userId;
-  const userdata = JSON.parse(localStorage.getItem('user'));
-  console.log(userdata)
-  const userID = userdata.userId;
-  console.log(userID);
+  const userdata = JSON.parse(localStorage.getItem("user"));
+  const userId = userdata.userId;
   const inputRefs = {
     username: useRef(null),
     email: useRef(null),
@@ -32,7 +27,9 @@ function EditProfile() {
   */
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${databaseURL}/users/${userID}`, { headers: AuthenticationToken() });
+      const response = await axios.get(`${databaseURL}/users/${userId}`, {
+        headers: AuthenticationToken(),
+      });
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data", error);
@@ -93,7 +90,9 @@ function EditProfile() {
           severity: "warning",
         });
       } else {
-        await axios.patch(`${databaseURL}/users/${userID}`, userData, { headers: AuthenticationToken() });
+        await axios.patch(`${databaseURL}/users/${userId}`, userData, {
+          headers: AuthenticationToken(),
+        });
 
         setSnack({
           message: "Saved successfully",

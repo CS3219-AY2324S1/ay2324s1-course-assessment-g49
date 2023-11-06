@@ -1,10 +1,9 @@
 export default function AuthenticationToken() {
-    const userToken = JSON.parse(localStorage.getItem('user')); //check 
-    console.log(userToken)
+  const userToken = JSON.parse(localStorage.getItem("user")); //check
 
-    if (userToken) {
-        return { Authorization: 'Bearer ' + userToken.jwt };
-    } else {
-        return {};
-    }
+  if (userToken) {
+    return { Authorization: "Bearer " + userToken.jwt };
+  } else {
+    return {};
+  }
 }

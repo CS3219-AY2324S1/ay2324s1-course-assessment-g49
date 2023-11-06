@@ -69,7 +69,9 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
 
     const title = inputRefs["title"].current.value.trimEnd();
     const categories = category;
-    const descriptionClean = description.replace(/<(?!img)[^>]*>/g, "").trimEnd();
+    const descriptionClean = description
+      .replace(/<(?!img)[^>]*>/g, "")
+      .trimEnd();
 
     const isDuplicateQuestion = questions.some(
       (question) => question.title.toLowerCase() === title.toLowerCase()
@@ -105,7 +107,9 @@ function AddQuestionDialog({ questions, onAddQuestion }) {
         description,
       };
 
-      await axios.post(`${databaseURL}/question`, newQuestion, { headers: AuthenticationToken() });
+      await axios.post(`${databaseURL}/question`, newQuestion, {
+        headers: AuthenticationToken(),
+      });
       onAddQuestion();
       setCategory([]);
       setComplexity(fieldOptions["complexity"][0]);

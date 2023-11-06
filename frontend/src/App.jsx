@@ -24,17 +24,15 @@ function App() {
       <Theme>
         <Grid container>
           <Grid item xs={12}>
-            <UserContextProvider.Provider value={value}>
-              <SnackbarProvider>
-                <Routes>
-                  <Route path="/" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/questions" element={<QuestionsRepo />} />
-                </Routes>
-              </SnackbarProvider>
-            </UserContextProvider.Provider>
+            <SnackbarProvider>
+              <Routes>
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/questions" element={<QuestionsRepo />} />
+              </Routes>
+            </SnackbarProvider>
           </Grid>
         </Grid>
       </Theme>

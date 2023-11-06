@@ -26,7 +26,6 @@ function Question({ question, questionId, onDelete, onEdit, userRole }) {
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = async () => {
-    console.log(userRole)
     loadDescription();
     setOpen(true);
   };
@@ -34,7 +33,9 @@ function Question({ question, questionId, onDelete, onEdit, userRole }) {
   const [description, setDescription] = React.useState("");
 
   const loadDescription = async () => {
-    const response = await axios.get(`${databaseURL}/question/${question.id}`, { headers: AuthenticationToken() });
+    const response = await axios.get(`${databaseURL}/question/${question.id}`, {
+      headers: AuthenticationToken(),
+    });
     setDescription(response.data.description);
   };
 
@@ -66,39 +67,41 @@ function Question({ question, questionId, onDelete, onEdit, userRole }) {
       </TableCell>
       <TableCell>{categories}</TableCell>
       <TableCell align="center">{question.complexity}</TableCell>
-      {userRole === 'ADMIN' && (<TableCell>
-      <IconButton
-          id="long-button"
-          aria-haspopup="true"
-          onClick={handleClick}
-          style={{ outline: "none" }}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
-          anchorEl={anchorEl}
-          open={openActions}
-          onClose={handleCloseActions}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <EditQuestionDialog question={question} onEdit={onEdit} />
-          <MenuItem onClick={() => onDelete(question.id)}>
-            <ListItemIcon>
-              <DeleteIcon fontSize="small" />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-        </Menu>
-      </TableCell>)}
+      {userRole === "ADMIN" && (
+        <TableCell>
+          <IconButton
+            id="long-button"
+            aria-haspopup="true"
+            onClick={handleClick}
+            style={{ outline: "none" }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={openActions}
+            onClose={handleCloseActions}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <EditQuestionDialog question={question} onEdit={onEdit} />
+            <MenuItem onClick={() => onDelete(question.id)}>
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" />
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+          </Menu>
+        </TableCell>
+      )}
     </TableRow>
   );
 }
