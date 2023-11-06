@@ -10,6 +10,10 @@ function EditProfile() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const { userContext, setUserContext } = useContext(userContextProvider);
   const userId = userContext.userId;
+  const userdata = JSON.parse(localStorage.getItem('user'));
+  console.log(userdata)
+  const userID = userdata.userId;
+  console.log(userID);
   const inputRefs = {
     username: useRef(null),
     email: useRef(null),
@@ -28,7 +32,7 @@ function EditProfile() {
   */
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${databaseURL}/users/${userId}`, { headers: AuthenticationToken() });
+      const response = await axios.get(`${databaseURL}/users/${userID}`, { headers: AuthenticationToken() });
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data", error);
@@ -89,7 +93,7 @@ function EditProfile() {
           severity: "warning",
         });
       } else {
-        await axios.patch(`${databaseURL}/users/${userId}`, userData, { headers: AuthenticationToken() });
+        await axios.patch(`${databaseURL}/users/${userID}`, userData, { headers: AuthenticationToken() });
 
         setSnack({
           message: "Saved successfully",

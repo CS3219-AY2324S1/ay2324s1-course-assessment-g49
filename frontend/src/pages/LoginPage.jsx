@@ -43,15 +43,19 @@ export default function LoginPage() {
           username,
           password,
         };
-        await axios.post(`${databaseURL}/auth/login`, user, { headers: AuthenticationToken() }).then((res) => {
+        await axios.post(`${databaseURL}/auth/login`, user).then((res) => {
           console.log(res.data.jwt);
           const token = res.data.jwt;
           const decodedToken = jwtDecode(token);
+          const userID = decodedToken.sub;
+          const userRole = decodedToken.role;
+          const userData = {jwt: token, userId: userID, userRole: userRole}
+          console.log(userData)
           setUserContext({
             userId: decodedToken.sub,
           });
           if (res.data.jwt) {
-            localStorage.setItem("user", JSON.stringify(res.data));
+            localStorage.setItem("user", JSON.stringify(userData));
           }
         });
         navigate("/home");
