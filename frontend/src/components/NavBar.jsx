@@ -52,7 +52,12 @@ const NavBar = () => {
               />
             ))}
           </Tabs>
-          <Button variant="text" href="/" onClick={handleLogOut}>
+          <Button
+            variant="text"
+            href="/"
+            onClick={handleLogOut}
+            sx={{ color: "inherit" }}
+          >
             Log Out
           </Button>
         </Toolbar>
