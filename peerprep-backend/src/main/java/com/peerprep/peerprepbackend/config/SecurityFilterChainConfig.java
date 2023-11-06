@@ -33,8 +33,8 @@ public class SecurityFilterChainConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/auth/login", "/auth/register", "/ping").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/question").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PATCH, "/question").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/question").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/question/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/question/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                         )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
