@@ -21,11 +21,12 @@ import "react-quill/dist/quill.snow.css";
 import EditQuestionDialog from "./EditQuestionDialog";
 import AuthenticationToken from "../services/AuthenticationToken";
 
-function Question({ question, questionId, onDelete, onEdit }) {
+function Question({ question, questionId, onDelete, onEdit, userRole }) {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
   const handleOpen = async () => {
+    console.log(userRole)
     loadDescription();
     setOpen(true);
   };
@@ -65,8 +66,8 @@ function Question({ question, questionId, onDelete, onEdit }) {
       </TableCell>
       <TableCell>{categories}</TableCell>
       <TableCell align="center">{question.complexity}</TableCell>
-      <TableCell>
-        <IconButton
+      {userRole === 'ADMIN' && (<TableCell>
+      <IconButton
           id="long-button"
           aria-haspopup="true"
           onClick={handleClick}
@@ -97,7 +98,7 @@ function Question({ question, questionId, onDelete, onEdit }) {
             Delete
           </MenuItem>
         </Menu>
-      </TableCell>
+      </TableCell>)}
     </TableRow>
   );
 }

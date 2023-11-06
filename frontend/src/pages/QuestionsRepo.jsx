@@ -10,6 +10,10 @@ import AuthenticationToken from "../services/AuthenticationToken";
 const QuestionsRepo = () => {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [questions, setQuestions] = useState([]);
+  const userData = JSON.parse(localStorage.getItem('user'));
+  console.log(userData)
+  const userRole = userData.userRole;
+  console.log(userRole);
   const loadQuestions = async () => {
     console.log(AuthenticationToken())
     const questions = await axios.get(`${databaseURL}/question`, { headers: AuthenticationToken() });
@@ -45,17 +49,18 @@ const QuestionsRepo = () => {
         <Grid item>
           <h1>Question Repository</h1>
         </Grid>
-        <Grid item mb={2}>
+        {userRole ==='ADMIN' && (<Grid item mb={2}>
           <AddQuestionDialog
             questions={questions}
             onAddQuestion={loadQuestions}
           />
-        </Grid>
+        </Grid>)}
         <Grid item mb={2}>
           <QuestionList
             questions={questions}
             onDelete={handleDelete}
             onEdit={handleEdit}
+            userRole={userRole}
           />
         </Grid>
       </Grid>
