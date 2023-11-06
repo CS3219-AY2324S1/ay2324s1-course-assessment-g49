@@ -55,29 +55,27 @@ function MeetingView(props) {
         ) : (
           <Button onClick={joinMeeting}>Join</Button>
         )}
+        <Grid item>
+          <Accordion
+            square
+            expanded={chatExpanded}
+            onChange={handleChatToggle}
+            style={{
+              zIndex: 1000,
+              maxHeight: "100%",
+              transition: "max-height 0.3s ease-in-out",
+              overflow: "auto",
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>Chat</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ChatView />
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
       </Grid>
-      <Accordion
-        square
-        expanded={chatExpanded}
-        onChange={handleChatToggle}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          maxHeight: chatExpanded ? "50%" : "10%", // Set the maximum height as desired
-          transition: "max-height 0.3s ease-in-out",
-          overflow: "auto",
-        }}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Chat</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <ChatView />
-        </AccordionDetails>
-      </Accordion>
     </div>
   );
 }

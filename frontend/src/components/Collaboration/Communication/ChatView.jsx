@@ -1,6 +1,7 @@
 import { useState } from "react";
-// importing usePubSub hook from react-sdk
 import { usePubSub } from "@videosdk.live/react-sdk";
+import { InputBase, Paper, IconButton, Grid } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 function ChatView() {
   // destructure publish method from usePubSub hook
@@ -18,23 +19,34 @@ function ChatView() {
 
   return (
     <>
-      <div>
-        <p>Messages: </p>
+      <Grid
+        container
+        item
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={0.5}
+        marginBottom={1}
+      >
         {messages.map((message) => {
           return (
-            <p>
-              {message.senderName} says {message.message}
-            </p>
+            <Grid item>
+              {message.senderName}: {message.message}
+            </Grid>
           );
         })}
-      </div>
-      <input
-        value={message}
-        onChange={(e) => {
-          setMessage(e.target.value);
-        }}
-      />
-      <button onClick={handleSendMessage}>Send Message</button>
+      </Grid>
+      <Paper elevation={2} component="form" sx={{ alignItems: "center" }}>
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          inputProps={{ "aria-label": "Chat here", value: message }}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Chat here"
+        ></InputBase>
+        <IconButton onClick={handleSendMessage}>
+          <SendIcon />
+        </IconButton>
+      </Paper>
     </>
   );
 }
