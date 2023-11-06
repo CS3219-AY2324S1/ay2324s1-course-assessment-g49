@@ -1,5 +1,5 @@
 import { useMeeting } from "@videosdk.live/react-sdk";
-import { Button, Grid } from "@mui/material";
+import { IconButton, Grid } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -16,27 +16,27 @@ function MeetingControls() {
     toggleWebcam();
   };
 
+  const responsiveIconSize = "calc(8px + 1vw)";
+
   return (
-    <Grid container direction="row" justifyContent="center" spacing={1} p={1}>
+    <Grid container direction="row">
       <Grid item>
-        <Button
-          onClick={handleMicToggle}
-          startIcon={localMicOn ? <MicIcon /> : <MicOffIcon />}
-          variant="outlined"
-          size="small"
-        >
-          {localMicOn ? "Mute" : "Unmute"}
-        </Button>
+        <IconButton onClick={handleMicToggle}>
+          {localMicOn ? (
+            <MicIcon style={{ fontSize: responsiveIconSize }} />
+          ) : (
+            <MicOffIcon style={{ fontSize: responsiveIconSize }} />
+          )}
+        </IconButton>
       </Grid>
       <Grid item>
-        <Button
-          onClick={handleWebcamToggle}
-          startIcon={localWebcamOn ? <VideocamIcon /> : <VideocamOffIcon />}
-          variant="outlined"
-          size="small"
-        >
-          {localWebcamOn ? "Off video" : "On video"}
-        </Button>
+        <IconButton onClick={handleWebcamToggle}>
+          {localWebcamOn ? (
+            <VideocamIcon style={{ fontSize: responsiveIconSize }} />
+          ) : (
+            <VideocamOffIcon style={{ fontSize: responsiveIconSize }} />
+          )}
+        </IconButton>
       </Grid>
     </Grid>
   );

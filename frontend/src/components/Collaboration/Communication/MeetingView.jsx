@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { useMeeting } from "@videosdk.live/react-sdk";
 import ParticipantView from "./ParticipantView";
-import { Button, Grid } from "@mui/material";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Button,
+  Grid,
+  Typography,
+} from "@mui/material";
+import ChatView from "./ChatView";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function MeetingView(props) {
   const [joined, setJoined] = useState(null);
+  const [chatExpanded, setChatExpanded] = useState(false);
   const { join, participants } = useMeeting({
     // callback for when user joins meeting
     onMeetingJoined: () => {
-      setJoined("JOINED");
+      setJoined("joined");
     },
     // callback for when user has ended meeting
     onMeetingLeft: () => {
@@ -17,29 +27,58 @@ function MeetingView(props) {
   });
 
   const joinMeeting = () => {
-    setJoined("JOINING");
     join();
   };
+
+  const handleChatToggle = () => {
+    setChatExpanded((prev) => !prev); // Toggle chat accordion
+  };
+
   return (
-    <Grid container>
-      <h3>Meeting Id: {props.meetingId}</h3>
-      {joined && joined == "JOINED" ? (
-        <Grid container item direction="column">
-          {[...participants.keys()].map((participantId, index) => (
-            <div key={index}>
+    <div style={{ position: "relative", height: "100%" }}>
+      <Grid container direction="column" style={{ height: "100%" }} spacing={2}>
+        <h3>Meeting Id: {props.meetingId}</h3>
+        {joined && joined == "joined" ? (
+          [...participants.keys()].map((participantId, index) => (
+            <Grid
+              key={participantId}
+              item
+              xs={true}
+              style={{ height: "0", flexGrow: 1 }}
+            >
               <ParticipantView
                 participantId={participantId}
                 key={participantId}
               />
-            </div>
-          ))}
-        </Grid>
-      ) : joined && joined == "JOINING" ? (
-        <p>Joining the meeting...</p>
-      ) : (
-        <Button onClick={joinMeeting}>Join</Button>
-      )}
-    </Grid>
+            </Grid>
+          ))
+        ) : (
+          <Button onClick={joinMeeting}>Join</Button>
+        )}
+      </Grid>
+      <Accordion
+        square
+        expanded={chatExpanded}
+        onChange={handleChatToggle}
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          maxHeight: chatExpanded ? "50%" : "10%", // Set the maximum height as desired
+          transition: "max-height 0.3s ease-in-out",
+          overflow: "auto",
+        }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Chat</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ChatView />
+        </AccordionDetails>
+      </Accordion>
+    </div>
   );
 }
 

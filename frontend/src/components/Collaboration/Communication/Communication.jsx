@@ -1,8 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MeetingProvider } from "@videosdk.live/react-sdk";
 import { authToken, createMeeting } from "./API";
 import MeetingView from "./MeetingView";
 import UserContextProvider from "../../../utils/UserContextUtil";
+import axios from "axios";
 
 function JoinScreen({ getMeetingAndToken }) {
   const [meetingId, setMeetingId] = useState(null);
@@ -26,9 +27,24 @@ function JoinScreen({ getMeetingAndToken }) {
 }
 
 function Communication() {
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [meetingId, setMeetingId] = useState(null);
   const { userContext, setUserContext } = useContext(UserContextProvider);
-  const username = userContext.username;
+  const userId = userContext.userId;
+  const [username, setUsername] = useState("");
+
+  const fetchUsername = async () => {
+    try {
+      const response = await axios.get(`${databaseURL}/users/${userId}`);
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error("Error fetching user data", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsername();
+  }, []);
 
   // Get meetingId from API.jsx
   const getMeetingAndToken = async (id) => {
@@ -55,6 +71,7 @@ function Communication() {
       <MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
     </MeetingProvider>
   ) : (
+    // TODO: to remove after setting up backend for communication
     <JoinScreen getMeetingAndToken={getMeetingAndToken} />
   );
 }

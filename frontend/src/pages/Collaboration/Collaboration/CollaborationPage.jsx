@@ -8,17 +8,20 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: "3%",
   flex: 1,
   margin: "0.5vh",
+  overflow: "auto",
 }));
 
 function CollaborationPage() {
   return (
-    <Grid container direction="row">
+    <Grid container style={{ height: "100vh" }}>
       <Grid container item xs={8} sx={{ height: "100vh" }}>
         <Item elevation={3}>Code Editor</Item>
       </Grid>
-      <Grid container item direction="column" xs={4} sx={{ height: "100vh" }}>
+      <Grid container item direction="column" xs={4} sx={{ height: "100%" }}>
         <Item elevation={3}>Question Description</Item>
-        <Item elevation={3}>{<Communication />}</Item>
+        <Item elevation={3} style={{ height: "100%", width: "100%" }}>
+          {<Communication />}
+        </Item>
       </Grid>
     </Grid>
   );

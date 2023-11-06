@@ -1,7 +1,7 @@
 import { useRef, useMemo, useEffect } from "react";
 import { useParticipant } from "@videosdk.live/react-sdk";
 import ReactPlayer from "react-player";
-import { Card, CardContent, CardMedia } from "@mui/material";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 import MeetingControls from "./MeetingControls";
 
 function ParticipantView(props) {
@@ -36,11 +36,13 @@ function ParticipantView(props) {
   }, [micStream, micOn]);
 
   return (
-    <div>
+    <div style={{ height: "100%" }}>
       <audio ref={micRef} autoPlay playsInline muted={isLocal} />
-      <Card>
+      <Card style={{ height: "100%", boxSizing: "border-box" }}>
         {webcamOn ? (
-          <CardMedia>
+          <div
+            style={{ height: "70%", width: "100%", backgroundColor: "black" }}
+          >
             <ReactPlayer
               playsinline
               pip={false}
@@ -49,27 +51,32 @@ function ParticipantView(props) {
               muted={true}
               playing={true}
               url={videoStream}
-              height={"100%"}
-              width={"100%"}
-              style={{ display: "flex" }}
+              width="100%"
+              height="100%"
               onError={(err) => {
                 console.log(err, "participant video error");
               }}
             />
-          </CardMedia>
-        ) : (
-          <div
-            style={{
-              backgroundColor: "black",
-              flex: 1,
-            }}
-          >
-            video is off
           </div>
+        ) : (
+          <div style={{ backgroundColor: "black", height: "70%" }} />
         )}
-        <CardContent>
-          {displayName}
-          {isLocal && <MeetingControls />}
+        <CardContent
+          style={{
+            display: "flex",
+            alignItems: "center",
+            height: "30%",
+          }}
+        >
+          <Grid container direction="row" justifyContent="space-between">
+            <Grid item xs style={{ display: "flex", alignItems: "center" }}>
+              <Typography style={{ fontSize: "calc(2px + 1vw)" }}>
+                {displayName}
+                {isLocal && " (You)"}
+              </Typography>
+            </Grid>
+            <Grid item>{isLocal && <MeetingControls />}</Grid>
+          </Grid>
         </CardContent>
       </Card>
     </div>
