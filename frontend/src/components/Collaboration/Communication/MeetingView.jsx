@@ -36,7 +36,13 @@ function MeetingView(props) {
 
   return (
     <div style={{ position: "relative", height: "100%" }}>
-      <Grid container direction="column" style={{ height: "100%" }} spacing={2}>
+      <Grid
+        container
+        direction="column"
+        style={{ height: "100%" }}
+        spacing={2}
+        justifyContent="space-between"
+      >
         <h3>Meeting Id: {props.meetingId}</h3>
         {joined && joined == "joined" ? (
           [...participants.keys()].map((participantId, index) => (
@@ -55,7 +61,7 @@ function MeetingView(props) {
         ) : (
           <Button onClick={joinMeeting}>Join</Button>
         )}
-        <Grid item>
+        <Grid item style={{ maxHeight: "40%" }}>
           <Accordion
             square
             expanded={chatExpanded}
@@ -67,11 +73,20 @@ function MeetingView(props) {
               overflow: "auto",
             }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Chat</Typography>
-            </AccordionSummary>
+            <div
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 1,
+                backgroundColor: "inherit",
+              }}
+            >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Chat</Typography>
+              </AccordionSummary>
+            </div>
             <AccordionDetails>
-              <ChatView />
+              <ChatView chatExpanded={chatExpanded}/>
             </AccordionDetails>
           </Accordion>
         </Grid>
