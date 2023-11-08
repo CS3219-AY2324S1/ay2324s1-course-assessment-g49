@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 
 export default function CodeEditor() {
@@ -12,10 +12,7 @@ export default function CodeEditor() {
   return (
     <div>
       <h1>Code Editor</h1>
-      <CodeMirror
-      value={code}
-      height="100px"
-    />
+      <CodeMirror value={code} height="100px" />
     </div>
   );
 }
