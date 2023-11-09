@@ -1,14 +1,18 @@
 package com.peerprep.peerprepapigateway.controller;
 
-import com.peerprep.peerprepapigateway.dto.request.CreateQuestionRequest;
-import com.peerprep.peerprepapigateway.dto.request.UpdateQuestionRequest;
-import com.peerprep.peerprepapigateway.dto.response.QuestionOverview;
-import com.peerprep.peerprepapigateway.dto.response.QuestionResponse;
-import com.peerprep.peerprepapigateway.service.QuestionService;
+import com.peerprep.peerprepcommon.dto.question.CreateQuestionRequest;
+import com.peerprep.peerprepcommon.dto.question.QuestionOverview;
+import com.peerprep.peerprepcommon.dto.question.QuestionResponse;
+import com.peerprep.peerprepcommon.dto.question.UpdateQuestionRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -18,36 +22,49 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
+    private final RestTemplate restTemplate = new RestTemplate();
 
-    private final QuestionService questionService;
+    @Value("${peerprep.question-service.url}")
+    private String questionServiceUrl;
 
     @PostMapping
     public ResponseEntity<String> createQuestion(@RequestBody @Valid final CreateQuestionRequest request) {
-        String id = questionService.createQuestion(request);
-        return ResponseEntity.status(201).body(id);
+        return restTemplate.postForEntity(questionServiceUrl, request, String.class);
     }
 
     @GetMapping
     public ResponseEntity<List<QuestionOverview>> getQuestions() {
-        List<QuestionOverview> questions = questionService.getQuestions();
-        return ResponseEntity.ok(questions);
+        return restTemplate.exchange(
+                questionServiceUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
+        );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<QuestionResponse> getQuestion(@PathVariable final String id) {
-        QuestionResponse question = questionService.getQuestion(id);
-        return ResponseEntity.ok(question);
+        String specificUrl = questionServiceUrl + "/" + id;
+        return restTemplate.getForEntity(specificUrl, QuestionResponse.class);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable final String id) {
-        questionService.deleteQuestion(id);
-        return ResponseEntity.ok().build();
+        String specificUrl = questionServiceUrl + "/" + id;
+        restTemplate.delete(specificUrl);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateQuestion(@PathVariable final String id, @RequestBody @Valid final UpdateQuestionRequest request) {
-        questionService.updateQuestion(id, request);
-        return ResponseEntity.ok().build();
+        String specificUrl = questionServiceUrl + "/" + id;
+        restTemplate.exchange(
+                specificUrl,
+                HttpMethod.PATCH,
+                new HttpEntity<>(request),
+                Void.class
+        );
+        return ResponseEntity.noContent().build();
     }
 }

@@ -21,12 +21,6 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing request");
     }
 
-    @ExceptionHandler(QuestionNotFoundException.class)
-    public ResponseEntity<String> handleQuestionNotFoundException(QuestionNotFoundException e) {
-        String msg = String.format("Question %s not found", e.getId());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msg);
-    }
-
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentialsException() {
         String msg = "Your username or password was incorrect.";
