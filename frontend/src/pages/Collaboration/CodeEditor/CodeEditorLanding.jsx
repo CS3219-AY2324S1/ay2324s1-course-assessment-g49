@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState, createContext } from "react";
 import CollabCodeEditor from "./CollabCodeEditor";
 import axios from "axios";
 import { languageOptions } from "../../../utils/Languages";
@@ -6,8 +6,13 @@ import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
 import LanguagesDropdown from "./LanguageDropdown";
+import { Grid, Button } from "@mui/material";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
 
 const pythonDefault = `// some comment`;
+
+export const YjsContext = createContext(null);
 
 const CodeEditorLanding = () => {
   const [code, setCode] = useState(pythonDefault);
@@ -15,6 +20,9 @@ const CodeEditorLanding = () => {
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [language, setLanguage] = useState(languageOptions[0]);
+
+  const doc = new Y.Doc();
+  const [provider] = useState(() => new WebrtcProvider("test-room", doc));
 
   const handleChangeLanguage = (newLanguage) => {
     console.log(newLanguage);
@@ -100,36 +108,50 @@ const CodeEditorLanding = () => {
   };
 
   return (
-    <>
-      <div className="h-4 w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500"></div>
-      <div className="flex flex-row">
-        <div className="px-4 py-2">
-          <LanguagesDropdown handleChangeLanguage={handleChangeLanguage} />
-        </div>
-      </div>
-      <div className="flex flex-row space-x-4 items-start px-4 py-4">
-        <div className="flex flex-col w-full h-full justify-start items-end">
+    <YjsContext.Provider value={{ provider, awareness: provider.awareness }}>
+      <Grid container direction="column" alignItems="flex-start" spacing={2}>
+        <Grid
+          container
+          item
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item>
+            <LanguagesDropdown handleChangeLanguage={handleChangeLanguage} />
+          </Grid>
+          <Grid item>
+            <Button
+              onClick={handleCompile}
+              disabled={!code}
+              variant="contained"
+            >
+              {processing ? "Processing..." : "Compile and Execute"}
+            </Button>
+          </Grid>
+        </Grid>
+
+        <Grid item>
           <CollabCodeEditor
             code={code}
             onChange={onChange}
             language={language?.value}
           />
-        </div>
-        <div className="right-container flex flex-shrink-0 w-[30%] flex-col">
-          <OutputWindow outputDetails={outputDetails} />
-          <div className="flex flex-col items-end">
+        </Grid>
+        <Grid container item direction="row" justifyContent="space-between">
+          <Grid item>
             <CustomInput
               customInput={customInput}
               setCustomInput={setCustomInput}
             />
-            <button onClick={handleCompile} disabled={!code}>
-              {processing ? "Processing..." : "Compile and Execute"}
-            </button>
-          </div>
-          {outputDetails && <OutputDetails outputDetails={outputDetails} />}
-        </div>
-      </div>
-    </>
+          </Grid>
+          <Grid item>
+            <OutputWindow outputDetails={outputDetails} />
+            {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+          </Grid>
+        </Grid>
+      </Grid>
+    </YjsContext.Provider>
   );
 };
 export default CodeEditorLanding;

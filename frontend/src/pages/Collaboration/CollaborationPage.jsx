@@ -1,34 +1,29 @@
-import { Grid } from "@mui/material/";
-import CodeEditor from "./CodeEditor/CodeEditor";
-import CollabCodeEditor from "./CodeEditor/CollabCodeEditor";
+import { Grid, Paper } from "@mui/material/";
+import { styled } from "@mui/material/styles";
 import CodeEditorLanding from "./CodeEditor/CodeEditorLanding";
-import { WebrtcProvider } from "y-webrtc";
-import * as Y from "yjs";
-import YourButtonComponent from "./CodeEditor/CollaborativeButton";
 
 function CollaborationPage() {
-  // Create a Yjs document
-  const ydoc = new Y.Doc();
-  console.log("ydoc:", ydoc);
-
-  // Define a Yjs data type for your button state
-  const buttonState = ydoc.getArray("button-state");
-
-  // Initialize the initial state of the button
-  buttonState.push([false]); // You can start with a disabled button
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    color: theme.palette.text.secondary,
+    padding: "3%",
+    flex: 1,
+    margin: "0.5vh",
+    overflow: "auto",
+  }));
 
   return (
-    <Grid container direction="row">
-      <Grid container item spacing={3} xs={8}>
-        <CodeEditorLanding />
+    <Grid container style={{ height: "100vh" }}>
+      <Grid container item xs={8} sx={{ height: "100%" }}>
+        <Item elevation={3}>
+          <CodeEditorLanding />
+        </Item>
       </Grid>
-      <Grid container item spacing={3} direction="column" xs={4}>
-        <Grid item sx={{ backgroundColor: "blue" }}>
-          Question Description
-        </Grid>
-        <Grid item sx={{ backgroundColor: "green" }}>
-          Communication Platform
-        </Grid>
+      <Grid container item direction="column" xs={4} sx={{ height: "100%" }}>
+        <Item elevation={3}>Question Description</Item>
+        <Item elevation={3} style={{ height: "100%", width: "100%" }}>
+          Communication
+        </Item>
       </Grid>
     </Grid>
   );

@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react';
-import Editor from '@monaco-editor/react';
-import * as Y from 'yjs';
-import { WebrtcProvider } from 'y-webrtc';
-import { MonacoBinding } from 'y-monaco';
-import TrialCollaborativeButton from './TrialButton';
+import React, { useRef, useState } from "react";
+import Editor from "@monaco-editor/react";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import { MonacoBinding } from "y-monaco";
+import TrialCollaborativeButton from "./TrialButton";
 
 export default function CollabCodeEditor({ onChange, language, code }) {
   const editorRef = useRef(null);
   const [value, setValue] = useState(code || "");
+  const { awareness } = useContext(YjsContext);
 
   function handleEditorChange(value) {
     setValue(value);
@@ -21,8 +22,8 @@ export default function CollabCodeEditor({ onChange, language, code }) {
     editorRef.current = editor;
     const doc = new Y.Doc();
 
-    const SIGNALING_SERVER ="ws://peerprep-399116.as.r.appspot.com"
-    
+    const SIGNALING_SERVER = "ws://peerprep-399116.as.r.appspot.com";
+
     //@ts-ignore
     const provider = new WebrtcProvider("test-room", doc, {
       signaling: [SIGNALING_SERVER],
@@ -38,7 +39,6 @@ export default function CollabCodeEditor({ onChange, language, code }) {
       new Set([editorRef.current]),
       provider.awareness
     );
-
   }
   return (
     <Editor
