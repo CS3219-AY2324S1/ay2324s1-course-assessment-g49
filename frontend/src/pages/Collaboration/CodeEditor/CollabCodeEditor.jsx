@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useContext } from "react";
 import Editor from "@monaco-editor/react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
@@ -7,13 +7,13 @@ import TrialCollaborativeButton from "./TrialButton";
 
 export default function CollabCodeEditor({ onChange, language, code }) {
   const editorRef = useRef(null);
-  const [value, setValue] = useState(code || "");
-  const { awareness } = useContext(YjsContext);
+  const { provider, doc } = useContext(YjsContext);
 
   function handleEditorChange(value) {
-    setValue(value);
+    console.log("editors changed", language);
     onChange("code", value);
   }
+  console.log("code editor", language);
 
   // const roomName = "test-room";
   // const signalingRef = database.ref(`signaling/${roomName}`);
@@ -40,18 +40,19 @@ export default function CollabCodeEditor({ onChange, language, code }) {
       provider.awareness
     );
   }
+
   return (
     <Editor
-      height="100vh"
-      width="50vw"
+      height="50vh"
+      width="50vh"
       theme="vs-dark"
       language={language || "python"}
       defaultLanguage="python"
-      value={value}
-      defaultValue="// some comment"
+      value={code}
+      defaultValue="Type your code here"
       onMount={handleEditorDidMount}
       options={{
-        cursorBlinking: "solid",
+        cursorBlinking: "blink",
       }}
       onChange={handleEditorChange}
     />

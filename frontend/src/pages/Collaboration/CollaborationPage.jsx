@@ -14,7 +14,7 @@ function CollaborationPage() {
 
   return (
     <Grid container style={{ height: "100vh" }}>
-      <Grid container item xs={8} sx={{ height: "100%" }}>
+      <Grid container item xs={8} sx={{ height: "100%", width: '100%' }}>
         <Item elevation={3}>
           <CodeEditorLanding />
         </Item>

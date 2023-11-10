@@ -1,15 +1,16 @@
-import React from "react";
+import { TextField } from "@mui/material";
 
 const CustomInput = ({ customInput, setCustomInput }) => {
   return (
     <>
       {" "}
-      <textarea
-        rows="5"
+      <TextField
+        rows={5}
+        multiline
         value={customInput}
         onChange={(e) => setCustomInput(e.target.value)}
-        placeholder={`Custom input`}
-      ></textarea>
+        placeholder="Custom input"
+      />
     </>
   );
 };

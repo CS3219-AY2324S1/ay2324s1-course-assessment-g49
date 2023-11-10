@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect, useRef } from "react";
 import CollabCodeEditor from "./CollabCodeEditor";
 import axios from "axios";
 import { languageOptions } from "../../../utils/Languages";
@@ -9,29 +9,54 @@ import LanguagesDropdown from "./LanguageDropdown";
 import { Grid, Button } from "@mui/material";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-
-const pythonDefault = `// some comment`;
+import { QuillBinding } from "y-quill";
+import QuillCursors from "quill-cursors";
 
 export const YjsContext = createContext(null);
 
-const CodeEditorLanding = () => {
-  const [code, setCode] = useState(pythonDefault);
+function CodeEditorLanding() {
+  const [code, setCode] = useState(`Start coding`);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [language, setLanguage] = useState(languageOptions[0]);
+  const [provider, setProvider] = useState(null);
+  const [doc, setDoc] = useState(null);
+  const lastCompileTimeRef = useRef(0);
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const userId = userData.userId;
 
-  const doc = new Y.Doc();
-  const [provider] = useState(() => new WebrtcProvider("test-room", doc));
+  useEffect(() => {
+    const doc = new Y.Doc();
+    const text = doc.getText("monaco");
+    console.log("after mounting landing", text.toString().length);
+    const newProvider = new WebrtcProvider("test-room", doc);
+
+    newProvider.awareness.setLocalStateField("user", {
+      name: userId,
+    });
+
+    setProvider(newProvider);
+    setDoc(doc);
+    setLanguage(language);
+
+    return () => {
+      newProvider.destroy();
+    };
+  }, []);
 
   const handleChangeLanguage = (newLanguage) => {
-    console.log(newLanguage);
     setLanguage(newLanguage);
+    if (provider) {
+      provider.awareness.setLocalStateField("selectedLanguage", newLanguage);
+    }
   };
+
   const onChange = (action, data) => {
     switch (action) {
       case "code": {
         setCode(data);
+        console.log("onchange", data, language);
         break;
       }
       default: {
@@ -39,6 +64,7 @@ const CodeEditorLanding = () => {
       }
     }
   };
+
   const handleCompile = () => {
     setProcessing(true);
     const formData = {
@@ -59,19 +85,79 @@ const CodeEditorLanding = () => {
       data: formData,
     };
 
-    axios
-      .request(options)
-      .then(function (response) {
-        console.log("res.data", response.data);
-        const token = response.data.token;
-        checkStatus(token);
-      })
-      .catch((err) => {
-        let error = err.response ? err.response.data : err;
-        setProcessing(false);
-        console.log(error);
-      });
+    // axios
+    //   .request(options)
+    //   .then(function (response) {
+    //     console.log("res.data", response.data);
+    //     const token = response.data.token;
+    //     checkStatus(token);
+    //   })
+    //   .catch((err) => {
+    //     let error = err.response ? err.response.data : err;
+    //     setProcessing(false);
+    //     console.log(error);
+    //   });
+
+    if (provider) {
+      provider.awareness.setLocalStateField(
+        "compileClicked",
+        new Date().getTime()
+      );
+    }
   };
+
+  useEffect(() => {
+    if (!provider) {
+      return;
+    }
+    const handleCompileUpdate = ({ added, updated, removed }) => {
+      const localClientID = provider.awareness.clientID;
+      updated.forEach((clientID) => {
+        if (clientID !== localClientID) {
+          const clientState = provider.awareness.getStates().get(clientID);
+
+          if (clientState?.compileClicked) {
+            const currentTime = new Date().getTime();
+            const difference =
+              (currentTime - lastCompileTimeRef.current) / 1000;
+            if (difference > 5) {
+              handleCompile();
+              lastCompileTimeRef.current = currentTime;
+            }
+          }
+        }
+      });
+    };
+    provider?.awareness.on("change", handleCompileUpdate);
+
+    return () => {
+      provider?.awareness.off("change", handleCompileUpdate);
+    };
+  }, [provider, handleCompile]);
+
+  useEffect(() => {
+    if (!provider) {
+      return;
+    }
+    const handleLanguageUpdate = ({ added, updated, removed }) => {
+      const localClientID = provider.awareness.clientID;
+      updated.forEach((clientID) => {
+        if (clientID !== localClientID) {
+          const clientState = provider.awareness.getStates().get(clientID);
+          const clientLangObject = JSON.stringify(clientState.selectedLanguage);
+          const currentLangObject = JSON.stringify(language);
+          if (clientLangObject !== currentLangObject) {
+            handleChangeLanguage(clientState.selectedLanguage);
+          }
+        }
+      });
+    };
+    provider?.awareness.on("change", handleLanguageUpdate);
+
+    return () => {
+      provider?.awareness.off("change", handleLanguageUpdate);
+    };
+  }, [provider, language]);
 
   const checkStatus = async (token) => {
     const options = {
@@ -107,8 +193,11 @@ const CodeEditorLanding = () => {
     }
   };
 
+  if (!provider) {
+    return <div>Loading...</div>;
+  }
   return (
-    <YjsContext.Provider value={{ provider, awareness: provider.awareness }}>
+    <YjsContext.Provider value={{ provider, doc: doc }}>
       <Grid container direction="column" alignItems="flex-start" spacing={2}>
         <Grid
           container
@@ -118,7 +207,10 @@ const CodeEditorLanding = () => {
           alignItems="center"
         >
           <Grid item>
-            <LanguagesDropdown handleChangeLanguage={handleChangeLanguage} />
+            <LanguagesDropdown
+              selectedLanguage={language}
+              handleChangeLanguage={handleChangeLanguage}
+            />
           </Grid>
           <Grid item>
             <Button
@@ -153,5 +245,5 @@ const CodeEditorLanding = () => {
       </Grid>
     </YjsContext.Provider>
   );
-};
+}
 export default CodeEditorLanding;

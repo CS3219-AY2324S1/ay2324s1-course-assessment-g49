@@ -1,28 +1,27 @@
-import { useState } from "react";
 import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import { languageOptions } from "../../../utils/Languages";
 
-const LanguagesDropdown = ({ handleChangeLanguage }) => {
-  const [language, setLanguage] = useState(languageOptions[0]);
-  console.log(languageOptions[0]);
-
+const LanguagesDropdown = ({ selectedLanguage, handleChangeLanguage }) => {
   const handleChange = (evt) => {
-    setLanguage(evt.target.value);
-    handleChangeLanguage(evt.target.value);
+    const newLanguage = languageOptions.find(
+      (lang) => lang.label === evt.target.value
+    );
+    handleChangeLanguage(newLanguage);
   };
+
+  selectedLanguage = selectedLanguage?.label || languageOptions[0].label;
 
   return (
     <Select
-      defaultValue={languageOptions[0]}
-      value={language}
+      value={selectedLanguage}
       onChange={handleChange}
       label="Language"
       size="small"
     >
-      {languageOptions.map((language, index) => (
-        <MenuItem key={language.id} value={language}>
-          {language.label}
+      {languageOptions.map((languageOption, index) => (
+        <MenuItem key={languageOption.id} value={languageOption.label}>
+          {languageOption.label}
         </MenuItem>
       ))}
     </Select>
