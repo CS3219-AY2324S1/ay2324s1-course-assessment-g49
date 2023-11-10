@@ -1,11 +1,13 @@
 package com.peerprep.peerprepbackend.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 
 @Value
 @NoArgsConstructor(force = true)
+@AllArgsConstructor
 public class RegisterRequest {
 
     @NotBlank(message = "username is mandatory")
