@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import AddQuestionDialog from "../components/AddQuestionDialog";
 import QuestionList from "../components/QuestionList";
-import { Box, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import axios from "axios";
 import { reverseCategoryMapping } from "../utils/QuestionUtil";
 import NavBar from "../components/NavBar";

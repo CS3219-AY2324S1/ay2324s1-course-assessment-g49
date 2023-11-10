@@ -8,17 +8,10 @@ import QuestionsRepo from "./pages/QuestionsRepo";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
-import UserContextProvider from "./utils/UserContextUtil";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
+import CollaborationPage from "./pages/Collaboration/Collaboration/CollaborationPage";
 
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [userContext, setUserContext] = useState({
-    username: user ? user.username : null,
-    userId: user ? user.id : null,
-  });
-  const value = { userContext, setUserContext };
-
   return (
     <>
       <Theme>
@@ -31,6 +24,7 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/questions" element={<QuestionsRepo />} />
+                <Route path="/collaboration" element={<CollaborationPage />} />
               </Routes>
             </SnackbarProvider>
           </Grid>
