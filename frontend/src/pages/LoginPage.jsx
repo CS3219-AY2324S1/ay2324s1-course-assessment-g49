@@ -45,7 +45,13 @@ export default function LoginPage() {
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.sub;
           const userRole = decodedToken.role;
-          const userData = { jwt: token, userId: userId, userRole: userRole };
+          const tokenExpiry = decodedToken.exp;
+          const userData = {
+            jwt: token,
+            userId: userId,
+            userRole: userRole,
+            tokenExp: tokenExpiry,
+          };
           if (res.data.jwt) {
             localStorage.setItem("user", JSON.stringify(userData));
           }
