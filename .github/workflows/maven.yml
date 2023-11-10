@@ -11,7 +11,7 @@ name: Java CI with Maven
 on:
   push:
     branches:
-      - '*'
+      - master
   pull_request:
     branches:
       - '*'
@@ -29,9 +29,8 @@ jobs:
         java-version: '20'
         distribution: 'temurin'
         cache: maven
-    - name: Change to microservice directory
-      run: cd peerprep-backend
-    - name: Build with Maven
+    - name: Build and Test peerprep-backend
+      working-directory: ./peerprep-backend
       run: mvn -B package --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
