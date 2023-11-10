@@ -4,12 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 import java.util.Set;
 
 @Value
 @NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 public class CreateQuestionRequest {
 
     @NotBlank(message = "title is mandatory")

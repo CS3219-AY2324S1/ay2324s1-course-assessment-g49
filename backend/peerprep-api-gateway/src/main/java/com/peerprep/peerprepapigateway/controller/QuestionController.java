@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     @Value("${peerprep.question-service.url}")
     private String questionServiceUrl;
