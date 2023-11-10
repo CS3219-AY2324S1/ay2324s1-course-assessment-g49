@@ -50,7 +50,6 @@ class UserServiceTest {
 
     @Test
     void authenticateUser_Success() {
-        // Arrange
         String username = "testUser";
         String password = "testPass";
         User mockUser = User.builder()
