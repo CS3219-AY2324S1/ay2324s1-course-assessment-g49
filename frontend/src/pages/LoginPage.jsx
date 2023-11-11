@@ -11,15 +11,14 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Copyright from "../components/Copyright";
 import axios from "axios";
-import userContextProvider from "../utils/UserContextUtil";
 import { SnackbarContext } from "../utils/SnackbarContextUtil";
+import { jwtDecode } from "jwt-decode";
 
 export default function LoginPage() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefUsername = useRef(null);
   const inputRefPassword = useRef(null);
   const navigate = useNavigate();
-  const { userContext, setUserContext } = useContext(userContextProvider);
   const { snack, setSnack } = useContext(SnackbarContext);
 
   const handleSubmit = async (event) => {
@@ -42,11 +41,20 @@ export default function LoginPage() {
           password,
         };
         await axios.post(`${databaseURL}/auth/login`, user).then((res) => {
-          setUserContext({
-            username: res.data.username,
-            userId: res.data.id,
-          });
-          localStorage.setItem("user", JSON.stringify(res.data));
+          const token = res.data.jwt;
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.sub;
+          const userRole = decodedToken.role;
+          const tokenExpiry = decodedToken.exp;
+          const userData = {
+            jwt: token,
+            userId: userId,
+            userRole: userRole,
+            tokenExp: tokenExpiry,
+          };
+          if (res.data.jwt) {
+            localStorage.setItem("user", JSON.stringify(userData));
+          }
         });
         navigate("/home");
         setSnack({
