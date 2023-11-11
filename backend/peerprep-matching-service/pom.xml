@@ -45,6 +45,14 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>repsy</id>
+            <name>My Private Maven Repository on Repsy</name>
+            <url>https://repo.repsy.io/mvn/adamoh/peerprep</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
