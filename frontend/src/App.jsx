@@ -7,39 +7,40 @@ import Home from "./pages/Home";
 import QuestionsRepo from "./pages/QuestionsRepo";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import { Route, Routes } from "react-router-dom";
-import UserContextProvider from "./utils/UserContextUtil";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
 import CollaborationPage from "./pages/Collaboration/Collaboration/CollaborationPage";
+import JwtVerification from "./components/JwtVerification";
 
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [userContext, setUserContext] = useState({
-    username: user ? user.username : null,
-    userId: user ? user.id : null,
-  });
-  const value = { userContext, setUserContext };
-
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
   return (
     <>
       <Theme>
         <Grid container>
           <Grid item xs={12}>
-            <UserContextProvider.Provider value={value}>
-              <SnackbarProvider>
-                <Routes>
-                  <Route path="/" element={<LoginPage />} />
-                  <Route path="/register" element={<RegisterPage />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/questions" element={<QuestionsRepo />} />
-                  <Route
-                    path="/collaboration"
-                    element={<CollaborationPage />}
-                  />
-                </Routes>
-              </SnackbarProvider>
-            </UserContextProvider.Provider>
+            <SnackbarProvider>
+              <div>
+                <div>
+                  <Routes>
+                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/questions" element={<QuestionsRepo />} />
+                    <Route
+                      path="/collaboration"
+                      element={<CollaborationPage />}
+                    />
+                  </Routes>
+                </div>
+                <JwtVerification logout={logout} />
+              </div>
+            </SnackbarProvider>
           </Grid>
         </Grid>
       </Theme>

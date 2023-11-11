@@ -10,14 +10,14 @@ import {
   DialogTitle,
 } from "@mui/material";
 import axios from "axios";
-import userContextProvider from "../../utils/UserContextUtil";
 import { useNavigate } from "react-router-dom";
 import { SnackbarContext } from "../../utils/SnackbarContextUtil";
+import AuthenticationToken from "../../services/AuthenticationToken";
 
 function Settings() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
-  const { userContext, setUserContext } = useContext(userContextProvider);
-  const userId = userContext.userId;
+  const userdata = JSON.parse(localStorage.getItem("user"));
+  const userId = userdata.userId;
   const [openDialog, setOpenDialog] = useState(false);
   const { snack, setSnack } = useContext(SnackbarContext);
   const navigate = useNavigate();
@@ -35,7 +35,9 @@ function Settings() {
 	*/
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(`${databaseURL}/users/${userId}`);
+      await axios.delete(`${databaseURL}/users/${userId}`, {
+        headers: AuthenticationToken(),
+      });
       navigate("/");
       localStorage.setItem(
         "user",

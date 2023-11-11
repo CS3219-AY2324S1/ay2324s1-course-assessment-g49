@@ -19,8 +19,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "react-quill/dist/quill.snow.css";
 import EditQuestionDialog from "./EditQuestionDialog";
+import AuthenticationToken from "../services/AuthenticationToken";
 
-function Question({ question, questionId, onDelete, onEdit }) {
+function Question({ question, questionId, onDelete, onEdit, userRole }) {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const categories = question.categories.join(", ");
   const [open, setOpen] = React.useState(false);
@@ -32,7 +33,9 @@ function Question({ question, questionId, onDelete, onEdit }) {
   const [description, setDescription] = React.useState("");
 
   const loadDescription = async () => {
-    const response = await axios.get(`${databaseURL}/question/${question.id}`);
+    const response = await axios.get(`${databaseURL}/question/${question.id}`, {
+      headers: AuthenticationToken(),
+    });
     setDescription(response.data.description);
   };
 
@@ -64,39 +67,41 @@ function Question({ question, questionId, onDelete, onEdit }) {
       </TableCell>
       <TableCell>{categories}</TableCell>
       <TableCell align="center">{question.complexity}</TableCell>
-      <TableCell>
-        <IconButton
-          id="long-button"
-          aria-haspopup="true"
-          onClick={handleClick}
-          style={{ outline: "none" }}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="demo-positioned-menu"
-          aria-labelledby="demo-positioned-button"
-          anchorEl={anchorEl}
-          open={openActions}
-          onClose={handleCloseActions}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <EditQuestionDialog question={question} onEdit={onEdit} />
-          <MenuItem onClick={() => onDelete(question.id)}>
-            <ListItemIcon>
-              <DeleteIcon fontSize="small" />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-        </Menu>
-      </TableCell>
+      {userRole === "ADMIN" && (
+        <TableCell>
+          <IconButton
+            id="long-button"
+            aria-haspopup="true"
+            onClick={handleClick}
+            style={{ outline: "none" }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id="demo-positioned-menu"
+            aria-labelledby="demo-positioned-button"
+            anchorEl={anchorEl}
+            open={openActions}
+            onClose={handleCloseActions}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <EditQuestionDialog question={question} onEdit={onEdit} />
+            <MenuItem onClick={() => onDelete(question.id)}>
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" />
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+          </Menu>
+        </TableCell>
+      )}
     </TableRow>
   );
 }

@@ -30,8 +30,9 @@ const NavBar = () => {
   }, [location]);
 
   const handleLogOut = (evt) => {
-    localStorage.setItem('user', JSON.stringify({username: null, id: null }));
-  }
+    localStorage.removeItem("user");
+    //localStorage.setItem('user', JSON.stringify({username: null, id: null }));
+  };
 
   return (
     <div>
@@ -51,7 +52,12 @@ const NavBar = () => {
               />
             ))}
           </Tabs>
-          <Button variant="text" href="/" onClick={handleLogOut}>
+          <Button
+            variant="text"
+            href="/"
+            onClick={handleLogOut}
+            sx={{ color: "inherit" }}
+          >
             Log Out
           </Button>
         </Toolbar>
