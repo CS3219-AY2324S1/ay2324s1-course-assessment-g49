@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { Button, TextField, Grid, Typography } from "@mui/material";
 import axios from "axios";
-import userContextProvider from "../../utils/UserContextUtil";
 import { SnackbarContext } from "../../utils/SnackbarContextUtil";
 import CountrySelect from "../../components/CountrySelect";
+import AuthenticationToken from "../../services/AuthenticationToken";
 
 function EditProfile() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
-  const { userContext, setUserContext } = useContext(userContextProvider);
-  const userId = userContext.userId;
+  const userdata = JSON.parse(localStorage.getItem("user"));
+  const userId = userdata.userId;
   const inputRefs = {
     username: useRef(null),
     email: useRef(null),
@@ -23,11 +23,13 @@ function EditProfile() {
   const { snack, setSnack } = useContext(SnackbarContext);
 
   /*
-	Fetch user's data 
-	*/
+  Fetch user's data 
+  */
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${databaseURL}/users/${userId}`);
+      const response = await axios.get(`${databaseURL}/users/${userId}`, {
+        headers: AuthenticationToken(),
+      });
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching user data", error);
@@ -39,8 +41,8 @@ function EditProfile() {
   }, []);
 
   /*
-	Handler to update user's data when fields are edited
-	*/
+  Handler to update user's data when fields are edited
+  */
   const handleFieldChange = (evt) => {
     const { name, value } = evt.target;
     setUserData((prevUserData) => ({
@@ -56,9 +58,9 @@ function EditProfile() {
     }));
   };
   /*
-	Handler to submit user's updated data
-	Only sends patch request with updated fields
-	*/
+  Handler to submit user's updated data
+  Only sends patch request with updated fields
+  */
   const handleSave = async () => {
     try {
       let hasMissingFields = false;
@@ -88,12 +90,10 @@ function EditProfile() {
           severity: "warning",
         });
       } else {
-        await axios.patch(`${databaseURL}/users/${userId}`, userData);
+        await axios.patch(`${databaseURL}/users/${userId}`, userData, {
+          headers: AuthenticationToken(),
+        });
 
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ username: userData.username, id: userId })
-        );
         setSnack({
           message: "Saved successfully",
           open: true,

@@ -1,14 +1,13 @@
 package com.peerprep.peerprepapigateway.dto.request;
 
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
 @Value
 @NoArgsConstructor(force = true)
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UpdateUserRequest {
 
     @Size(min = 1, message = "username cannot be empty")

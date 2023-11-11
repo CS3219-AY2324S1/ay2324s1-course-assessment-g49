@@ -55,7 +55,7 @@ export default function RegisterPage() {
           password,
         };
 
-        await axios.post(`${databaseURL}/users`, newUser);
+        await axios.post(`${databaseURL}/auth/register`, newUser);
         navigate("/");
         setSnack({
           message: "Registered successfully",
