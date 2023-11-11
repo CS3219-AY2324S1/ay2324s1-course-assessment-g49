@@ -10,10 +10,8 @@ export default function CollabCodeEditor({ onChange, language, code }) {
   const { provider, doc } = useContext(YjsContext);
 
   function handleEditorChange(value) {
-    console.log("editors changed", language);
     onChange("code", value);
   }
-  console.log("code editor", language);
 
   // const roomName = "test-room";
   // const signalingRef = database.ref(`signaling/${roomName}`);

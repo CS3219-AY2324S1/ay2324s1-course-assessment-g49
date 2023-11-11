@@ -1,5 +1,6 @@
 import { Grid, Paper } from "@mui/material/";
 import { styled } from "@mui/material/styles";
+import LanguageContextUtil from "../../utils/LanguageContextUtil";
 import CodeEditorLanding from "./CodeEditor/CodeEditorLanding";
 
 function CollaborationPage() {
@@ -14,9 +15,11 @@ function CollaborationPage() {
 
   return (
     <Grid container style={{ height: "100vh" }}>
-      <Grid container item xs={8} sx={{ height: "100%", width: '100%' }}>
+      <Grid container item xs={8} sx={{ height: "100%", width: "100%" }}>
         <Item elevation={3}>
-          <CodeEditorLanding />
+          <LanguageContextUtil>
+            <CodeEditorLanding />
+          </LanguageContextUtil>
         </Item>
       </Grid>
       <Grid container item direction="column" xs={4} sx={{ height: "100%" }}>

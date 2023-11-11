@@ -1,7 +1,6 @@
-import { useState, createContext, useEffect, useRef } from "react";
+import { useState, createContext, useEffect, useRef, useContext } from "react";
 import CollabCodeEditor from "./CollabCodeEditor";
 import axios from "axios";
-import { languageOptions } from "../../../utils/Languages";
 import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
@@ -9,8 +8,7 @@ import LanguagesDropdown from "./LanguageDropdown";
 import { Grid, Button } from "@mui/material";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { QuillBinding } from "y-quill";
-import QuillCursors from "quill-cursors";
+import { LanguageContext } from "../../../utils/LanguageContextUtil";
 
 export const YjsContext = createContext(null);
 
@@ -19,7 +17,9 @@ function CodeEditorLanding() {
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
-  const [language, setLanguage] = useState(languageOptions[0]);
+
+  const { language, handleChangeLanguage } = useContext(LanguageContext);
+
   const [provider, setProvider] = useState(null);
   const [doc, setDoc] = useState(null);
   const lastCompileTimeRef = useRef(0);
@@ -29,28 +29,21 @@ function CodeEditorLanding() {
   useEffect(() => {
     const doc = new Y.Doc();
     const text = doc.getText("monaco");
-    console.log("after mounting landing", text.toString().length);
-    const newProvider = new WebrtcProvider("test-room", doc);
 
-    newProvider.awareness.setLocalStateField("user", {
-      name: userId,
+    const newProvider = new WebrtcProvider("test-room", doc, {
+      signaling: ["wss://peerprep-399116.as.r.appspot.com:4444"],
     });
+
+    newProvider.awareness.setLocalStateField("name", userId);
+    newProvider.awareness.setLocalStateField("selectedLanguage", language);
 
     setProvider(newProvider);
     setDoc(doc);
-    setLanguage(language);
 
     return () => {
       newProvider.destroy();
     };
   }, []);
-
-  const handleChangeLanguage = (newLanguage) => {
-    setLanguage(newLanguage);
-    if (provider) {
-      provider.awareness.setLocalStateField("selectedLanguage", newLanguage);
-    }
-  };
 
   const onChange = (action, data) => {
     switch (action) {
@@ -139,15 +132,26 @@ function CodeEditorLanding() {
     if (!provider) {
       return;
     }
+
     const handleLanguageUpdate = ({ added, updated, removed }) => {
       const localClientID = provider.awareness.clientID;
+
       updated.forEach((clientID) => {
         if (clientID !== localClientID) {
           const clientState = provider.awareness.getStates().get(clientID);
-          const clientLangObject = JSON.stringify(clientState.selectedLanguage);
-          const currentLangObject = JSON.stringify(language);
-          if (clientLangObject !== currentLangObject) {
+          const localState = provider.awareness.getStates().get(localClientID);
+          const clientLangObject = JSON.stringify(
+            clientState?.selectedLanguage
+          );
+          const localLangObject = JSON.stringify(localState?.selectedLanguage);
+
+          if (clientLangObject !== localLangObject) {
             handleChangeLanguage(clientState.selectedLanguage);
+
+            provider.awareness.setLocalStateField(
+              "selectedLanguage",
+              clientState.selectedLanguage
+            );
           }
         }
       });
@@ -157,7 +161,7 @@ function CodeEditorLanding() {
     return () => {
       provider?.awareness.off("change", handleLanguageUpdate);
     };
-  }, [provider, language]);
+  }, [provider, language, handleChangeLanguage]);
 
   const checkStatus = async (token) => {
     const options = {
@@ -207,10 +211,7 @@ function CodeEditorLanding() {
           alignItems="center"
         >
           <Grid item>
-            <LanguagesDropdown
-              selectedLanguage={language}
-              handleChangeLanguage={handleChangeLanguage}
-            />
+            <LanguagesDropdown />
           </Grid>
           <Grid item>
             <Button
