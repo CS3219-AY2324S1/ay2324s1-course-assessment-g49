@@ -2,6 +2,7 @@ import { Grid, Paper } from "@mui/material/";
 import { styled } from "@mui/material/styles";
 import LanguageContextUtil from "../../utils/LanguageContextUtil";
 import CodeEditorLanding from "./CodeEditor/CodeEditorLanding";
+import CodeContextUtil from "../../utils/CodeContextUtil";
 
 function CollaborationPage() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -17,9 +18,11 @@ function CollaborationPage() {
     <Grid container style={{ height: "100vh" }}>
       <Grid container item xs={8} sx={{ height: "100%", width: "100%" }}>
         <Item elevation={3}>
-          <LanguageContextUtil>
-            <CodeEditorLanding />
-          </LanguageContextUtil>
+          <CodeContextUtil>
+            <LanguageContextUtil>
+              <CodeEditorLanding />
+            </LanguageContextUtil>
+          </CodeContextUtil>
         </Item>
       </Grid>
       <Grid container item direction="column" xs={4} sx={{ height: "100%" }}>

@@ -3,14 +3,17 @@ import Editor from "@monaco-editor/react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
-import TrialCollaborativeButton from "./TrialButton";
+import { YjsContext } from "./CodeEditorLanding";
+import { CodeContext } from "../../../utils/CodeContextUtil";
 
-export default function CollabCodeEditor({ onChange, language, code }) {
+export default function CollabCodeEditor({ language }) {
   const editorRef = useRef(null);
   const { provider, doc } = useContext(YjsContext);
+  const { code, handleChangeCode } = useContext(CodeContext);
 
   function handleEditorChange(value) {
-    onChange("code", value);
+    // onChange("code", value);
+    handleChangeCode(value);
   }
 
   // const roomName = "test-room";

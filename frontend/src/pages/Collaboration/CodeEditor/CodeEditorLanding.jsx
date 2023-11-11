@@ -9,16 +9,18 @@ import { Grid, Button } from "@mui/material";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { LanguageContext } from "../../../utils/LanguageContextUtil";
+import { CodeContext } from "../../../utils/CodeContextUtil";
 
 export const YjsContext = createContext(null);
 
 function CodeEditorLanding() {
-  const [code, setCode] = useState(`Start coding`);
+  // const [code, setCode] = useState(`Start coding`);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
 
   const { language, handleChangeLanguage } = useContext(LanguageContext);
+  const { code, handleChangeCode } = useContext(CodeContext);
 
   const [provider, setProvider] = useState(null);
   const [doc, setDoc] = useState(null);
@@ -29,6 +31,7 @@ function CodeEditorLanding() {
   useEffect(() => {
     const doc = new Y.Doc();
     const text = doc.getText("monaco");
+    handleChangeCode(text.toString());
 
     const newProvider = new WebrtcProvider("test-room", doc, {
       signaling: ["wss://peerprep-399116.as.r.appspot.com:4444"],
@@ -48,8 +51,7 @@ function CodeEditorLanding() {
   const onChange = (action, data) => {
     switch (action) {
       case "code": {
-        setCode(data);
-        console.log("onchange", data, language);
+        handleChangeCode(data);
         break;
       }
       default: {
@@ -78,18 +80,18 @@ function CodeEditorLanding() {
       data: formData,
     };
 
-    // axios
-    //   .request(options)
-    //   .then(function (response) {
-    //     console.log("res.data", response.data);
-    //     const token = response.data.token;
-    //     checkStatus(token);
-    //   })
-    //   .catch((err) => {
-    //     let error = err.response ? err.response.data : err;
-    //     setProcessing(false);
-    //     console.log(error);
-    //   });
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log("res.data", response.data);
+        const token = response.data.token;
+        checkStatus(token);
+      })
+      .catch((err) => {
+        let error = err.response ? err.response.data : err;
+        setProcessing(false);
+        console.log(error);
+      });
 
     if (provider) {
       provider.awareness.setLocalStateField(
@@ -211,7 +213,7 @@ function CodeEditorLanding() {
           alignItems="center"
         >
           <Grid item>
-            <LanguagesDropdown />
+            <LanguagesDropdown disabled={processing} />
           </Grid>
           <Grid item>
             <Button

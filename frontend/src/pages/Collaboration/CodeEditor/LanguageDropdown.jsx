@@ -5,7 +5,7 @@ import { YjsContext } from "./CodeEditorLanding";
 import { LanguageContext } from "../../../utils/LanguageContextUtil";
 import { useContext } from "react";
 
-const LanguagesDropdown = () => {
+const LanguagesDropdown = ({ disabled }) => {
   const { language, handleChangeLanguage } = useContext(LanguageContext);
   const { provider } = useContext(YjsContext);
 
@@ -27,6 +27,7 @@ const LanguagesDropdown = () => {
       onChange={handleChange}
       label="Language"
       size="small"
+      disabled={disabled}
     >
       {languageOptions.map((languageOption, index) => (
         <MenuItem key={languageOption.id} value={languageOption.label}>
