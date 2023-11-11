@@ -29,22 +29,9 @@ jobs:
         java-version: '20'
         distribution: 'temurin'
         cache: maven
-    - name: Cache Maven local repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-    - name: Build and Test peerprep-common
-      working-directory: ./backend/peerprep-common
-      run: mvn -B package --file pom.xml
-    - name: Build and Test peerprep-api-gateway
-      working-directory: ./backend/peerprep-api-gateway
-      run: mvn -B package --file pom.xml
-    - name: Build and Test peerprep-question-service
-      working-directory: ./backend/peerprep-question-service
-      run: mvn -B package --file pom.xml
-    - name: Build and Test peerprep-matching-service
-      working-directory: ./backend/peerprep-matching-service
-      run: mvn -B package --file pom.xml
+    - name: Build all projects
+      run: |
+        mvn -B install --file ./backend/peerprep-common/pom.xml
+        mvn -B package --file ./backend/peerprep-api-gateway/pom.xml
+        mvn -B package --file ./backend/peerprep-question-service/pom.xml
+        mvn -B package --file ./backend/peerprep-matching-service/pom.xml
