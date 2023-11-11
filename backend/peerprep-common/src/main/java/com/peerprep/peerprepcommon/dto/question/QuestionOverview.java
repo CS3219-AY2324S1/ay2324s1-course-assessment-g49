@@ -2,6 +2,7 @@ package com.peerprep.peerprepcommon.dto.question;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Value
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor(force = true)
 public class QuestionOverview {
     String id;
     String title;
