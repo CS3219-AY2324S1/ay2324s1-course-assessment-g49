@@ -11,7 +11,7 @@ import lombok.Value;
 public class MatchRequest {
 
     @NotNull(message = "userId is mandatory")
-    Long userId;
+    String userId;
 
     @NotNull(message = "complexity is mandatory")
     Complexity complexity;

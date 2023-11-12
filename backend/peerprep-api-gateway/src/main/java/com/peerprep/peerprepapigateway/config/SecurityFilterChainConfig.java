@@ -32,6 +32,7 @@ public class SecurityFilterChainConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/auth/login", "/auth/register", "/ping").permitAll()
+                                .requestMatchers("/match").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/question").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PATCH, "/question/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/question/**").hasAuthority("ADMIN")
@@ -46,7 +47,7 @@ public class SecurityFilterChainConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("http://localhost:5173");
+        configuration.addAllowedOriginPattern("*");
         configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
