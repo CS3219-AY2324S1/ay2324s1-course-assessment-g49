@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect, useRef, useContext } from "react";
+import { useState, createContext, useEffect, useContext } from "react";
 import CollabCodeEditor from "./CollabCodeEditor";
 import axios from "axios";
 import OutputWindow from "./OutputWindow";
@@ -14,23 +14,25 @@ import { CodeContext } from "../../../utils/CodeContextUtil";
 export const YjsContext = createContext(null);
 
 function CodeEditorLanding() {
-  // const [code, setCode] = useState(`Start coding`);
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
-  const [processing, setProcessing] = useState(null);
+  const [processing, setProcessing] = useState(false);
 
   const { language, handleChangeLanguage } = useContext(LanguageContext);
   const { code, handleChangeCode } = useContext(CodeContext);
 
   const [provider, setProvider] = useState(null);
   const [doc, setDoc] = useState(null);
-  const lastCompileTimeRef = useRef(0);
   const userData = JSON.parse(localStorage.getItem("user"));
   const userId = userData.userId;
 
   useEffect(() => {
     const doc = new Y.Doc();
     const text = doc.getText("monaco");
+    const customInputText = doc.getText("customInput");
+    customInputText.observe((event) => {
+      setCustomInput(customInputText.toString());
+    });
     handleChangeCode(text.toString());
 
     const newProvider = new WebrtcProvider("test-room", doc, {
@@ -47,6 +49,12 @@ function CodeEditorLanding() {
       newProvider.destroy();
     };
   }, []);
+
+  const handleCustomInputChange = (newCustomInput) => {
+    const customInputText = doc.getText("customInput");
+    customInputText.delete(0, customInputText.length);
+    customInputText.insert(0, newCustomInput);
+  };
 
   const onChange = (action, data) => {
     switch (action) {
@@ -92,43 +100,7 @@ function CodeEditorLanding() {
         setProcessing(false);
         console.log(error);
       });
-
-    if (provider) {
-      provider.awareness.setLocalStateField(
-        "compileClicked",
-        new Date().getTime()
-      );
-    }
   };
-
-  useEffect(() => {
-    if (!provider) {
-      return;
-    }
-    const handleCompileUpdate = ({ added, updated, removed }) => {
-      const localClientID = provider.awareness.clientID;
-      updated.forEach((clientID) => {
-        if (clientID !== localClientID) {
-          const clientState = provider.awareness.getStates().get(clientID);
-
-          if (clientState?.compileClicked) {
-            const currentTime = new Date().getTime();
-            const difference =
-              (currentTime - lastCompileTimeRef.current) / 1000;
-            if (difference > 5) {
-              handleCompile();
-              lastCompileTimeRef.current = currentTime;
-            }
-          }
-        }
-      });
-    };
-    provider?.awareness.on("change", handleCompileUpdate);
-
-    return () => {
-      provider?.awareness.off("change", handleCompileUpdate);
-    };
-  }, [provider, handleCompile]);
 
   useEffect(() => {
     if (!provider) {
@@ -221,7 +193,7 @@ function CodeEditorLanding() {
               disabled={!code}
               variant="contained"
             >
-              {processing ? "Processing..." : "Compile and Execute"}
+              {processing ? "Processing..." : "Execute"}
             </Button>
           </Grid>
         </Grid>
@@ -233,13 +205,20 @@ function CodeEditorLanding() {
             language={language?.value}
           />
         </Grid>
-        <Grid container item direction="row" justifyContent="space-between">
+        <Grid
+          container
+          item
+          justifyContent="space-between"
+          direction="column"
+          spacing={2}
+        >
           <Grid item>
             <CustomInput
               customInput={customInput}
-              setCustomInput={setCustomInput}
+              setCustomInput={handleCustomInputChange}
             />
           </Grid>
+
           <Grid item>
             <OutputWindow outputDetails={outputDetails} />
             {outputDetails && <OutputDetails outputDetails={outputDetails} />}

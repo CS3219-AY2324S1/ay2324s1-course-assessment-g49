@@ -16,7 +16,11 @@ function CollaborationPage() {
 
   return (
     <Grid container style={{ height: "100vh" }}>
-      <Grid container item xs={8} sx={{ height: "100%", width: "100%" }}>
+      <Grid
+        item
+        xs={4.5}
+        style={{ display: "flex", height: "100vh", width: "100%" }}
+      >
         <Item elevation={3}>
           <CodeContextUtil>
             <LanguageContextUtil>
@@ -25,9 +29,11 @@ function CollaborationPage() {
           </CodeContextUtil>
         </Item>
       </Grid>
-      <Grid container item direction="column" xs={4} sx={{ height: "100%" }}>
+      <Grid item xs={3.75} style={{ height: "100vh", width: "100%" }}>
         <Item elevation={3}>Question Description</Item>
-        <Item elevation={3} style={{ height: "100%", width: "100%" }}>
+      </Grid>
+      <Grid item xs={3.75}>
+        <Item elevation={3} style={{ height: "100vh", width: "100%" }}>
           Communication
         </Item>
       </Grid>

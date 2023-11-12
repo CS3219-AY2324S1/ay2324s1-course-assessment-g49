@@ -3,9 +3,9 @@ import { TextField } from "@mui/material";
 const CustomInput = ({ customInput, setCustomInput }) => {
   return (
     <>
-      {" "}
       <TextField
-        rows={5}
+        fullWidth
+        rows={3}
         multiline
         value={customInput}
         onChange={(e) => setCustomInput(e.target.value)}

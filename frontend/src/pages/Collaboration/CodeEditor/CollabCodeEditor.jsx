@@ -12,7 +12,6 @@ export default function CollabCodeEditor({ language }) {
   const { code, handleChangeCode } = useContext(CodeContext);
 
   function handleEditorChange(value) {
-    // onChange("code", value);
     handleChangeCode(value);
   }
 
@@ -43,19 +42,27 @@ export default function CollabCodeEditor({ language }) {
   }
 
   return (
-    <Editor
-      height="50vh"
-      width="50vh"
-      theme="vs-dark"
-      language={language || "python"}
-      defaultLanguage="python"
-      value={code}
-      defaultValue="Type your code here"
-      onMount={handleEditorDidMount}
-      options={{
-        cursorBlinking: "blink",
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
       }}
-      onChange={handleEditorChange}
-    />
+    >
+      <Editor
+        height="60vh"
+        width="50vh"
+        theme="vs-dark"
+        language={language || "python"}
+        defaultLanguage="python"
+        value={code}
+        defaultValue="Type your code here"
+        onMount={handleEditorDidMount}
+        options={{
+          cursorBlinking: "blink",
+        }}
+        onChange={handleEditorChange}
+      />
+    </div>
   );
 }
