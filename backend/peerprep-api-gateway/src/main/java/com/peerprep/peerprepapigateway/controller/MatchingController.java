@@ -1,5 +1,6 @@
 package com.peerprep.peerprepapigateway.controller;
 
+import com.peerprep.peerprepapigateway.service.RedisMessagePublisher;
 import com.peerprep.peerprepcommon.dto.match.MatchRequest;
 import com.peerprep.peerprepcommon.dto.match.MatchResponse;
 import jakarta.validation.Valid;
@@ -19,16 +20,12 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class MatchingController {
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    private final RedisMessagePublisher redisMessagePublisher;
 
     @MessageMapping("/match")
-    public void submitMatch(@RequestBody MatchRequest request, Principal principal) {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.simpMessagingTemplate.convertAndSendToUser(principal.getName(), "/queue/match", new MatchResponse("2", "1232131"));
+    public void submitMatch(@RequestBody MatchRequest request) {
+        redisMessagePublisher.publish(request);
     }
 }

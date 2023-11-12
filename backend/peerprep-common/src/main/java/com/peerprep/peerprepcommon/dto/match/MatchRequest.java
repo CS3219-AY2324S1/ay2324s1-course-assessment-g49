@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 
+import java.io.Serializable;
+
 @Value
 @NoArgsConstructor(force = true)
-public class MatchRequest {
+public class MatchRequest implements Serializable {
 
     @NotNull(message = "userId is mandatory")
     String userId;
