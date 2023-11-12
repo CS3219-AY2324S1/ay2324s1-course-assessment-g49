@@ -26,7 +26,7 @@ public class RedisMessageSubscriber implements MessageListener {
             MatchRequest matchRequest = (new ObjectMapper()).readValue(json, MatchRequest.class);
             String key = matchRequest.getComplexity().toString() + matchRequest.getComplexity().toString();
             if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-                MatchRequest existing = redisTemplate.opsForValue().get(key);
+                MatchRequest existing = redisTemplate.opsForValue().getAndDelete(key);
                 matchingService.processMatch(matchRequest, existing);
             } else {
                 Duration timeout = Duration.ofSeconds(20);
