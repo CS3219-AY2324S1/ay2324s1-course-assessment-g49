@@ -9,6 +9,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "src/tests/setupTests.js",
-    dangerouslyIgnoreUnhandledErrors: true,
+    //dangerouslyIgnoreUnhandledErrors: true,
+    setupFiles: ["./src/tests/setupTests.js"],
   },
 });
