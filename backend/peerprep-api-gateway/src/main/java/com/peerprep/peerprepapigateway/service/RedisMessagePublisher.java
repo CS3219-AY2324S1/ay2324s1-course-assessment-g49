@@ -20,11 +20,9 @@ public class RedisMessagePublisher {
 
     public void publish(MatchRequest message) {
         try {
-            String json = objectMapper.writeValueAsString(message);
             redisTemplate.convertAndSend(topic.getTopic(), objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
-
 }

@@ -25,19 +25,15 @@ public class MatchingServiceTest {
 
     @Test
     void testProcessMatch() {
-        // Arrange
         String apiGatewayUrl = "http://localhost:8082"; // Example URL
         String expectedUrl = apiGatewayUrl + "/notify/result";
         MatchRequest request1 = new MatchRequest("user1", Complexity.EASY, Category.ARRAYS);
         MatchRequest request2 = new MatchRequest("user2", Complexity.EASY, Category.ARRAYS);
 
-        // Use reflection to set the value of the private field
         ReflectionTestUtils.setField(matchingService, "apiGatewayUrl", apiGatewayUrl);
 
-        // Act
         matchingService.processMatch(request1, request2);
 
-        // Assert
         verify(restTemplate).postForEntity(expectedUrl, new MatchResult(request1.getUserId(), request2.getUserId(), request1.getComplexity(), request1.getCategory()), Void.class);
     }
 }

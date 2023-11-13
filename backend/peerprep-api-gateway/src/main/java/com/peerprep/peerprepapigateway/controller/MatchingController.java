@@ -20,8 +20,6 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class MatchingController {
 
-    private final SimpMessagingTemplate simpMessagingTemplate;
-
     private final RedisMessagePublisher redisMessagePublisher;
 
     @MessageMapping("/match")

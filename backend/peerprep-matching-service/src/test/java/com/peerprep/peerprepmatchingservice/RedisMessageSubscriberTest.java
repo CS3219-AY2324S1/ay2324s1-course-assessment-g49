@@ -31,20 +31,16 @@ public class RedisMessageSubscriberTest {
 
     @Test
     void testOnMessage() {
-        // Mock the message
         String json = "{\"userId\":\"1\",\"complexity\":\"EASY\",\"category\":\"ARRAYS\"}";
         Message mockMessage = mock(Message.class);
         when(mockMessage.getBody()).thenReturn(json.getBytes());
 
-        // Stubbing for chained method call
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
         when(valueOperations.getAndDelete(anyString())).thenReturn(new MatchRequest());
         when(redisTemplate.hasKey(anyString())).thenReturn(true);
 
-        // Call the onMessage method
         redisMessageSubscriber.onMessage(mockMessage, new byte[0]);
 
-        // Verify interactions and assert expectations
         verify(redisTemplate).hasKey(anyString());
         verify(valueOperations).getAndDelete(anyString());
         verify(matchingService).processMatch(any(MatchRequest.class), any(MatchRequest.class));
