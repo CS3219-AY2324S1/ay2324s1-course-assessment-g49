@@ -10,6 +10,9 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "src/tests/setupTests.js",
     //dangerouslyIgnoreUnhandledErrors: true,
-    setupFiles: ["./src/tests/setupTests.js"],
+    //setupFiles: ["./src/tests/setupTests.js"],
   },
+  server: {
+    port: 5173
+  }
 });
