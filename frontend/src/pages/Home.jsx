@@ -5,7 +5,7 @@ import { Client } from "@stomp/stompjs";
 import AuthenticationToken from "../services/AuthenticationToken";
 
 const sampleMatchRequest = {
-  userId: "1",
+  userId: JSON.parse(localStorage.getItem("user")).userId,
   complexity: "EASY",
   category: "ARRAYS"
 }
