@@ -1,5 +1,4 @@
 import "./App.css";
-import { useState } from "react";
 import { Grid } from "@mui/material";
 import Theme from "./themes/Theme";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
@@ -11,6 +10,8 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
 import CollaborationPage from "./pages/Collaboration/Collaboration/CollaborationPage";
 import JwtVerification from "./components/JwtVerification";
+import LoadingMatchPage from "./pages/MatchingPage/LoadingMatchPage";
+import MatchPage from "./pages/MatchingPage/MatchPage";
 
 function App() {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ function App() {
                       path="/collaboration"
                       element={<CollaborationPage />}
                     />
+                    <Route path="/matchpage" element={<MatchPage />} />
+                    <Route path="/matching" element={<LoadingMatchPage />} />
                   </Routes>
                 </div>
                 <JwtVerification logout={logout} />
