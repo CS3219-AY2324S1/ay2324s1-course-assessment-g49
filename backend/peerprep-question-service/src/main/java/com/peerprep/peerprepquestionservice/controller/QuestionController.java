@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080/")
+@CrossOrigin(origins = {"http://localhost:8080/", "https://api-gateway-dot-peerprep-399116.as.r.appspot.com/"})
 @RestController
 @RequiredArgsConstructor
 public class QuestionController {
