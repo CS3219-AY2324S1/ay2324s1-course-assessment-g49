@@ -9,6 +9,7 @@ import YourButtonComponent from "./CodeEditor/CollaborativeButton";
 function CollaborationPage() {
   // Create a Yjs document
   const ydoc = new Y.Doc();
+  console.log("ydoc:", ydoc);
 
   // Define a Yjs data type for your button state
   const buttonState = ydoc.getArray("button-state");

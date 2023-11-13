@@ -1,10 +1,9 @@
-import { createContext, useState, useRef } from "react";
-import Editor from "@monaco-editor/react";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
-import { MonacoBinding } from "y-monaco";
-import { QuillBinding } from "y-quill";
-import TrialCollaborativeButton from "./TrialButton";
+import React, { useRef, useState } from 'react';
+import Editor from '@monaco-editor/react';
+import * as Y from 'yjs';
+import { WebrtcProvider } from 'y-webrtc';
+import { MonacoBinding } from 'y-monaco';
+import TrialCollaborativeButton from './TrialButton';
 
 export default function CollabCodeEditor({ onChange, language, code }) {
   const editorRef = useRef(null);
@@ -15,55 +14,31 @@ export default function CollabCodeEditor({ onChange, language, code }) {
     onChange("code", value);
   }
 
+  // const roomName = "test-room";
+  // const signalingRef = database.ref(`signaling/${roomName}`);
+
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
     const doc = new Y.Doc();
+
+    const SIGNALING_SERVER ="ws://peerprep-399116.as.r.appspot.com"
+    
+    //@ts-ignore
     const provider = new WebrtcProvider("test-room", doc, {
-      signaling: ["wss://y-webrtc-eu.fly.dev/"],
+      signaling: [SIGNALING_SERVER],
     });
+
+    console.log("provider:", provider);
     const type = doc.getText("monaco");
     const awareness = provider.awareness;
-    /** 
-    // Add a custom field for the button click event
-    awareness.setLocalStateField("buttonClick", false);
 
-    // Listen for awareness changes
-    awareness.on("change", () => {
-      // Whenever somebody updates their awareness information,
-      // check if the button click event field is true
-      const allStates = awareness.getStates();
-      const buttonClickEventStates = Array.from(allStates.values()).filter(
-        (state) => state["buttonClick"] === true
-      );
-
-      if (buttonClickEventStates.length > 0) {
-        // Handle the button click event here
-        console.log("Button was clicked by:", buttonClickEventStates);
-
-        // Reset the button click event field to false for all users
-        awareness.setLocalStateField("buttonClick", false);
-      }
-    });*/
-    /** 
-        const awareness = provider.awareness
-        awareness.on('change', changes => {
-            // Whenever somebody updates their awareness information,
-            // we log all awareness information from all users.
-            console.log(Array.from(awareness.getStates().values()))
-          })
-          awareness.setLocalStateField('user', {
-            // Define a print name that should be displayed
-            name: 'Emmanuelle Charpentier',
-            // Define a color that should be associated to the user:
-            color: '#ffb61e' // should be a hex color
-          })
-          */
     const binding = new MonacoBinding(
       type,
       editorRef.current.getModel(),
       new Set([editorRef.current]),
       provider.awareness
     );
+
   }
   return (
     <Editor
