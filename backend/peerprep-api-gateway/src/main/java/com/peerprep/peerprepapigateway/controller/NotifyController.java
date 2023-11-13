@@ -21,6 +21,7 @@ public class NotifyController {
     public ResponseEntity<?> receiveMatchResult(@RequestBody MatchResult matchResult) {
         // generate meeting token
         String meetingId = "placeholder meeting id";
+
         // notify respective frontend
         this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId1(), "/queue/match", new MatchResponse(matchResult.getUserId2(), meetingId, matchResult.getComplexity(), matchResult.getCategory()));
         this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId2(), "/queue/match", new MatchResponse(matchResult.getUserId1(), meetingId, matchResult.getComplexity(), matchResult.getCategory()));
