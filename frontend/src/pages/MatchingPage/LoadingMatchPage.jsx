@@ -16,6 +16,8 @@ function LoadingMatchPage() {
 
   const [text, setText] = useState("Matching in progress...");
   const [timerCompleted, setTimerCompleted] = useState(false);
+  const [timerStopped, setTimerStopped] = useState(false);
+
   const [responseReceived, setResponseReceived] = useState(false);
 
   const { complexity, category } = location.state;
@@ -28,6 +30,12 @@ function LoadingMatchPage() {
   const handleTimerComplete = () => {
     setText("Could not find a match");
     setTimerCompleted(true);
+    setTimeout(() => {
+      setTimerCompleted(true);
+    }, 0);
+  };
+  const handleTimerStopped = () => {
+    setTimerStopped(true);
   };
 
   const handleCollaboration = (message) => {
@@ -98,7 +106,7 @@ function LoadingMatchPage() {
             <Button
               id="practice-alone"
               variant="contained"
-              disabled={!timerCompleted}
+              disabled={!timerCompleted && !timerStopped}
               onClick={handleDisconnectClick}
               color="secondary"
             >
@@ -108,7 +116,7 @@ function LoadingMatchPage() {
         </Grid>
         <Grid item mt={5}>
           {!responseReceived && (
-            <TimerComponent onTimerComplete={handleTimerComplete} />
+            <TimerComponent onTimerComplete={handleTimerComplete} onTimerStopped={handleTimerStopped} />
           )}
         </Grid>
       </Grid>
