@@ -64,12 +64,15 @@ export default function LoginPage() {
         });
       }
     } catch (err) {
-      setSnack({
-        message: err.response.data,
-        open: true,
-        severity: "warning",
-      });
-      console.error("Error updating user's data", err);
+      if (err.response?.response.data) {
+        setSnack({
+          message: err.response.data,
+          open: true,
+          severity: "warning",
+        });
+      } else {
+        console.error("Error updating user's data", err);
+      }
     }
   };
 
@@ -147,6 +150,7 @@ export default function LoginPage() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSubmit}
+              data-testid="sign-in-button"
             >
               Sign In
             </Button>
