@@ -6,7 +6,7 @@ import { SnackbarContext } from "../utils/SnackbarContextUtil";
 
 const NavBar = () => {
   const location = useLocation();
-  const { setUser } = useAuth();
+  const { setUser } = useAuth() || {};
   const [page, setPage] = useState(0);
   const { snack, setSnack } = useContext(SnackbarContext);
   const pageTabs = [

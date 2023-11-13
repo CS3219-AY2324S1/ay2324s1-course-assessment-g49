@@ -16,7 +16,7 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../utils/AuthContextUtil";
 
 export default function LoginPage() {
-  const { setUser } = useAuth();
+  const { setUser } = useAuth() || {};
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefUsername = useRef(null);
   const inputRefPassword = useRef(null);
