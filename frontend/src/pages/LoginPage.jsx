@@ -13,8 +13,10 @@ import Copyright from "../components/Copyright";
 import axios from "axios";
 import { SnackbarContext } from "../utils/SnackbarContextUtil";
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../utils/AuthContextUtil";
 
 export default function LoginPage() {
+  const { setUser } = useAuth();
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefUsername = useRef(null);
   const inputRefPassword = useRef(null);
@@ -54,6 +56,7 @@ export default function LoginPage() {
           };
           if (res.data.jwt) {
             localStorage.setItem("user", JSON.stringify(userData));
+            setUser(userData);
           }
         });
         navigate("/home");
