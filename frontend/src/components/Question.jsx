@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { useEffect } from "react";
 import axios from "axios";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -57,6 +56,7 @@ function Question({ question, questionId, onDelete, onEdit, userRole }) {
           <DialogTitle>Question Description</DialogTitle>
           <DialogContent>
             <DialogContentText
+              data-testid="question-description"
               dangerouslySetInnerHTML={{ __html: description }}
             ></DialogContentText>
           </DialogContent>
@@ -71,6 +71,7 @@ function Question({ question, questionId, onDelete, onEdit, userRole }) {
         <TableCell>
           <IconButton
             id="long-button"
+            data-testid="test-long-button"
             aria-haspopup="true"
             onClick={handleClick}
             style={{ outline: "none" }}
@@ -92,7 +93,7 @@ function Question({ question, questionId, onDelete, onEdit, userRole }) {
               horizontal: "left",
             }}
           >
-            <EditQuestionDialog question={question} onEdit={onEdit} />
+            <EditQuestionDialog question={question} onEdit={onEdit} data-testid="test-edit-button"/>
             <MenuItem onClick={() => onDelete(question.id)}>
               <ListItemIcon>
                 <DeleteIcon fontSize="small" />
