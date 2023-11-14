@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AppBar, Toolbar, Tabs, Tab, Button } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../utils/AuthContextUtil";
+import { SnackbarContext } from "../utils/SnackbarContextUtil";
 
 const NavBar = () => {
   const location = useLocation();
+  const { setUser } = useAuth() || {};
   const [page, setPage] = useState(0);
+  const { snack, setSnack } = useContext(SnackbarContext);
   const pageTabs = [
     {
       page: "Home",
@@ -30,8 +34,13 @@ const NavBar = () => {
   }, [location]);
 
   const handleLogOut = (evt) => {
+    setSnack({
+      message: "Logged out successfully",
+      open: true,
+      severity: "success",
+    });
     localStorage.removeItem("user");
-    //localStorage.setItem('user', JSON.stringify({username: null, id: null }));
+    setUser(null);
   };
 
   return (

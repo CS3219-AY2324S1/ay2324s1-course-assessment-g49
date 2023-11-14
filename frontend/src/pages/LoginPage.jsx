@@ -13,8 +13,10 @@ import Copyright from "../components/Copyright";
 import axios from "axios";
 import { SnackbarContext } from "../utils/SnackbarContextUtil";
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../utils/AuthContextUtil";
 
 export default function LoginPage() {
+  const { setUser } = useAuth() || {};
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const inputRefUsername = useRef(null);
   const inputRefPassword = useRef(null);
@@ -54,6 +56,7 @@ export default function LoginPage() {
           };
           if (res.data.jwt) {
             localStorage.setItem("user", JSON.stringify(userData));
+            setUser(userData);
           }
         });
         navigate("/home");
@@ -64,12 +67,15 @@ export default function LoginPage() {
         });
       }
     } catch (err) {
-      setSnack({
-        message: err.response.data,
-        open: true,
-        severity: "warning",
-      });
-      console.error("Error updating user's data", err);
+      if (err.response?.response.data) {
+        setSnack({
+          message: err.response.data,
+          open: true,
+          severity: "warning",
+        });
+      } else {
+        console.error("Error updating user's data", err);
+      }
     }
   };
 
@@ -147,6 +153,7 @@ export default function LoginPage() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSubmit}
+              data-testid="sign-in-button"
             >
               Sign In
             </Button>

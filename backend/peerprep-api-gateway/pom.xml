@@ -100,6 +100,15 @@
             <artifactId>httpclient5</artifactId>
             <version>5.2.1</version>
         </dependency>
+        <!-- Add CloudSQL Starter for PostgreSQL -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

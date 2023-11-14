@@ -10,6 +10,14 @@ export default defineConfig(({ command }) => {
         port: 5173,
       },
       plugins: [react()],
+      build: { chunkSizeWarningLimit: 1600 },
+      test: {
+        globals: true,
+        environment: "jsdom",
+        setupFiles: "src/tests/setupTests.js",
+        dangerouslyIgnoreUnhandledErrors: true,
+        //setupFiles: ["./src/tests/setupTests.js"],
+      },
     };
   } else {
     return {
@@ -18,6 +26,14 @@ export default defineConfig(({ command }) => {
         port: 8080,
       },
       plugins: [react()],
+      build: { chunkSizeWarningLimit: 1600 },
+      test: {
+        globals: true,
+        environment: "jsdom",
+        setupFiles: "src/tests/setupTests.js",
+        dangerouslyIgnoreUnhandledErrors: true,
+        //setupFiles: ["./src/tests/setupTests.js"],
+      },
     };
   }
 });
