@@ -81,7 +81,7 @@ function LoadingMatchPage() {
       setMatchClient(null);
     }
     console.log("Disconnected");
-    navigate("/matchpage");
+    navigate("/home");
   };
 
   return (

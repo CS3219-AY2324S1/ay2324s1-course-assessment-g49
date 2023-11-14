@@ -86,17 +86,11 @@ function MatchPage() {
     <>
       <Grid container direction="column">
         <Grid item>
-          <NavBar />
-        </Grid>
-        <Grid item>
-          <Stack alignItems="flex-start" direction="column" spacing={1} ml={5}>
-            <Typography variant="h4" style={{ textAlign: "left" }}>
-              Matching Page
-            </Typography>
+          <Stack alignItems="center" direction="column" spacing={1} ml={5}>
             <Typography variant="h6" style={{ textAlign: "left" }}>
               Choose your preferred criteria and practice with another user.
             </Typography>
-            <Grid container item>
+            <Grid container item justifyContent={"center"}>
               <Grid item sx={{ width: "50%" }} mt={3}>
                 <Stack spacing={2}>
                   {renderSelectField(
