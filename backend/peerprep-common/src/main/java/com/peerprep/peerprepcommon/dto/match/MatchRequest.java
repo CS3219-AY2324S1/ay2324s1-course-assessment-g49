@@ -14,6 +14,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class MatchRequest implements Serializable {
 
+    @NotNull(message = "must specify create or cancel")
+    Boolean isCreate;
+
     @NotNull(message = "userId is mandatory")
     String userId;
 

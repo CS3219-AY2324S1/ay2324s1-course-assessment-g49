@@ -27,8 +27,8 @@ public class MatchingServiceTest {
     void testProcessMatch() {
         String apiGatewayUrl = "http://localhost:8082"; // Example URL
         String expectedUrl = apiGatewayUrl + "/notify/result";
-        MatchRequest request1 = new MatchRequest("user1", Complexity.EASY, Category.ARRAYS);
-        MatchRequest request2 = new MatchRequest("user2", Complexity.EASY, Category.ARRAYS);
+        MatchRequest request1 = new MatchRequest(true, "user1", Complexity.EASY, Category.ARRAYS);
+        MatchRequest request2 = new MatchRequest(true, "user2", Complexity.EASY, Category.ARRAYS);
 
         ReflectionTestUtils.setField(matchingService, "apiGatewayUrl", apiGatewayUrl);
 
