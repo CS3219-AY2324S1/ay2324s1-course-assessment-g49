@@ -8,15 +8,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/notify")
+@CrossOrigin(origins = "http://localhost:8083")
 public class NotifyController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -36,7 +34,7 @@ public class NotifyController {
 
         // create session in peerprep-session-service
         CreateSessionRequest createSessionRequest = new CreateSessionRequest(matchResult.getUserId1(), matchResult.getUserId2(), questionId);
-        SessionDTO session = restTemplate.postForObject(sessionServiceUrl, createSessionRequest, SessionDTO.class);
+        SessionDTO session = restTemplate.postForObject(sessionServiceUrl + "/session", createSessionRequest, SessionDTO.class);
 
         // notify respective frontend
         this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId1(), "/queue/match", new MatchResponse(matchResult.getUserId2(), session.getId(), questionId, session.getRoomId()));

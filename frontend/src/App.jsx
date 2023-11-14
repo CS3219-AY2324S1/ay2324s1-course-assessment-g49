@@ -11,6 +11,7 @@ import SnackbarProvider from "./utils/SnackbarContextUtil";
 import CollaborationPage from "./pages/Collaboration/CollaborationPage";
 import { AuthProvider } from "./utils/AuthContextUtil";
 import ProtectedRoute from "./utils/ProtectedRouteUtil";
+import LoadingMatchPage from "./pages/MatchingPage/LoadingMatchPage"
 
 function App() {
   return (
@@ -55,6 +56,14 @@ function App() {
                         element={
                           <ProtectedRoute>
                             <CollaborationPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/matching"
+                        element={
+                          <ProtectedRoute>
+                            <LoadingMatchPage />
                           </ProtectedRoute>
                         }
                       />
