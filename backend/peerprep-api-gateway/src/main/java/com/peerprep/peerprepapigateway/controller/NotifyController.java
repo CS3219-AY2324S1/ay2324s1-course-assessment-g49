@@ -39,8 +39,8 @@ public class NotifyController {
         SessionDTO session = restTemplate.postForObject(sessionServiceUrl, createSessionRequest, SessionDTO.class);
 
         // notify respective frontend
-        this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId1(), "/queue/match", new MatchResponse(matchResult.getUserId2(), session.getId(), session.getRoomId()));
-        this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId2(), "/queue/match", new MatchResponse(matchResult.getUserId1(), session.getId(), session.getRoomId()));
+        this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId1(), "/queue/match", new MatchResponse(matchResult.getUserId2(), session.getId(), questionId, session.getRoomId()));
+        this.simpMessagingTemplate.convertAndSendToUser(matchResult.getUserId2(), "/queue/match", new MatchResponse(matchResult.getUserId1(), session.getId(), questionId, session.getRoomId()));
         return ResponseEntity.ok().build();
     }
 }

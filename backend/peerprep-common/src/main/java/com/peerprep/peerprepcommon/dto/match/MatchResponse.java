@@ -8,5 +8,6 @@ import lombok.Data;
 public class MatchResponse {
     private String matchedWithUser;
     private String sessionId;
+    private String questionId;
     private String roomId;
 }
