@@ -16,7 +16,6 @@ function LoadingMatchPage() {
 
   const [text, setText] = useState("Matching in progress...");
   const [timerCompleted, setTimerCompleted] = useState(false);
-  const [timerStopped, setTimerStopped] = useState(false);
 
   const [responseReceived, setResponseReceived] = useState(false);
 
@@ -26,16 +25,6 @@ function LoadingMatchPage() {
     setResponseReceived(true);
     setText("Found a match");
     setTimerCompleted(true);
-  };
-  const handleTimerComplete = () => {
-    setText("Could not find a match");
-    setTimerCompleted(true);
-    setTimeout(() => {
-      setTimerCompleted(true);
-    }, 0);
-  };
-  const handleTimerStopped = () => {
-    setTimerStopped(true);
   };
 
   const handleCollaboration = (message) => {
@@ -49,6 +38,7 @@ function LoadingMatchPage() {
   };
 
   useEffect(() => {
+    console.log("re enter", matchClient);
     const client = new Client({
       brokerURL: "ws://localhost:8080/match",
       connectHeaders: AuthenticationToken(),
@@ -106,7 +96,7 @@ function LoadingMatchPage() {
             <Button
               id="practice-alone"
               variant="contained"
-              disabled={!timerCompleted && !timerStopped}
+              disabled={!timerCompleted}
               onClick={handleDisconnectClick}
               color="secondary"
             >
@@ -116,7 +106,12 @@ function LoadingMatchPage() {
         </Grid>
         <Grid item mt={5}>
           {!responseReceived && (
-            <TimerComponent onTimerComplete={handleTimerComplete} onTimerStopped={handleTimerStopped} />
+            <TimerComponent
+              text={text}
+              setText={setText}
+              timerCompleted={timerCompleted}
+              setTimerCompleted={setTimerCompleted}
+            />
           )}
         </Grid>
       </Grid>

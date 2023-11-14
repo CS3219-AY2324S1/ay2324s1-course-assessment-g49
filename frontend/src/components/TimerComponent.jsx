@@ -2,10 +2,18 @@ import React, { useState, useEffect } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box, Button } from "@mui/material";
 
-function TimerComponent({ onTimerComplete, onTimerStopped }) {
+function TimerComponent({ setText, setTimerCompleted }) {
   const [progress, setProgress] = useState(100);
   const [remaining, setRemaining] = useState(20);
   const [timerId, setTimerId] = useState(null);
+  const [complete, setComplete] = useState(false);
+
+  useEffect(() => {
+    if (complete) {
+      setTimerCompleted(true);
+      setText("Could not find a match");
+    }
+  }, [setTimerCompleted, setText, complete]);
 
   useEffect(() => {
     const duration = 20;
@@ -15,7 +23,7 @@ function TimerComponent({ onTimerComplete, onTimerStopped }) {
       setProgress((prevProgress) => {
         if (prevProgress <= 0) {
           clearInterval(progressTimer);
-          onTimerComplete();
+          setComplete(true);
           return 0;
         }
         return prevProgress - (100 / duration) * (interval / 1000);
@@ -26,7 +34,7 @@ function TimerComponent({ onTimerComplete, onTimerStopped }) {
       setRemaining((prev) => {
         if (prev <= 0) {
           clearInterval(remainingTimer);
-          onTimerComplete();
+          setComplete(true);
           return 0;
         }
         return prev - 1;
@@ -39,13 +47,15 @@ function TimerComponent({ onTimerComplete, onTimerStopped }) {
       clearInterval(progressTimer);
       clearInterval(remainingTimer);
     };
-  }, [onTimerComplete]);
+  }, []);
 
   const stopTimer = () => {
-    timerId.forEach((id) => clearInterval(id));
+    if (timerId != null) {
+      timerId.forEach((id) => clearInterval(id));
+    }
     setProgress(0);
     setRemaining(0);
-    onTimerStopped();
+    setComplete(true);
     setTimerId([]);
   };
 
@@ -54,7 +64,7 @@ function TimerComponent({ onTimerComplete, onTimerStopped }) {
       <LinearProgress variant="determinate" value={progress} />
       <Box display="flex" justifyContent="space-between" width="100%" mt={1}>
         <div>Remaining Time: {remaining} seconds</div>
-        <Button variant="text" onClick={stopTimer}>
+        <Button variant="text" onClick={() => stopTimer()}>
           Cancel
         </Button>
       </Box>
