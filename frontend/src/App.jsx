@@ -8,7 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
-import CollaborationPage from "./pages/Collaboration/Collaboration/CollaborationPage";
+import CollaborationPage from "./pages/Collaboration/CollaborationPage";
 import { AuthProvider } from "./utils/AuthContextUtil";
 import ProtectedRoute from "./utils/ProtectedRouteUtil";
 
