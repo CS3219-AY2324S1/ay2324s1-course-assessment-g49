@@ -31,7 +31,7 @@ public class RedisMessageSubscriberTest {
 
     @Test
     void testOnMessage() {
-        String json = "{\"userId\":\"1\",\"complexity\":\"EASY\",\"category\":\"ARRAYS\"}";
+        String json = "{\"isCreate\":true,\"userId\":\"1\",\"complexity\":\"EASY\",\"category\":\"ARRAYS\"}";
         Message mockMessage = mock(Message.class);
         when(mockMessage.getBody()).thenReturn(json.getBytes());
 
