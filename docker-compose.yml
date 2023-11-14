@@ -10,6 +10,10 @@ services:
       - "8080:8080"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - "$HOME/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro"
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json
   PeerprepQuestionServiceApplication:
     image: "rachelkeh/peerprep-question-service-0.0.1.jar"
     build:
@@ -19,6 +23,10 @@ services:
       - "8082:8082"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - "$HOME/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro"
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/gcp/creds.json
   PeerprepMatchingServiceApplication:
     image: "rachelkeh/peerprep-matching-service-0.0.1.jar"
     build:
