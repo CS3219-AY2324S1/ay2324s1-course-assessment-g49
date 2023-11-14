@@ -13,11 +13,21 @@ RUN npm install
 # RUN npm ci --omit=dev
 # Bundle the app's source code inside the Docker image.
 COPY . .
-# Build React app for production
-RUN npm run build
-# Serve the build version in a static server
-RUN npm install -g serve
-# Expose port 8080 so it can be mapped by Docker daemon to Google App Engine.
-EXPOSE 8080
+
+# ################## FOR PROD #######################
+# # Build React app for production
+# RUN npm run build
+# # Serve the build version in a static server
+# RUN npm install -g serve
+# # Expose port 8080 so it can be mapped by Docker daemon to Google App Engine.
+# EXPOSE 8080
+# # Define the command to run your app using CMD which defines your runtime.
+# CMD [ "serve", "-s", "dist", "-p", "8080" ]
+# ###################################################
+
+################## FOR DEV #######################
+# Expose port 5173 so it can be mapped by Docker daemon to Google App Engine.
+EXPOSE 5173
 # Define the command to run your app using CMD which defines your runtime.
-CMD [ "serve", "-s", "dist", "-p", "8080" ]
+CMD [ "npm", "run", "dev" ]
+###################################################
