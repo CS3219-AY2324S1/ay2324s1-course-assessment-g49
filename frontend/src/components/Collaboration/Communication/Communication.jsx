@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MeetingProvider } from "@videosdk.live/react-sdk";
 import { authToken, createMeeting } from "./API";
 import MeetingView from "./MeetingView";
-import UserContextProvider from "../../../utils/UserContextUtil";
+
 import axios from "axios";
 
 function JoinScreen({ getMeetingAndToken }) {
@@ -29,8 +29,8 @@ function JoinScreen({ getMeetingAndToken }) {
 function Communication() {
   const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [meetingId, setMeetingId] = useState(null);
-  const { userContext, setUserContext } = useContext(UserContextProvider);
-  const userId = userContext.userId;
+  const userdata = JSON.parse(localStorage.getItem("user"));
+  const userId = userdata.userId;
   const [username, setUsername] = useState("");
 
   const fetchUsername = async () => {
