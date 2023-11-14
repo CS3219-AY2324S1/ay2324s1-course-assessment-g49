@@ -38,6 +38,9 @@ public class RedisMessageSubscriber implements MessageListener {
     private void handleCreate(MatchRequest matchRequest) {
         String key = matchRequest.getComplexity().toString() + matchRequest.getComplexity();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            if (redisTemplate.opsForValue().get(key).getUserId().equals(matchRequest.getUserId())) {
+                return;
+            }
             MatchRequest existing = redisTemplate.opsForValue().getAndDelete(key);
             matchingService.processMatch(matchRequest, existing);
         } else {

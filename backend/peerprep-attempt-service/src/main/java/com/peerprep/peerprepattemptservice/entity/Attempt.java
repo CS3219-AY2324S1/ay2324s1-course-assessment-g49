@@ -1,6 +1,5 @@
 package com.peerprep.peerprepattemptservice.entity;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
