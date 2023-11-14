@@ -1,4 +1,4 @@
-package com.peerprep.peerprepapigateway.controller;
+package com.peerprep.peerprepapigateway.gateway;
 
 import com.peerprep.peerprepcommon.dto.question.CreateQuestionRequest;
 import com.peerprep.peerprepcommon.dto.question.QuestionOverview;
@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/question")
 @RequiredArgsConstructor
-public class QuestionController {
+public class QuestionGateway {
 
     private final RestTemplate restTemplate;
 

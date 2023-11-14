@@ -52,6 +52,11 @@ public class QuestionService {
                 .build();
     }
 
+    public String getRandomQuestion() {
+        Question question = questionRepository.random().getMappedResults().stream().findFirst().orElseThrow(() -> new QuestionNotFoundException("-1"));
+        return question.getId();
+    }
+
     public void deleteQuestion(String id) {
         if (!questionRepository.existsById(id)) {
             throw new QuestionNotFoundException(id);
@@ -76,4 +81,5 @@ public class QuestionService {
         }
         questionRepository.save(question);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.peerprep.peerprepapigateway.controller;
+package com.peerprep.peerprepapigateway.gateway;
 
 import com.peerprep.peerprepapigateway.service.RedisMessagePublisher;
 import com.peerprep.peerprepcommon.dto.match.MatchRequest;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
-public class MatchingController {
+public class MatchingGateway {
 
     private final RedisMessagePublisher redisMessagePublisher;
 

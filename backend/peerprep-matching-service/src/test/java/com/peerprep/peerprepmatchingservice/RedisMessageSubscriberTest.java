@@ -1,6 +1,8 @@
 package com.peerprep.peerprepmatchingservice;
 
 import com.peerprep.peerprepcommon.dto.match.MatchRequest;
+import com.peerprep.peerprepcommon.dto.question.Category;
+import com.peerprep.peerprepcommon.dto.question.Complexity;
 import com.peerprep.peerprepmatchingservice.messaging.RedisMessageSubscriber;
 import com.peerprep.peerprepmatchingservice.service.MatchingService;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,7 @@ public class RedisMessageSubscriberTest {
         when(mockMessage.getBody()).thenReturn(json.getBytes());
 
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
+        when(valueOperations.get(anyString())).thenReturn(new MatchRequest(true, "user1", Complexity.EASY, Category.ARRAYS));
         when(valueOperations.getAndDelete(anyString())).thenReturn(new MatchRequest());
         when(redisTemplate.hasKey(anyString())).thenReturn(true);
 
@@ -45,4 +48,5 @@ public class RedisMessageSubscriberTest {
         verify(valueOperations).getAndDelete(anyString());
         verify(matchingService).processMatch(any(MatchRequest.class), any(MatchRequest.class));
     }
+
 }

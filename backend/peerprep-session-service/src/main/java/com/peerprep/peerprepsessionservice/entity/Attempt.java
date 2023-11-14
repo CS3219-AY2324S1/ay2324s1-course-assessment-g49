@@ -1,4 +1,4 @@
-package com.peerprep.peerprepattemptservice.entity;
+package com.peerprep.peerprepsessionservice.entity;
 
 import lombok.Builder;
 import lombok.Data;
@@ -11,14 +11,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Attempt {
 
     @Id
-    String id;
+    private String id;
 
-    String userId;
+    private String userId;
 
-    String sessionId;
+    private String sessionId;
 
-    String questionId;
+    private String questionId;
 
-    long epochTimestamp;
+    private long epochTimestamp;
 
 }

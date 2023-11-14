@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.peerprep</groupId>
-    <artifactId>peerprep-attempt-service</artifactId>
+    <artifactId>peerprep-session-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>peerprep-attempt-service</name>
     <description>peerprep-attempt-service</description>

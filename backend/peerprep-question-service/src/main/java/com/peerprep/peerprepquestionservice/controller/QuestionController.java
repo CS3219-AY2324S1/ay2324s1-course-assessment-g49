@@ -40,6 +40,12 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<String> getRandomQuestion() {
+        String id = questionService.getRandomQuestion();
+        return ResponseEntity.ok(id);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable final String id) {
         questionService.deleteQuestion(id);
