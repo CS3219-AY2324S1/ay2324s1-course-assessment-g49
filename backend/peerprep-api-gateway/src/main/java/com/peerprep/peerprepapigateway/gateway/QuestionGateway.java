@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = {"http://localhost:5173/", "https://frontend-dot-peerprep-399116.as.r.appspot.com/"})
 @RestController
 @RequestMapping("/question")
 @RequiredArgsConstructor
