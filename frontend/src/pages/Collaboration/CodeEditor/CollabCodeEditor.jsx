@@ -1,10 +1,10 @@
-import { useRef, useContext } from "react";
+import React, { useRef, useContext } from "react";
 import Editor from "@monaco-editor/react";
 import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
 import { MonacoBinding } from "y-monaco";
 import { YjsContext } from "./CodeEditorLanding";
 import { CodeContext } from "../../../utils/CodeContextUtil";
+import { WebrtcProvider } from "y-webrtc";
 
 export default function CollabCodeEditor({ language }) {
   const editorRef = useRef(null);
@@ -18,23 +18,13 @@ export default function CollabCodeEditor({ language }) {
   // const roomName = "test-room";
   // const signalingRef = database.ref(`signaling/${roomName}`);
 
-  function handleEditorDidMount(editor, monaco) {
+  function handleEditorDidMount(editor) {
     editorRef.current = editor;
-    const doc = new Y.Doc();
+    const text = doc.getText("monaco");
 
-    const SIGNALING_SERVER = "ws://peerprep-399116.as.r.appspot.com";
-
-    //@ts-ignore
-    const provider = new WebrtcProvider("test-room", doc, {
-      signaling: [SIGNALING_SERVER],
-    });
-
-    console.log("provider:", provider);
-    const type = doc.getText("monaco");
-    const awareness = provider.awareness;
-
+    handleChangeCode(text.toString());
     const binding = new MonacoBinding(
-      type,
+      text,
       editorRef.current.getModel(),
       new Set([editorRef.current]),
       provider.awareness

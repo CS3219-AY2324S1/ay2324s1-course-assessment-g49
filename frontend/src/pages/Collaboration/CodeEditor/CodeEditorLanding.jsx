@@ -10,6 +10,7 @@ import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { LanguageContext } from "../../../utils/LanguageContextUtil";
 import { CodeContext } from "../../../utils/CodeContextUtil";
+import { MonacoBinding } from "y-monaco";
 
 export const YjsContext = createContext(null);
 
@@ -36,7 +37,7 @@ function CodeEditorLanding() {
     handleChangeCode(text.toString());
 
     const newProvider = new WebrtcProvider("test-room", doc, {
-      signaling: ["wss://peerprep-399116.as.r.appspot.com:4444"],
+      signaling: ["ws://peerprep-399116.as.r.appspot.com"],
     });
 
     newProvider.awareness.setLocalStateField("name", userId);
@@ -44,6 +45,7 @@ function CodeEditorLanding() {
 
     setProvider(newProvider);
     setDoc(doc);
+    console.log(newProvider);
 
     return () => {
       newProvider.destroy();
