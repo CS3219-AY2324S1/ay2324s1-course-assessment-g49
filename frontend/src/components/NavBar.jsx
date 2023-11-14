@@ -18,6 +18,10 @@ const NavBar = () => {
       page: "Questions Repo",
       route: "/questions",
     },
+    {
+      page: "Practice",
+      route: "/matchpage",
+    },
   ];
 
   useEffect(() => {
