@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box, Button } from "@mui/material";
 
-function TimerComponent({ setText, setTimerCompleted }) {
+function TimerComponent({ setText, setTimerCompleted, onCancel }) {
   const [progress, setProgress] = useState(100);
   const [remaining, setRemaining] = useState(20);
   const [timerId, setTimerId] = useState(null);
   const [complete, setComplete] = useState(false);
+  const [cancel, setCancel] = useState(false);
 
   useEffect(() => {
     if (complete) {
@@ -14,6 +15,13 @@ function TimerComponent({ setText, setTimerCompleted }) {
       setText("Could not find a match");
     }
   }, [setTimerCompleted, setText, complete]);
+
+  useEffect(() => {
+    if (cancel) {
+      onCancel()
+    }
+  }, [cancel, onCancel]);
+
 
   useEffect(() => {
     const duration = 20;
@@ -56,6 +64,7 @@ function TimerComponent({ setText, setTimerCompleted }) {
     setProgress(0);
     setRemaining(0);
     setComplete(true);
+    setCancel(true);
     setTimerId([]);
   };
 

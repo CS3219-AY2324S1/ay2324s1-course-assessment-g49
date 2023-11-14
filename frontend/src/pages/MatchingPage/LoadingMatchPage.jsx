@@ -37,8 +37,20 @@ function LoadingMatchPage() {
     });
   };
 
+  const handleCancel = () => {
+    console.log("cancel request");
+    matchClient.publish({
+      destination: "/app/cancel",
+      body: JSON.stringify({
+        isCreate: false,
+        complexity: complexity,
+        category: category,
+        userId: JSON.parse(localStorage.getItem("user")).userId,
+      }),
+    });
+  };
+
   useEffect(() => {
-    console.log("re enter", matchClient);
     const client = new Client({
       brokerURL: "ws://localhost:8080/match",
       connectHeaders: AuthenticationToken(),
@@ -62,6 +74,7 @@ function LoadingMatchPage() {
         client.publish({
           destination: "/app/match",
           body: JSON.stringify({
+            isCreate: true,
             complexity: complexity,
             category: category,
             userId: JSON.parse(localStorage.getItem("user")).userId,
@@ -111,6 +124,7 @@ function LoadingMatchPage() {
               setText={setText}
               timerCompleted={timerCompleted}
               setTimerCompleted={setTimerCompleted}
+              onCancel={handleCancel}
             />
           )}
         </Grid>
