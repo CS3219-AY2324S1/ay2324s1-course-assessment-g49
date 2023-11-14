@@ -37,7 +37,7 @@ function CodeEditorLanding() {
     handleChangeCode(text.toString());
 
     const newProvider = new WebrtcProvider("test-room", doc, {
-      signaling: ["ws://peerprep-399116.as.r.appspot.com"],
+      // signaling: ["ws://peerprep-399116.as.r.appspot.com"],
     });
 
     newProvider.awareness.setLocalStateField("name", userId);

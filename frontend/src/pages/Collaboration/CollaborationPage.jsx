@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import LanguageContextUtil from "../../utils/LanguageContextUtil";
 import CodeEditorLanding from "./CodeEditor/CodeEditorLanding";
 import CodeContextUtil from "../../utils/CodeContextUtil";
+import Communication from "../../components/Collaboration/Communication";
 
 function CollaborationPage() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -34,7 +35,7 @@ function CollaborationPage() {
       </Grid>
       <Grid item xs={3.75}>
         <Item elevation={3} style={{ height: "100vh", width: "100%" }}>
-          Communication
+          {<Communication />}
         </Item>
       </Grid>
     </Grid>
