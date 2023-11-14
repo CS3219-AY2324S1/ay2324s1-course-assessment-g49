@@ -12,5 +12,5 @@ test("full app rendering/navigating", async () => {
   );
 
   // verify page content for default route
-  expect(screen.getByText(/home page/i)).toBeInTheDocument();
+  expect(screen.getByText(/Welcome to PeerPrep!/i)).toBeInTheDocument();
 });
