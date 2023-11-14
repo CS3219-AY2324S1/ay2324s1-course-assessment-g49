@@ -1,0 +1,3 @@
+service: api-gateway
+runtime: custom
+env: flex
