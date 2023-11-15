@@ -15,6 +15,8 @@ const QuestionsRepo = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedComplexities, setSelectedComplexities] = useState([]);
   const userData = JSON.parse(localStorage.getItem("user"));
+  console.log(userData)
+  console.log(userData.userRole)
   const userRole = userData.userRole;
 
   const isContainCommonElement = (arr1, arr2) => {
@@ -28,31 +30,36 @@ const QuestionsRepo = () => {
     return false;
   };
   const loadQuestions = async () => {
-    const questions = await axios.get(`${databaseURL}/question`, {
-      headers: AuthenticationToken(),
-    });
+    try {
+      const questions = await axios.get(`${databaseURL}/question`, {
+        headers: AuthenticationToken(),
+      });
 
-    const questionsFilteredByComplexity =
-      selectedComplexities.length !== 0
-        ? questions.data.filter((question) =>
+      const questionsFilteredByComplexity =
+        selectedComplexities.length !== 0
+          ? questions.data.filter((question) =>
             selectedComplexities.includes(question.complexity)
           )
-        : questions.data;
-    const questionsFilteredByCategory =
-      selectedCategories.length !== 0
-        ? questionsFilteredByComplexity.filter((question) =>
+          : questions.data;
+      const questionsFilteredByCategory =
+        selectedCategories.length !== 0
+          ? questionsFilteredByComplexity.filter((question) =>
             isContainCommonElement(selectedCategories, question.categories)
           )
-        : questionsFilteredByComplexity;
+          : questionsFilteredByComplexity;
 
-    for (let i = 0; i < questionsFilteredByCategory.length; i++) {
-      let question = questionsFilteredByCategory[i];
-      for (let j = 0; j < question.categories.length; j++) {
-        question.categories[j] = reverseCategoryMapping[question.categories[j]];
+      for (let i = 0; i < questionsFilteredByCategory.length; i++) {
+        let question = questionsFilteredByCategory[i];
+        for (let j = 0; j < question.categories.length; j++) {
+          question.categories[j] =
+            reverseCategoryMapping[question.categories[j]];
+        }
+        questionsFilteredByCategory[i] = question;
       }
-      questionsFilteredByCategory[i] = question;
+      setQuestions(questionsFilteredByCategory);
+    } catch (error) {
+      console.log(error);
     }
-    setQuestions(questionsFilteredByCategory);
   };
 
   const handleDelete = async (id) => {
