@@ -1,4 +1,4 @@
-package com.peerprep.peerprepbackend;
+package com.peerprep.peerprepapigateway;
 
 import com.peerprep.peerprepapigateway.controller.AuthController;
 import com.peerprep.peerprepapigateway.dto.request.LoginRequest;

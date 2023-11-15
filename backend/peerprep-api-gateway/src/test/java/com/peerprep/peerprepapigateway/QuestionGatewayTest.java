@@ -1,6 +1,6 @@
 package com.peerprep.peerprepapigateway;
 
-import com.peerprep.peerprepapigateway.controller.QuestionController;
+import com.peerprep.peerprepapigateway.gateway.QuestionGateway;
 import com.peerprep.peerprepcommon.dto.question.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,17 +28,17 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-class QuestionControllerTest {
+class QuestionGatewayTest {
 
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private QuestionController questionController;
+    private QuestionGateway questionGateway;
 
     @BeforeEach
     void setup() {
-        ReflectionTestUtils.setField(questionController, "questionServiceUrl", "mockUrl");
+        ReflectionTestUtils.setField(questionGateway, "questionServiceUrl", "mockUrl");
     }
 
     @Test
@@ -47,7 +47,7 @@ class QuestionControllerTest {
         ResponseEntity<String> mockResponse = new ResponseEntity<>("Question Created", HttpStatus.OK);
 
         when(restTemplate.postForEntity(anyString(), any(), eq(String.class))).thenReturn(mockResponse);
-        ResponseEntity<String> response = questionController.createQuestion(mockRequest);
+        ResponseEntity<String> response = questionGateway.createQuestion(mockRequest);
 
         assertNotNull(response, "response should not be null");
         assertEquals("Question Created", response.getBody());
@@ -67,7 +67,7 @@ class QuestionControllerTest {
                 any(ParameterizedTypeReference.class)
         )).thenReturn(mockResponse);
 
-        ResponseEntity<List<QuestionOverview>> response = questionController.getQuestions();
+        ResponseEntity<List<QuestionOverview>> response = questionGateway.getQuestions();
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
@@ -80,7 +80,7 @@ class QuestionControllerTest {
         ResponseEntity<QuestionResponse> mockResponse = new ResponseEntity<>(mockQuestionResponse, HttpStatus.OK);
         when(restTemplate.getForEntity(anyString(), eq(QuestionResponse.class))).thenReturn(mockResponse);
 
-        ResponseEntity<QuestionResponse> response = questionController.getQuestion(questionId);
+        ResponseEntity<QuestionResponse> response = questionGateway.getQuestion(questionId);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -91,7 +91,7 @@ class QuestionControllerTest {
     void testDeleteQuestion() {
         String questionId = "123";
 
-        ResponseEntity<Void> response = questionController.deleteQuestion(questionId);
+        ResponseEntity<Void> response = questionGateway.deleteQuestion(questionId);
 
         verify(restTemplate, times(1)).delete(anyString());
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -102,7 +102,7 @@ class QuestionControllerTest {
         String questionId = "123";
         UpdateQuestionRequest updateRequest = new UpdateQuestionRequest("Updated Title", "Updated Description", Set.of(Category.DATABASES), Complexity.MEDIUM);
 
-        ResponseEntity<Void> response = questionController.updateQuestion(questionId, updateRequest);
+        ResponseEntity<Void> response = questionGateway.updateQuestion(questionId, updateRequest);
 
         verify(restTemplate, times(1)).exchange(
                 anyString(),

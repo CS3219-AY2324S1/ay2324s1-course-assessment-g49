@@ -42,29 +42,37 @@ export default function LoginPage() {
           username,
           password,
         };
-        await axios.post(`${databaseURL}/auth/login`, user).then((res) => {
-          const token = res.data.jwt;
-          const decodedToken = jwtDecode(token);
-          const userId = decodedToken.sub;
-          const userRole = decodedToken.role;
-          const tokenExpiry = decodedToken.exp;
-          const userData = {
-            jwt: token,
-            userId: userId,
-            userRole: userRole,
-            tokenExp: tokenExpiry,
-          };
-          if (res.data.jwt) {
-            localStorage.setItem("user", JSON.stringify(userData));
-            setUser(userData);
-          }
-        });
-        navigate("/home");
-        setSnack({
-          message: "Logged in successfully",
-          open: true,
-          severity: "success",
-        });
+        try {
+          await axios.post(`${databaseURL}/auth/login`, user).then((res) => {
+            const token = res.data.jwt;
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.sub;
+            const userRole = decodedToken.role;
+            const tokenExpiry = decodedToken.exp;
+            const userData = {
+              jwt: token,
+              userId: userId,
+              userRole: userRole,
+              tokenExp: tokenExpiry,
+            };
+            if (res.data.jwt) {
+              localStorage.setItem("user", JSON.stringify(userData));
+              setUser(userData);
+            }
+            navigate("/home");
+            setSnack({
+              message: "Logged in successfully",
+              open: true,
+              severity: "success",
+            });
+          });
+        } catch (error) {
+          setSnack({
+            message: error.response.data,
+            open: true,
+            severity: "warning",
+          });
+        }
       }
     } catch (err) {
       if (err.response?.response.data) {

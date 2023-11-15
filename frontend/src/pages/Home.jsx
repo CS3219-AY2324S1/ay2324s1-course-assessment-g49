@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import NavBar from "../components/NavBar";
+import MatchPage from "./MatchingPage/MatchPage";
 
 const Home = () => {
   return (
@@ -9,8 +10,9 @@ const Home = () => {
         <NavBar />
       </Grid>
       <Grid item>
-        <h1>Home Page</h1>
+        <h1>Welcome to PeerPrep!</h1>
       </Grid>
+      <MatchPage/>
     </Grid>
   );
 };

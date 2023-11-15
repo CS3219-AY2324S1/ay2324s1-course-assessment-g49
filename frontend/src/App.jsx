@@ -8,9 +8,10 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
 import SnackbarProvider from "./utils/SnackbarContextUtil";
-import CollaborationPage from "./pages/Collaboration/Collaboration/CollaborationPage";
+import CollaborationPage from "./pages/Collaboration/CollaborationPage";
 import { AuthProvider } from "./utils/AuthContextUtil";
 import ProtectedRoute from "./utils/ProtectedRouteUtil";
+import LoadingMatchPage from "./pages/MatchingPage/LoadingMatchPage"
 
 function App() {
   return (
@@ -55,6 +56,14 @@ function App() {
                         element={
                           <ProtectedRoute>
                             <CollaborationPage />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/matching"
+                        element={
+                          <ProtectedRoute>
+                            <LoadingMatchPage />
                           </ProtectedRoute>
                         }
                       />

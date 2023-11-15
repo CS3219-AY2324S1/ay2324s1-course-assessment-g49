@@ -32,6 +32,8 @@ public class SecurityFilterChainConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/auth/login", "/auth/register", "/ping").permitAll()
+                                .requestMatchers("/match").permitAll()
+                                .requestMatchers("/notify/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/question").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PATCH, "/question/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/question/**").hasAuthority("ADMIN")
