@@ -39,5 +39,14 @@ jobs:
           deliverables: app.yaml
           version: v1
 
-      - name: Test
-        run: curl "${{ steps.deploy.outputs.url }}"
+      - name: Deploy question service
+        run: gcloud app deploy
+        working-directory: ./backend/peerprep-question-service
+
+      - name: Deploy matching service
+        run: gcloud app deploy
+        working-directory: ./backend/peerprep-matching-service
+
+      - name: Deploy api gateway service
+        run: gcloud app deploy
+        working-directory: ./backend/peerprep-api-gateway
