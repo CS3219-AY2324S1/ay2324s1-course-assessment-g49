@@ -6,8 +6,16 @@ import MeetingControls from "./MeetingControls";
 
 function ParticipantView(props) {
   const micRef = useRef(null);
-  const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
-    useParticipant(props.participantId);
+  const {
+    webcamStream,
+    micStream,
+    webcamOn,
+    disableWebcam,
+    disableMic,
+    micOn,
+    isLocal,
+    displayName,
+  } = useParticipant(props.participantId);
 
   const videoStream = useMemo(() => {
     if (webcamOn && webcamStream) {

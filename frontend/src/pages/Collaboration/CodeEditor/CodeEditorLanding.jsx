@@ -10,15 +10,15 @@ import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { LanguageContext } from "../../../utils/LanguageContextUtil";
 import { CodeContext } from "../../../utils/CodeContextUtil";
-import { MonacoBinding } from "y-monaco";
+import AuthenticationToken from "../../../services/AuthenticationToken";
 
 export const YjsContext = createContext(null);
 
-function CodeEditorLanding() {
+function CodeEditorLanding({ roomName, questionId }) {
+  const databaseURL = import.meta.env.VITE_DATABASE_URL;
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
-
   const { language, handleChangeLanguage } = useContext(LanguageContext);
   const { code, handleChangeCode } = useContext(CodeContext);
 
@@ -37,7 +37,7 @@ function CodeEditorLanding() {
     handleChangeCode(text.toString());
 
     const newProvider = new WebrtcProvider("test-room", doc, {
-      // signaling: ["ws://peerprep-399116.as.r.appspot.com"],
+      signaling: ["ws://peerprep-399116.as.r.appspot.com"],
     });
 
     newProvider.awareness.setLocalStateField("name", userId);
@@ -45,7 +45,6 @@ function CodeEditorLanding() {
 
     setProvider(newProvider);
     setDoc(doc);
-    console.log(newProvider);
 
     return () => {
       newProvider.destroy();
@@ -70,8 +69,18 @@ function CodeEditorLanding() {
     }
   };
 
-  const handleCompile = () => {
+  const handleCompile = async () => {
     setProcessing(true);
+    const epochTimestamp = new Date().getTime();
+    const newAttempt = {
+      userId,
+      sessionId: roomName,
+      questionId,
+      epochTimestamp,
+    };
+    await axios.post(`${databaseURL}/attempt`, newAttempt, {
+      headers: AuthenticationToken(),
+    });
     const formData = {
       language_id: language.id,
       source_code: btoa(code),

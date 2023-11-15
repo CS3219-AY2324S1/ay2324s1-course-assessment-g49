@@ -30,15 +30,14 @@ function LoadingMatchPage() {
   const handleCollaboration = (message) => {
     navigate("/collaboration", {
       state: {
-        // meetingId: message.meetingId,
-        // questionId: message.questionId,
-        // sessionId: message.sessionId,
+        roomId: message.roomId,
+        questionId: message.questionId,
+        sessionId: message.sessionId,
       },
     });
   };
 
   const handleCancel = () => {
-    console.log("cancel request");
     matchClient.publish({
       destination: "/app/cancel",
       body: JSON.stringify({
@@ -61,10 +60,11 @@ function LoadingMatchPage() {
         setMatchClient(client);
         client.subscribe("/user/queue/match", (message) => {
           console.log(`Received: ${message.body}`);
+          const messageObject = JSON.parse(message.body);
           client.deactivate();
           setMatchClient(null);
-          handleResponseReceived(message.body);
-          handleCollaboration();
+          handleResponseReceived();
+          handleCollaboration(messageObject);
           setSnack({
             message: "Matched successfully!",
             open: true,

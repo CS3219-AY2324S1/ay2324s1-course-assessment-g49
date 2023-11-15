@@ -1,10 +1,8 @@
 import React, { useRef, useContext } from "react";
 import Editor from "@monaco-editor/react";
-import * as Y from "yjs";
 import { MonacoBinding } from "y-monaco";
 import { YjsContext } from "./CodeEditorLanding";
 import { CodeContext } from "../../../utils/CodeContextUtil";
-import { WebrtcProvider } from "y-webrtc";
 
 export default function CollabCodeEditor({ language }) {
   const editorRef = useRef(null);
@@ -14,9 +12,6 @@ export default function CollabCodeEditor({ language }) {
   function handleEditorChange(value) {
     handleChangeCode(value);
   }
-
-  // const roomName = "test-room";
-  // const signalingRef = database.ref(`signaling/${roomName}`);
 
   function handleEditorDidMount(editor) {
     editorRef.current = editor;
