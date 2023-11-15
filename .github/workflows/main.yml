@@ -32,21 +32,20 @@ jobs:
           workload_identity_provider: ${{ secrets.GCLOUD_CD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCLOUD_CD_SERVICE_ACCOUNT }}
 
-      - name: Deploy to App Engine
-        id: deploy
+      - name: Deploy question service to App Engine
         uses: google-github-actions/deploy-appengine@v1
         with:
-          deliverables: app.yaml
+          deliverables: ./backend/peerprep-question-service/app.yaml
           version: v1
 
-      - name: Deploy question service
-        run: gcloud app deploy
-        working-directory: ./backend/peerprep-question-service
+      - name: Deploy question service to App Engine
+        uses: google-github-actions/deploy-appengine@v1
+        with:
+          deliverables: ./backend/peerprep-matching-service/app.yaml
+          version: v1
 
-      - name: Deploy matching service
-        run: gcloud app deploy
-        working-directory: ./backend/peerprep-matching-service
-
-      - name: Deploy api gateway service
-        run: gcloud app deploy
-        working-directory: ./backend/peerprep-api-gateway
+      - name: Deploy api gateway service to App Engine
+        uses: google-github-actions/deploy-appengine@v1
+        with:
+          deliverables: ./backend/peerprep-api-gateway/app.yaml
+          version: v1
