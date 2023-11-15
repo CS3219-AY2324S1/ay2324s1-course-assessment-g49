@@ -31,34 +31,35 @@ const QuestionsRepo = () => {
   };
   const loadQuestions = async () => {
     try {
-    const questions = await axios.get(`${databaseURL}/question`, {
-      headers: AuthenticationToken(),
-    });
-  } catch (error) {
-    console.log(error)
-  }
+      const questions = await axios.get(`${databaseURL}/question`, {
+        headers: AuthenticationToken(),
+      });
 
-    const questionsFilteredByComplexity =
-      selectedComplexities.length !== 0
-        ? questions.data.filter((question) =>
+      const questionsFilteredByComplexity =
+        selectedComplexities.length !== 0
+          ? questions.data.filter((question) =>
             selectedComplexities.includes(question.complexity)
           )
-        : questions.data;
-    const questionsFilteredByCategory =
-      selectedCategories.length !== 0
-        ? questionsFilteredByComplexity.filter((question) =>
+          : questions.data;
+      const questionsFilteredByCategory =
+        selectedCategories.length !== 0
+          ? questionsFilteredByComplexity.filter((question) =>
             isContainCommonElement(selectedCategories, question.categories)
           )
-        : questionsFilteredByComplexity;
+          : questionsFilteredByComplexity;
 
-    for (let i = 0; i < questionsFilteredByCategory.length; i++) {
-      let question = questionsFilteredByCategory[i];
-      for (let j = 0; j < question.categories.length; j++) {
-        question.categories[j] = reverseCategoryMapping[question.categories[j]];
+      for (let i = 0; i < questionsFilteredByCategory.length; i++) {
+        let question = questionsFilteredByCategory[i];
+        for (let j = 0; j < question.categories.length; j++) {
+          question.categories[j] =
+            reverseCategoryMapping[question.categories[j]];
+        }
+        questionsFilteredByCategory[i] = question;
       }
-      questionsFilteredByCategory[i] = question;
+      setQuestions(questionsFilteredByCategory);
+    } catch (error) {
+      console.log(error);
     }
-    setQuestions(questionsFilteredByCategory);
   };
 
   const handleDelete = async (id) => {
