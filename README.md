@@ -45,7 +45,6 @@ To configure and run the frontend of this project, you'll need to set up environ
 5. Open a new terminal and navigate to the peerprep-matching-service directory: `cd peerprep-matching-service`and start the server `mvn spring-boot:run`
 6. Open a new terminal and navigate to the peerprep-session-service directory: `cd peerprep-session-service`and start the server `mvn spring-boot:run`
 7. Open a new terminal and navigate to the peerprep-question-service directory: `cd peerprep-question-service`and start the server `mvn spring-boot:run`
-8. Detailed information on running the backend can be found [here](https://github.com/CS3219-AY2324S1/ay2324s1-course-assessment-g49/tree/master/peerprep-backend#peerprep-backend)
 
 ## Usage
 
