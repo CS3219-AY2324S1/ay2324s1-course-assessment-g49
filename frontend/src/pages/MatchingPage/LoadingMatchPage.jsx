@@ -8,6 +8,7 @@ import AuthenticationToken from "../../services/AuthenticationToken";
 import { SnackbarContext } from "../../utils/SnackbarContextUtil";
 
 function LoadingMatchPage() {
+  const hostname = import.meta.env.VITE_API_GATEWAY_HOSTNAME;
   const navigate = useNavigate();
   const location = useLocation();
   const { snack, setSnack } = useContext(SnackbarContext);
@@ -59,7 +60,8 @@ function LoadingMatchPage() {
 
   useEffect(() => {
     const client = new Client({
-      brokerURL: "ws://localhost:8080/match",
+
+      brokerURL: `ws://${hostname}/match`,
       connectHeaders: AuthenticationToken(),
       debug: (str) => {
         console.log(str);
