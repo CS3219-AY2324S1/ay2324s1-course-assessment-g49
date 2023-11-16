@@ -67,10 +67,10 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
             <version>3.1.5</version>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>com.peerprep</groupId>
             <artifactId>peerprep-common</artifactId>
