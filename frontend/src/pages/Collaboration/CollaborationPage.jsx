@@ -1,14 +1,15 @@
-import { Grid, Paper } from "@mui/material/";
+import { Grid, Paper, Button } from "@mui/material/";
 import { styled } from "@mui/material/styles";
 import LanguageContextUtil from "../../utils/LanguageContextUtil";
 import CodeEditorLanding from "./CodeEditor/CodeEditorLanding";
 import CodeContextUtil from "../../utils/CodeContextUtil";
+import { useNavigate, useLocation } from "react-router-dom";
 import Communication from "../../components/Collaboration/Communication";
-import { useLocation } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import QuestionView from "../../components/Collaboration/QuestionView";
 
 function CollaborationPage() {
+  const navigate = useNavigate();
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     color: theme.palette.text.secondary,
@@ -21,10 +22,23 @@ function CollaborationPage() {
   const location = useLocation();
   const { roomId, sessionId, questionId } = location.state;
 
+  const leaveRoomHandler = () => {
+    navigate("/home")
+  }
+
   return (
     <Grid container style={{ height: "100vh" }}>
-      <Grid item xs={12}>
+      <Grid item xs={12} marginBottom={0}>
         <NavBar />
+      </Grid>
+      <Grid item xs={12} display="flex" justifyContent="flex-start" marginBottom={2} flexDirection={"row"}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={leaveRoomHandler}
+        >
+          Leave Room
+        </Button>
       </Grid>
       <Grid
         item

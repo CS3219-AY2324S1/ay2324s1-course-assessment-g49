@@ -23,7 +23,7 @@ function LoadingMatchPage() {
 
   const handleResponseReceived = () => {
     setResponseReceived(true);
-    setText("Found a match");
+
     setTimerCompleted(true);
   };
 
@@ -34,6 +34,14 @@ function LoadingMatchPage() {
         questionId: message.questionId,
         sessionId: message.sessionId,
       },
+    });
+  };
+
+  const handleNoQuestion = () => {
+    setSnack({
+      message: "No such question, try another question!",
+      open: true,
+      severity: "warning",
     });
   };
 
@@ -61,16 +69,22 @@ function LoadingMatchPage() {
         client.subscribe("/user/queue/match", (message) => {
           console.log(`Received: ${message.body}`);
           const messageObject = JSON.parse(message.body);
-          client.deactivate();
-          setMatchClient(null);
-          handleResponseReceived();
-          handleCollaboration(messageObject);
-          setSnack({
-            message: "Matched successfully!",
-            open: true,
-            severity: "success",
-          });
+          if (messageObject.questionId == -1) {
+            handleNoQuestion();
+            handleResponseReceived();
+            setText("No such question found!");
+          } else {
+            handleResponseReceived();
+            setText("Found a match");
+            handleCollaboration(messageObject);
+            setSnack({
+              message: "Matched successfully!",
+              open: true,
+              severity: "success",
+            });
+          }
         });
+
         client.publish({
           destination: "/app/match",
           body: JSON.stringify({

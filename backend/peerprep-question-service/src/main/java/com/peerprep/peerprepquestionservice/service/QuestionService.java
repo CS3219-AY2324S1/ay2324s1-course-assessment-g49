@@ -1,16 +1,15 @@
 package com.peerprep.peerprepquestionservice.service;
 
-import com.peerprep.peerprepcommon.dto.question.CreateQuestionRequest;
-import com.peerprep.peerprepcommon.dto.question.QuestionOverview;
-import com.peerprep.peerprepcommon.dto.question.QuestionResponse;
-import com.peerprep.peerprepcommon.dto.question.UpdateQuestionRequest;
+import com.peerprep.peerprepcommon.dto.question.*;
 import com.peerprep.peerprepquestionservice.entity.Question;
+import com.peerprep.peerprepquestionservice.exception.NoSuitableQuestionException;
 import com.peerprep.peerprepquestionservice.exception.QuestionNotFoundException;
 import com.peerprep.peerprepquestionservice.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,9 +51,15 @@ public class QuestionService {
                 .build();
     }
 
-    public String getRandomQuestion() {
-        Question question = questionRepository.random().getMappedResults().stream().findFirst().orElseThrow(() -> new QuestionNotFoundException("-1"));
-        return question.getId();
+    public String getRandomQuestion(RandomQuestionRequest request) throws NoSuitableQuestionException {
+        List<Question> questions = questionRepository.findQuestionByComplexityAndCategoriesContaining(request.getComplexity(), request.getCategory());
+        if (questions.isEmpty()) {
+            throw new NoSuitableQuestionException();
+        }
+        Random random = new Random();
+        int randomIndex = random.nextInt(questions.size()); // Generates a random index
+        Question randomQuestion = questions.get(randomIndex);
+        return randomQuestion.getId();
     }
 
     public void deleteQuestion(String id) {
