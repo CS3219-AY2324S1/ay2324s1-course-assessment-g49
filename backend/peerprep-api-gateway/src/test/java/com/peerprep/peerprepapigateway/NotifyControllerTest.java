@@ -45,12 +45,12 @@ public class NotifyControllerTest {
         String questionId = "randomQuestionId";
         SessionDTO sessionDTO = new SessionDTO("id", "user1", "user2", "sessionId", "roomId", false);
 
-        when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn(questionId);
+        when(restTemplate.postForObject(anyString(), any(), eq(String.class))).thenReturn(questionId);
         when(restTemplate.postForObject(anyString(), any(), eq(SessionDTO.class))).thenReturn(sessionDTO);
 
         ResponseEntity<?> response = notifyController.receiveMatchResult(matchResult);
 
-        verify(restTemplate).getForObject(anyString(), eq(String.class));
+        verify(restTemplate).postForObject(anyString(), any(), eq(String.class));
         verify(restTemplate).postForObject(anyString(), any(CreateSessionRequest.class), eq(SessionDTO.class));
         verify(simpMessagingTemplate).convertAndSendToUser(eq("user1"), eq("/queue/match"), any(MatchResponse.class));
         verify(simpMessagingTemplate).convertAndSendToUser(eq("user2"), eq("/queue/match"), any(MatchResponse.class));
