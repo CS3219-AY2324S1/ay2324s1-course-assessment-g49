@@ -2,6 +2,7 @@ package com.peerprep.peerprepapigateway.controller;
 
 import com.peerprep.peerprepcommon.dto.match.MatchResponse;
 import com.peerprep.peerprepcommon.dto.match.MatchResult;
+import com.peerprep.peerprepcommon.dto.question.RandomQuestionRequest;
 import com.peerprep.peerprepcommon.dto.session.CreateSessionRequest;
 import com.peerprep.peerprepcommon.dto.session.SessionDTO;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,8 @@ public class NotifyController {
     @PostMapping("/result")
     public ResponseEntity<?> receiveMatchResult(@RequestBody MatchResult matchResult) {
         // get random question id from peerprep-question-service
-        String questionId = restTemplate.getForObject(questionServiceUrl + "/random", String.class);
+        RandomQuestionRequest randomQuestionRequest = new RandomQuestionRequest(matchResult.getComplexity(), matchResult.getCategory());
+        String questionId = restTemplate.postForObject(questionServiceUrl + "/random", randomQuestionRequest, String.class);
 
         // create session in peerprep-session-service
         CreateSessionRequest createSessionRequest = new CreateSessionRequest(matchResult.getUserId1(), matchResult.getUserId2(), questionId);

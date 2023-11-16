@@ -1,9 +1,7 @@
 package com.peerprep.peerprepquestionservice.controller;
 
-import com.peerprep.peerprepcommon.dto.question.CreateQuestionRequest;
-import com.peerprep.peerprepcommon.dto.question.QuestionOverview;
-import com.peerprep.peerprepcommon.dto.question.QuestionResponse;
-import com.peerprep.peerprepcommon.dto.question.UpdateQuestionRequest;
+import com.peerprep.peerprepcommon.dto.question.*;
+import com.peerprep.peerprepquestionservice.exception.NoSuitableQuestionException;
 import com.peerprep.peerprepquestionservice.exception.QuestionNotFoundException;
 import com.peerprep.peerprepquestionservice.service.QuestionService;
 import jakarta.validation.Valid;
@@ -40,10 +38,14 @@ public class QuestionController {
         return ResponseEntity.ok(question);
     }
 
-    @GetMapping("/random")
-    public ResponseEntity<String> getRandomQuestion() {
-        String id = questionService.getRandomQuestion();
-        return ResponseEntity.ok(id);
+    @PostMapping("/random")
+    public ResponseEntity<String> getRandomQuestion(@RequestBody RandomQuestionRequest request) {
+        try {
+            String id = questionService.getRandomQuestion(request);
+            return ResponseEntity.ok(id);
+        } catch (NoSuitableQuestionException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No suitable question found");
+        }
     }
 
     @DeleteMapping("/{id}")
