@@ -3,15 +3,26 @@
 
 ## Table of Contents
 - [Introduction](#introduction) 
+- [Features](#features)
 - [Prerequisites](#prerequisites) 
 - [Getting Started](#getting-started) 
 	- [Environment variables](#environment-variables)
 	- [Frontend](#frontend) 
 	- [Backend](#backend) 
-- [Usage](#usage) 
 
 ## Introduction
 PeerPrep is designed to assist students in their technical interview preparation. It offers a platform for finding peers to collaborate and practice whiteboard-style interview questions together.
+
+PeerPrep is deployed and can be visited online at: https://frontend-dot-peerprep-399116.as.r.appspot.com/
+
+## Features
+With Peerprep, you can:
+- View coding questions from the Questions Repository
+- Update, Delete or Edit the questions with admin account
+- Match with another peer based on selected question type and complexity
+- Edit and run code with peer in a collaborative code editor
+- Communicate with peer using chat or video in the collaboration space 
+
 
 ## Prerequisites
 Before getting started with PeerPrep, make sure you have the following prerequisites installed: 
@@ -46,11 +57,4 @@ To configure and run the frontend of this project, you'll need to set up environ
 6. Open a new terminal and navigate to the peerprep-session-service directory: `cd peerprep-session-service`and start the server `mvn spring-boot:run`
 7. Open a new terminal and navigate to the peerprep-question-service directory: `cd peerprep-question-service`and start the server `mvn spring-boot:run`
 
-## Usage
 
-With Peerprep, you can:
-- Create questions (title, complexity, category, descrption)
-- View details of each question (by clicking on the title)
-- View all questions
-- Update questions
-- Delete questions
