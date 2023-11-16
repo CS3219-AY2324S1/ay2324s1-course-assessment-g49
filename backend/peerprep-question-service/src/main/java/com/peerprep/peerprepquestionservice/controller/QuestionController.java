@@ -44,7 +44,7 @@ public class QuestionController {
             String id = questionService.getRandomQuestion(request);
             return ResponseEntity.ok(id);
         } catch (NoSuitableQuestionException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No suitable question found");
+            return ResponseEntity.ok("-1");
         }
     }
 
