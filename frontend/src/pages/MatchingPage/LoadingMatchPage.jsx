@@ -23,7 +23,7 @@ function LoadingMatchPage() {
 
   const handleResponseReceived = () => {
     setResponseReceived(true);
-    setText("Found a match");
+
     setTimerCompleted(true);
   };
 
@@ -71,8 +71,11 @@ function LoadingMatchPage() {
           const messageObject = JSON.parse(message.body);
           if (messageObject.questionId == -1) {
             handleNoQuestion();
+            handleResponseReceived();
+            setText("No such question found!");
           } else {
             handleResponseReceived();
+            setText("Found a match");
             handleCollaboration(messageObject);
             setSnack({
               message: "Matched successfully!",
