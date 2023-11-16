@@ -52,9 +52,14 @@ To configure and run the frontend of this project, you'll need to set up environ
 1. Open a terminal and navigate to the backend directory: `cd backend`
 2. Navigate to the peerprep-common directory: `cd peerprep-common`
 3. Build the backend server: `mvn clean install`
-4. Open a new terminal and navigate to the peerprep-api-gateway directory: `cd peerprep-api-gateway`and start the server `mvn spring-boot:run`
+4. Open a new terminal and navigate to the peerprep-api-gateway directory: `cd peerprep-api-gateway`and start the server `mvn spring-boot:run`.
 5. Open a new terminal and navigate to the peerprep-matching-service directory: `cd peerprep-matching-service`and start the server `mvn spring-boot:run`
 6. Open a new terminal and navigate to the peerprep-session-service directory: `cd peerprep-session-service`and start the server `mvn spring-boot:run`
 7. Open a new terminal and navigate to the peerprep-question-service directory: `cd peerprep-question-service`and start the server `mvn spring-boot:run`
 
-
+## Using Peerprep on production
+We have provided an admin account on production for testing purposes
+```
+username: admin
+password: password
+```
