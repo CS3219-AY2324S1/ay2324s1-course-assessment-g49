@@ -36,21 +36,25 @@ public class RedisMessageSubscriber implements MessageListener {
     }
 
     private void handleCreate(MatchRequest matchRequest) {
-        String key = matchRequest.getComplexity().toString() + matchRequest.getComplexity();
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-            if (redisTemplate.opsForValue().get(key).getUserId().equals(matchRequest.getUserId())) {
-                return;
+        String key = matchRequest.getComplexity().toString() + matchRequest.getCategory().toString();
+        try {
+            MatchRequest existingMatchRequest = redisTemplate.opsForValue().get(key);
+            if (existingMatchRequest != null) {
+                if (existingMatchRequest.getUserId().equals(matchRequest.getUserId())) {
+                    return;
+                }
+                matchingService.processMatch(matchRequest, existingMatchRequest);
+                redisTemplate.delete(key);
+            } else {
+                Duration timeout = Duration.ofSeconds(20);
+                redisTemplate.opsForValue().set(key, matchRequest, timeout);
             }
-            MatchRequest existing = redisTemplate.opsForValue().getAndDelete(key);
-            matchingService.processMatch(matchRequest, existing);
-        } else {
-            Duration timeout = Duration.ofSeconds(20);
-            redisTemplate.opsForValue().set(key, matchRequest, timeout);
+        } catch (Exception e) {
         }
     }
 
     private void handleCancel(MatchRequest matchRequest) {
-        String key = matchRequest.getComplexity().toString() + matchRequest.getComplexity();
+        String key = matchRequest.getComplexity().toString() + matchRequest.getCategory().toString();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
             redisTemplate.opsForValue().getAndDelete(key);
         }
