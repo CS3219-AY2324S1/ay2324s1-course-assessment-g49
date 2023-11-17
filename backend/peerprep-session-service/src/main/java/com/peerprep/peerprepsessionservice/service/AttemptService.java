@@ -18,29 +18,14 @@ public class AttemptService {
 
     private final AttemptRepository attemptRepository;
 
-    private final SessionRepository sessionRepository;
-
     public void createAttempt(AttemptDTO request) throws SessionNotFoundException {
-        // get session to identify both users
-        Session session = sessionRepository.findById(request.getSessionId())
-                .orElseThrow(() -> new SessionNotFoundException(request.getSessionId()));
-        String userId1 = session.getUserId1();
-        String userId2 = session.getUserId2();
-
-        Attempt user1Attempt = Attempt.builder()
-                .userId(userId1)
+        Attempt attempt = Attempt.builder()
+                .userId(request.getUserId())
                 .sessionId(request.getSessionId())
                 .questionId(request.getQuestionId())
                 .epochTimestamp(request.getEpochTimestamp())
                 .build();
-        Attempt user2Attempt = Attempt.builder()
-                .userId(userId2)
-                .sessionId(request.getSessionId())
-                .questionId(request.getQuestionId())
-                .epochTimestamp(request.getEpochTimestamp())
-                .build();
-        attemptRepository.save(user1Attempt);
-        attemptRepository.save(user2Attempt);
+        attemptRepository.save(attempt);
     }
 
     public List<AttemptDTO> getAllAttempts(String userId) {
