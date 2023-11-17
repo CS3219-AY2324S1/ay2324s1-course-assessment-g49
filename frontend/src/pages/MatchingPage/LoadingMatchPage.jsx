@@ -60,7 +60,6 @@ function LoadingMatchPage() {
 
   useEffect(() => {
     const client = new Client({
-
       brokerURL: `ws://${hostname}/match`,
       connectHeaders: AuthenticationToken(),
       debug: (str) => {

@@ -8,6 +8,7 @@ import com.peerprep.peerprepapigateway.dto.request.LoginRequest;
 import com.peerprep.peerprepapigateway.dto.response.LoginResponse;
 import com.peerprep.peerprepapigateway.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final UserService userService;
@@ -22,6 +24,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody final LoginRequest request) throws BadCredentialsException {
         LoginResponse authenticate = userService.authenticateUser(request.getUsername(), request.getPassword());
+        log.info("AuthController: Logged in as " + request.getUsername());
         return ResponseEntity.ok(authenticate);
     }
 

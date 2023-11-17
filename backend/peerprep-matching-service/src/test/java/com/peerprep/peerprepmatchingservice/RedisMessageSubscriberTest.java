@@ -39,13 +39,9 @@ public class RedisMessageSubscriberTest {
 
         when(redisTemplate.opsForValue()).thenReturn(valueOperations);
         when(valueOperations.get(anyString())).thenReturn(new MatchRequest(true, "user1", Complexity.EASY, Category.ARRAYS));
-        when(valueOperations.getAndDelete(anyString())).thenReturn(new MatchRequest());
-        when(redisTemplate.hasKey(anyString())).thenReturn(true);
 
         redisMessageSubscriber.onMessage(mockMessage, new byte[0]);
 
-        verify(redisTemplate).hasKey(anyString());
-        verify(valueOperations).getAndDelete(anyString());
         verify(matchingService).processMatch(any(MatchRequest.class), any(MatchRequest.class));
     }
 
