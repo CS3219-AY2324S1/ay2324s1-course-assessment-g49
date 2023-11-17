@@ -11,6 +11,7 @@ const wsReadyStateClosed = 3 // eslint-disable-line
 
 const pingTimeout = 30000
 
+const host = "wss://wss-dot-peerprep-399116.as.r.appspot.com"
 const port = process.env.PORT || 4444
 // @ts-ignore
 const wss = new ws.Server({ noServer: true })
@@ -49,6 +50,7 @@ const onconnection = conn => {
   /**
    * @type {Set<string>}
    */
+  console.log("user connected on host", host, "and port",port)
   const subscribedTopics = new Set()
   let closed = false
   // Check if connection is still alive

@@ -1,3 +1,4 @@
+service: wss
 runtime: nodejs
 env: flex
 runtime_config:
