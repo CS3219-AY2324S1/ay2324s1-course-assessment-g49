@@ -41,23 +41,32 @@ To configure and run the frontend of this project, you'll need to set up environ
 - In the `.env` file, define the required environment variables in the following format:
 	- VITE_DATABASE_URL=http://localhost:example
 	
-### Frontend
-1. Open a terminal and navigate to the frontend directory: `cd frontend`
-2. Delete node_modules file if it exists in the frontend directory
-3. Install the required dependencies: `npm install`
-4. Start the development server: `npm run dev`
-5. The frontend will be accessible at the link provided in the terminal.
+### Running the application
 
-### Backend
-1. Open a terminal and navigate to the backend directory: `cd backend`
-2. Navigate to the peerprep-common directory: `cd peerprep-common`
-3. Build the backend server: `mvn clean install`
-4. Open a new terminal and navigate to the peerprep-api-gateway directory: `cd peerprep-api-gateway`and start the server `mvn spring-boot:run`.
-5. Open a new terminal and navigate to the peerprep-matching-service directory: `cd peerprep-matching-service`and start the server `mvn spring-boot:run`
-6. Open a new terminal and navigate to the peerprep-session-service directory: `cd peerprep-session-service`and start the server `mvn spring-boot:run`
-7. Open a new terminal and navigate to the peerprep-question-service directory: `cd peerprep-question-service`and start the server `mvn spring-boot:run`
+Run all at once
+```
+cd backend/peerprep-api-gateway
+mvn clean package
+cd ../..
+cd backend/peerprep-question-service
+mvn clean package
+cd ../..
+cd backend/peerprep-session-service
+mvn clean package
+cd ../..
+cd backend/peerprep-matching-service
+mvn clean package
+cd ../..
+docker compose up
+```
+
+Stop application:
+```
+docker compose down --rmi all
+```
 
 ## Using Peerprep on production
+Website: https://frontend-dot-peerprep-399116.as.r.appspot.com/
 We have provided an admin account on production for testing purposes
 ```
 username: admin

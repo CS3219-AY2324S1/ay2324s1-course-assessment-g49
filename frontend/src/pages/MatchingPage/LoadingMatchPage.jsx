@@ -62,9 +62,6 @@ function LoadingMatchPage() {
     const client = new Client({
       brokerURL: `ws://${hostname}/match`,
       connectHeaders: AuthenticationToken(),
-      debug: (str) => {
-        console.log(str);
-      },
       onConnect: () => {
         setMatchClient(client);
         client.subscribe("/user/queue/match", (message) => {
