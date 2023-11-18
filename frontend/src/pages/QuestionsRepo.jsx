@@ -15,8 +15,6 @@ const QuestionsRepo = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedComplexities, setSelectedComplexities] = useState([]);
   const userData = JSON.parse(localStorage.getItem("user"));
-  console.log(userData)
-  console.log(userData.userRole)
   const userRole = userData.userRole;
 
   const isContainCommonElement = (arr1, arr2) => {
