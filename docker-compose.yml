@@ -10,34 +10,15 @@ services:
     build: backend/peerprep-api-gateway/.
     ports:
       - "8080:8080"
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /gcp/creds.json
-    volumes:
-      - "$HOME/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro"
-
   question-service:
     build: backend/peerprep-question-service/.
     ports:
       - "8082:8082"
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /gcp/creds.json
-    volumes:
-      - "$HOME/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro"
-
   matching-service:
     build: backend/peerprep-matching-service/.
     ports:
       - "8083:8083"
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /gcp/creds.json
-    volumes:
-      - "$HOME/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro"
-
   session-service:
     build: backend/peerprep-session-service/.
     ports:
       - "8081:8081"
-    environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /gcp/creds.json
-    volumes:
-      - "$HOME/.config/gcloud/application_default_credentials.json:/gcp/creds.json:ro"
