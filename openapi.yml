@@ -1,0 +1,336 @@
+openapi: 3.0.0
+info:
+  title: Peerprep
+  description: A technical interview preparation platform and peer matching system, where students can find peers to practice whiteboard-style interview questions together
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: auth
+    description: Endpoints for authentication
+  - name: questions
+    description: Endpoints for questions
+  - name: users
+    description: Endpoints for users
+
+paths:
+  /question:
+    post:
+      tags:
+        - questions
+      description: Creates a question
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuestionRequest"
+      responses:
+        "200":
+          description: Question successfully created
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Id of newly created question
+                example: "65017ab714d2e510a11d0cc9"
+    get:
+      tags:
+        - questions
+      description: Retrieves a list of all questions
+      responses:
+        "200":
+          description: Successfully retrieved all questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionOverview"
+  /question/{id}:
+    get:
+      tags:
+        - questions
+      description: Retrieves a specific question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionResponse"
+    patch:
+      tags:
+        - questions
+      description: Updates a specific question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateQuestionRequest"
+      responses:
+        "200":
+          description: Successfully updated question. Empty response
+    delete:
+      tags:
+        - questions
+      description: Deletes a specific question
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted question. Empty response
+  /users:
+    get:
+      tags:
+        - users
+      description: Retrieves a list of all users
+      responses:
+        "200":
+          description: Successfully retrieved all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserResponse"
+  /users/{id}:
+    get:
+      tags:
+        - users
+      description: Retrieves a specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+    patch:
+      tags:
+        - users
+      description: Updates a specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: Successfully updated user
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Id of updated user
+                example: 1
+
+    delete:
+      tags:
+        - users
+      description: Deletes a specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successfully deleted user
+  /auth/login:
+    post:
+      tags:
+        - auth
+      description: Uses username and password to login, and get a JWT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+  /auth/register:
+    post:
+      tags:
+        - auth
+      description: Registers a user with details
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "200":
+          description: Successfully registered user
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Id of newly created user
+                example: 1
+
+components:
+  schemas:
+    CreateQuestionRequest:
+      type: object
+      required:
+        - title
+        - description
+        - categories
+        - complexity
+      properties:
+        title:
+          type: string
+          example: Reverse a String
+        description:
+          type: string
+          example: Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.
+        categories:
+          type: array
+          items:
+            type: string
+          example: [ARRAY, ALGORITHMS]
+        complexity:
+          type: string
+          example: MEDIUM
+    QuestionOverview:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Reverse a String
+        categories:
+          type: array
+          items:
+            type: string
+          example: [ARRAY, ALGORITHMS]
+        complexity:
+          type: string
+          example: MEDIUM
+    QuestionResponse:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Reverse a String
+        description:
+          type: string
+          example: Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.
+        categories:
+          type: array
+          items:
+            type: string
+          example: [ARRAY, ALGORITHMS]
+        complexity:
+          type: string
+          example: MEDIUM
+    UpdateQuestionRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Reverse a String
+        description:
+          type: string
+          example: Write a function that reverses a string. The input string is given as an array of characters s. You must do this by modifying the input array in-place with O(1) extra memory.
+        categories:
+          type: array
+          items:
+            type: string
+          example: [ARRAY, ALGORITHMS]
+        complexity:
+          type: string
+          example: MEDIUM
+    RegisterRequest:
+      type: object
+      required:
+        - username
+        - email
+        - country
+        - password
+      properties:
+        username:
+          type: string
+          example: apple
+        email:
+          type: string
+          example: apple@gmail.com
+        country:
+          type: string
+          example: Singapore
+        password:
+          type: string
+          example: applepassword
+    UpdateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          example: orange
+        country:
+          type: string
+          example: Malaysia
+    UserResponse:
+      type: object
+      properties:
+        username:
+          type: string
+          example: apple
+        email:
+          type: string
+          example: apple@gmail.com
+        country:
+          type: string
+          example: Singapore
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: apple
+        password:
+          type: string
+          example: password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
